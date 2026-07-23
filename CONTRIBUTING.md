@@ -1,12 +1,12 @@
 # Contributing
 
-Use Python 3.11 or newer and install the development extras:
+Use Python 3.10 or newer and install the development extras:
 
 ```bash
 python -m pip install -e '.[dev]'
 ```
 
-Before proposing a change, run `pytest`, `ruff format --check .`, `ruff check .`,
+Before proposing a change, run `pytest`, `black --check .`, `ruff check .`,
 `mypy src/tui_wifi`, and `python -m build`.
 
 Never add a fallback that invokes a shell, `sudo`, ConnMan, `wpa_supplicant`, or

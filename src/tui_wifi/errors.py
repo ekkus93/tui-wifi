@@ -3,8 +3,11 @@
 
 from __future__ import annotations
 
-from enum import StrEnum
-from typing import TypedDict, Unpack
+from typing import TypedDict
+
+from typing_extensions import Unpack
+
+from tui_wifi.compat import StrEnum
 
 
 class ErrorCategory(StrEnum):

@@ -7,7 +7,7 @@ import asyncio
 import sys
 from collections.abc import Callable
 from dataclasses import replace
-from datetime import UTC, datetime
+from datetime import datetime, timezone
 from typing import TYPE_CHECKING
 
 from tui_wifi.backends.base import (
@@ -129,7 +129,7 @@ class WifiService:
                     OperationPhase.SUCCEEDED,
                     operation_id=generation,
                 ),
-                last_refresh=datetime.now(UTC),
+                last_refresh=datetime.now(timezone.utc),
                 warning=warning,
                 stale=False,
                 generation=generation,

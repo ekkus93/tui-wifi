@@ -14,7 +14,7 @@ and common Wi-Fi actions without requiring users to learn `nmcli`.
 ## Requirements
 
 - Linux
-- Python 3.11 or newer
+- Python 3.10 or newer
 - NetworkManager running
 - `nmcli` available in `PATH`
 - A terminal supported by Textual
@@ -147,7 +147,7 @@ package remains defined by `pyproject.toml`.
 
 ## CI/CD and release assets
 
-GitHub Actions runs tests on Python 3.11, 3.12, and 3.13, checks formatting,
+GitHub Actions runs tests on Python 3.10, 3.11, 3.12, and 3.13, checks formatting,
 linting, types, global and critical-module coverage, and validates an installable
 wheel and source distribution. Ordinary branch and pull-request runs do not
 upload or retain package or coverage assets.

@@ -144,7 +144,7 @@ class AsyncProcessRunner:
         process.terminate()
         try:
             await asyncio.wait_for(process.wait(), timeout=_TERMINATION_TIMEOUT_SECONDS)
-        except TimeoutError:
+        except asyncio.TimeoutError:
             process.kill()
             await process.wait()
 
@@ -181,7 +181,7 @@ class AsyncProcessRunner:
                 process.communicate(stdin_bytes),
                 timeout=request.timeout,
             )
-        except TimeoutError as exc:
+        except asyncio.TimeoutError as exc:
             await self._stop(process)
             result = self._interrupted_result(
                 request,

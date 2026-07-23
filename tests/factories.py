@@ -3,7 +3,9 @@
 
 from __future__ import annotations
 
-from typing import TypedDict, Unpack
+from typing import TypedDict
+
+from typing_extensions import Unpack
 
 from tui_wifi.models import (
     AccessPoint,

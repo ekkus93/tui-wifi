@@ -4,8 +4,9 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from datetime import UTC, datetime
-from enum import StrEnum
+from datetime import datetime, timezone
+
+from tui_wifi.compat import StrEnum
 
 _COMPARISON_VALUE_25 = 25
 _COMPARISON_VALUE_50 = 50
@@ -251,7 +252,7 @@ class ApplicationSnapshot:
     profiles: tuple[SavedProfile, ...] = ()
     active_connection: ActiveWifiConnection | None = None
     operation: OperationStatus = field(default_factory=OperationStatus)
-    last_refresh: datetime = field(default_factory=lambda: datetime.now(UTC))
+    last_refresh: datetime = field(default_factory=lambda: datetime.now(timezone.utc))
     warning: str | None = None
     error: str | None = None
     stale: bool = False

@@ -11,5 +11,6 @@
   matching `v<version>` tag.
 - Hardened subprocess diagnostics so credential-bearing arguments are redacted even if
   a child process echoes them to stdout or stderr.
+- Added Python 3.10 support and CI coverage across Python 3.10 through 3.13.
 - Hardware acceptance validation remains pending and is tracked in
   `tests/manual/V01_ACCEPTANCE.md`.
