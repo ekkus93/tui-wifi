@@ -24,7 +24,37 @@ The TUI runs as the normal user. NetworkManager and Polkit handle authorization;
 
 ## Installation
 
-From a checkout:
+### Install directly from GitHub
+
+Because the repository is public and contains a complete `pyproject.toml`, pip can
+install `tui-wifi` directly from GitHub. Git must be installed on the local machine.
+
+Install the latest code from `master`:
+
+```bash
+python -m pip install "tui-wifi @ git+https://github.com/ekkus93/tui-wifi.git@master"
+```
+
+Install a specific release tag, which is preferable for a stable installation:
+
+```bash
+python -m pip install "tui-wifi @ git+https://github.com/ekkus93/tui-wifi.git@v0.1.0"
+```
+
+Upgrade or reinstall the current `master` version:
+
+```bash
+python -m pip install --upgrade --force-reinstall \
+  "tui-wifi @ git+https://github.com/ekkus93/tui-wifi.git@master"
+```
+
+After installation, start the application with:
+
+```bash
+wifi-tui
+```
+
+### Install from a checkout
 
 ```bash
 python -m venv .venv
@@ -33,7 +63,7 @@ python -m pip install -e .
 wifi-tui
 ```
 
-With `pipx` after cloning:
+### Install with pipx after cloning
 
 ```bash
 pipx install .
