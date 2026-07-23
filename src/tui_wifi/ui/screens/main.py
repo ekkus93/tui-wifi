@@ -44,7 +44,7 @@ class MainScreen(Screen[None]):
         ("w", "toggle_wifi", "Wi-Fi"),
         ("i", "details", "Details"),
         ("enter", "connect", "Connect"),
-        ("q", "quit", "Quit"),
+        Binding("q", "app.quit", "Quit", priority=True),
         Binding("j", "cursor_down", "Down", show=False),
         Binding("k", "cursor_up", "Up", show=False),
     ]
