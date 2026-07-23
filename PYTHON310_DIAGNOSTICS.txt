@@ -1,0 +1,915 @@
+compatibility changes applied
+apply_status=0
+
+=== python -m pip install --upgrade pip ===
+Requirement already satisfied: pip in /opt/hostedtoolcache/Python/3.10.20/x64/lib/python3.10/site-packages (26.1.2)
+status=0
+
+=== python -m pip install -e '.[dev]' ===
+Obtaining file:///home/runner/work/tui-wifi/tui-wifi
+  Installing build dependencies: started
+  Installing build dependencies: finished with status 'done'
+  Checking if build backend supports build_editable: started
+  Checking if build backend supports build_editable: finished with status 'done'
+  Getting requirements to build editable: started
+  Getting requirements to build editable: finished with status 'done'
+  Preparing editable metadata (pyproject.toml): started
+  Preparing editable metadata (pyproject.toml): finished with status 'done'
+Collecting textual<9,>=8.2 (from tui-wifi==0.1.0)
+  Downloading textual-8.2.8-py3-none-any.whl.metadata (9.1 kB)
+Collecting typing-extensions<5,>=4.12 (from tui-wifi==0.1.0)
+  Downloading typing_extensions-4.16.0-py3-none-any.whl.metadata (3.3 kB)
+Collecting black<27,>=25 (from tui-wifi==0.1.0)
+  Downloading black-26.5.1-cp310-cp310-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (95 kB)
+Collecting build<2,>=1.2 (from tui-wifi==0.1.0)
+  Downloading build-1.5.0-py3-none-any.whl.metadata (5.7 kB)
+Collecting mypy<2,>=1.11 (from tui-wifi==0.1.0)
+  Downloading mypy-1.20.2-cp310-cp310-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (2.4 kB)
+Collecting pytest<10,>=8.2 (from tui-wifi==0.1.0)
+  Downloading pytest-9.1.1-py3-none-any.whl.metadata (7.6 kB)
+Collecting pytest-cov<7,>=5 (from tui-wifi==0.1.0)
+  Downloading pytest_cov-6.3.0-py3-none-any.whl.metadata (30 kB)
+Collecting ruff<1,>=0.6 (from tui-wifi==0.1.0)
+  Downloading ruff-0.16.0-py3-none-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (26 kB)
+Collecting click>=8.0.0 (from black<27,>=25->tui-wifi==0.1.0)
+  Downloading click-8.4.2-py3-none-any.whl.metadata (2.6 kB)
+Collecting mypy-extensions>=0.4.3 (from black<27,>=25->tui-wifi==0.1.0)
+  Downloading mypy_extensions-1.1.0-py3-none-any.whl.metadata (1.1 kB)
+Collecting packaging>=22.0 (from black<27,>=25->tui-wifi==0.1.0)
+  Using cached packaging-26.2-py3-none-any.whl.metadata (3.5 kB)
+Collecting pathspec>=1.0.0 (from black<27,>=25->tui-wifi==0.1.0)
+  Downloading pathspec-1.1.1-py3-none-any.whl.metadata (14 kB)
+Collecting platformdirs>=2 (from black<27,>=25->tui-wifi==0.1.0)
+  Downloading platformdirs-4.11.0-py3-none-any.whl.metadata (5.5 kB)
+Collecting pytokens~=0.4.0 (from black<27,>=25->tui-wifi==0.1.0)
+  Downloading pytokens-0.4.1-cp310-cp310-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (3.8 kB)
+Collecting tomli>=1.1.0 (from black<27,>=25->tui-wifi==0.1.0)
+  Downloading tomli-2.4.1-py3-none-any.whl.metadata (10 kB)
+Collecting pyproject_hooks (from build<2,>=1.2->tui-wifi==0.1.0)
+  Downloading pyproject_hooks-1.2.0-py3-none-any.whl.metadata (1.3 kB)
+Collecting librt>=0.8.0 (from mypy<2,>=1.11->tui-wifi==0.1.0)
+  Downloading librt-0.13.0-cp310-cp310-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (1.3 kB)
+Collecting exceptiongroup>=1 (from pytest<10,>=8.2->tui-wifi==0.1.0)
+  Downloading exceptiongroup-1.3.1-py3-none-any.whl.metadata (6.7 kB)
+Collecting iniconfig>=1.0.1 (from pytest<10,>=8.2->tui-wifi==0.1.0)
+  Downloading iniconfig-2.3.0-py3-none-any.whl.metadata (2.5 kB)
+Collecting pluggy<2,>=1.5 (from pytest<10,>=8.2->tui-wifi==0.1.0)
+  Downloading pluggy-1.6.0-py3-none-any.whl.metadata (4.8 kB)
+Collecting pygments>=2.7.2 (from pytest<10,>=8.2->tui-wifi==0.1.0)
+  Downloading pygments-2.20.0-py3-none-any.whl.metadata (2.5 kB)
+Collecting coverage>=7.5 (from coverage[toml]>=7.5->pytest-cov<7,>=5->tui-wifi==0.1.0)
+  Downloading coverage-7.15.2-cp310-cp310-manylinux1_x86_64.manylinux_2_28_x86_64.manylinux_2_5_x86_64.whl.metadata (8.6 kB)
+Collecting markdown-it-py>=2.1.0 (from markdown-it-py[linkify]>=2.1.0->textual<9,>=8.2->tui-wifi==0.1.0)
+  Downloading markdown_it_py-4.2.0-py3-none-any.whl.metadata (7.4 kB)
+Collecting mdit-py-plugins (from textual<9,>=8.2->tui-wifi==0.1.0)
+  Downloading mdit_py_plugins-0.6.1-py3-none-any.whl.metadata (2.9 kB)
+Collecting rich>=14.2.0 (from textual<9,>=8.2->tui-wifi==0.1.0)
+  Downloading rich-15.0.0-py3-none-any.whl.metadata (18 kB)
+Collecting mdurl~=0.1 (from markdown-it-py>=2.1.0->markdown-it-py[linkify]>=2.1.0->textual<9,>=8.2->tui-wifi==0.1.0)
+  Downloading mdurl-0.1.2-py3-none-any.whl.metadata (1.6 kB)
+Collecting linkify-it-py<3,>=1 (from markdown-it-py[linkify]>=2.1.0->textual<9,>=8.2->tui-wifi==0.1.0)
+  Downloading linkify_it_py-2.1.0-py3-none-any.whl.metadata (8.5 kB)
+Collecting uc-micro-py (from linkify-it-py<3,>=1->markdown-it-py[linkify]>=2.1.0->textual<9,>=8.2->tui-wifi==0.1.0)
+  Downloading uc_micro_py-2.0.0-py3-none-any.whl.metadata (2.2 kB)
+Downloading black-26.5.1-cp310-cp310-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (1.9 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.9/1.9 MB 19.9 MB/s  0:00:00
+Downloading build-1.5.0-py3-none-any.whl (26 kB)
+Downloading mypy-1.20.2-cp310-cp310-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (14.7 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 14.7/14.7 MB 70.8 MB/s  0:00:00
+Downloading pytest-9.1.1-py3-none-any.whl (386 kB)
+Downloading pluggy-1.6.0-py3-none-any.whl (20 kB)
+Downloading pytest_cov-6.3.0-py3-none-any.whl (25 kB)
+Downloading pytokens-0.4.1-cp310-cp310-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (259 kB)
+Downloading ruff-0.16.0-py3-none-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (11.4 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 11.4/11.4 MB 166.4 MB/s  0:00:00
+Downloading textual-8.2.8-py3-none-any.whl (731 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 731.4/731.4 kB 148.3 MB/s  0:00:00
+Downloading platformdirs-4.11.0-py3-none-any.whl (23 kB)
+Downloading pygments-2.20.0-py3-none-any.whl (1.2 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.2/1.2 MB 197.0 MB/s  0:00:00
+Downloading typing_extensions-4.16.0-py3-none-any.whl (45 kB)
+Downloading click-8.4.2-py3-none-any.whl (119 kB)
+Downloading coverage-7.15.2-cp310-cp310-manylinux1_x86_64.manylinux_2_28_x86_64.manylinux_2_5_x86_64.whl (250 kB)
+Downloading exceptiongroup-1.3.1-py3-none-any.whl (16 kB)
+Downloading iniconfig-2.3.0-py3-none-any.whl (7.5 kB)
+Downloading librt-0.13.0-cp310-cp310-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (515 kB)
+Downloading markdown_it_py-4.2.0-py3-none-any.whl (91 kB)
+Downloading mdurl-0.1.2-py3-none-any.whl (10.0 kB)
+Downloading linkify_it_py-2.1.0-py3-none-any.whl (19 kB)
+Downloading mypy_extensions-1.1.0-py3-none-any.whl (5.0 kB)
+Using cached packaging-26.2-py3-none-any.whl (100 kB)
+Downloading pathspec-1.1.1-py3-none-any.whl (57 kB)
+Downloading rich-15.0.0-py3-none-any.whl (310 kB)
+Downloading tomli-2.4.1-py3-none-any.whl (14 kB)
+Downloading mdit_py_plugins-0.6.1-py3-none-any.whl (66 kB)
+Downloading pyproject_hooks-1.2.0-py3-none-any.whl (10 kB)
+Downloading uc_micro_py-2.0.0-py3-none-any.whl (6.4 kB)
+Building wheels for collected packages: tui-wifi
+  Building editable for tui-wifi (pyproject.toml): started
+  Building editable for tui-wifi (pyproject.toml): finished with status 'done'
+  Created wheel for tui-wifi: filename=tui_wifi-0.1.0-0.editable-py3-none-any.whl size=5068 sha256=ee3725ec60b4e3684e8e911d0b3f2ff22e937e893ccb04f4d9779e6db972d34f
+  Stored in directory: /tmp/pip-ephem-wheel-cache-sts6v5az/wheels/72/62/2a/b9fc3f1806fd60c7594cc307867b520691a8e59f1b78c7190d
+Successfully built tui-wifi
+Installing collected packages: uc-micro-py, typing-extensions, tomli, ruff, pytokens, pyproject_hooks, pygments, pluggy, platformdirs, pathspec, packaging, mypy-extensions, mdurl, librt, iniconfig, coverage, click, mypy, markdown-it-py, linkify-it-py, exceptiongroup, build, black, rich, pytest, mdit-py-plugins, textual, pytest-cov, tui-wifi
+
+Successfully installed black-26.5.1 build-1.5.0 click-8.4.2 coverage-7.15.2 exceptiongroup-1.3.1 iniconfig-2.3.0 librt-0.13.0 linkify-it-py-2.1.0 markdown-it-py-4.2.0 mdit-py-plugins-0.6.1 mdurl-0.1.2 mypy-1.20.2 mypy-extensions-1.1.0 packaging-26.2 pathspec-1.1.1 platformdirs-4.11.0 pluggy-1.6.0 pygments-2.20.0 pyproject_hooks-1.2.0 pytest-9.1.1 pytest-cov-6.3.0 pytokens-0.4.1 rich-15.0.0 ruff-0.16.0 textual-8.2.8 tomli-2.4.1 tui-wifi-0.1.0 typing-extensions-4.16.0 uc-micro-py-2.0.0
+status=0
+
+=== black . ===
+All done! ✨ 🍰 ✨
+65 files left unchanged.
+status=0
+
+=== ruff check --fix . ===
+All checks passed!
+status=0
+
+=== black --check . ===
+All done! ✨ 🍰 ✨
+65 files would be left unchanged.
+status=0
+
+=== ruff check . ===
+All checks passed!
+status=0
+
+=== mypy src/tui_wifi ===
+Success: no issues found in 32 source files
+status=0
+
+=== pytest -m 'not real_network' ===
+============================= test session starts ==============================
+platform linux -- Python 3.10.20, pytest-9.1.1, pluggy-1.6.0
+rootdir: /home/runner/work/tui-wifi/tui-wifi
+configfile: pyproject.toml
+testpaths: tests
+plugins: cov-6.3.0
+collected 200 items
+
+tests/integration/test_fake_nmcli_executable.py .                        [  0%]
+tests/tui/test_app.py .                                                  [  1%]
+tests/tui/test_dialogs.py ...                                            [  2%]
+tests/tui/test_main_screen.py ...........                                [  8%]
+tests/tui/test_saved_screen.py ....                                      [ 10%]
+tests/unit/test_cli.py ...                                               [ 11%]
+tests/unit/test_critical_coverage.py .....                               [ 14%]
+tests/unit/test_errors.py ..                                             [ 15%]
+tests/unit/test_grouping.py .                                            [ 15%]
+tests/unit/test_logging.py .                                             [ 16%]
+tests/unit/test_nmcli.py ..................                              [ 25%]
+tests/unit/test_nmcli_mutations.py ...............                       [ 32%]
+tests/unit/test_nmcli_mutations_verification.py .................        [ 41%]
+tests/unit/test_nmcli_profiles.py ................................       [ 57%]
+tests/unit/test_nmcli_radio.py ............                              [ 63%]
+tests/unit/test_nmcli_scan.py .......                                    [ 66%]
+tests/unit/test_parsing.py ...................                           [ 76%]
+tests/unit/test_process.py ...........FF....                             [ 84%]
+tests/unit/test_secrets.py ...                                           [ 86%]
+tests/unit/test_service.py ......                                        [ 89%]
+tests/unit/test_service_branches.py ...............                      [ 96%]
+tests/unit/test_service_concurrency.py .......                           [100%]
+
+=================================== FAILURES ===================================
+______________ test_terminate_escalates_to_kill_and_reaps_process ______________
+
+self = <tests.unit.test_process.ControlledProcess object at 0x7f1c1a102830>
+
+    async def wait(self) -> int:
+        """Wait for termination and return the final code."""
+        self.wait_calls += 1
+>       await self.wait_release.wait()
+
+tests/unit/test_process.py:88: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <asyncio.locks.Event object at 0x7f1c1a103490 [unset]>
+
+    async def wait(self):
+        """Block until the internal flag is true.
+    
+        If the internal flag is true on entry, return True
+        immediately.  Otherwise, block until another coroutine calls
+        set() to set the flag to true, then return True.
+        """
+        if self._value:
+            return True
+    
+        fut = self._get_loop().create_future()
+        self._waiters.append(fut)
+        try:
+>           await fut
+E           asyncio.exceptions.CancelledError
+
+/opt/hostedtoolcache/Python/3.10.20/x64/lib/python3.10/asyncio/locks.py:214: CancelledError
+
+During handling of the above exception, another exception occurred:
+
+fut = <Task cancelled name='Task-7439' coro=<ControlledProcess.wait() done, defined at /home/runner/work/tui-wifi/tui-wifi/tests/unit/test_process.py:85>>
+timeout = 0.001
+
+    async def wait_for(fut, timeout):
+        """Wait for the single Future or coroutine to complete, with timeout.
+    
+        Coroutine will be wrapped in Task.
+    
+        Returns result of the Future or coroutine.  When a timeout occurs,
+        it cancels the task and raises TimeoutError.  To avoid the task
+        cancellation, wrap it in shield().
+    
+        If the wait is cancelled, the task is also cancelled.
+    
+        This function is a coroutine.
+        """
+        loop = events.get_running_loop()
+    
+        if timeout is None:
+            return await fut
+    
+        if timeout <= 0:
+            fut = ensure_future(fut, loop=loop)
+    
+            if fut.done():
+                return fut.result()
+    
+            await _cancel_and_wait(fut, loop=loop)
+            try:
+                return fut.result()
+            except exceptions.CancelledError as exc:
+                raise exceptions.TimeoutError() from exc
+    
+        waiter = loop.create_future()
+        timeout_handle = loop.call_later(timeout, _release_waiter, waiter)
+        cb = functools.partial(_release_waiter, waiter)
+    
+        fut = ensure_future(fut, loop=loop)
+        fut.add_done_callback(cb)
+    
+        try:
+            # wait until the future completes or the timeout
+            try:
+                await waiter
+            except exceptions.CancelledError:
+                if fut.done():
+                    return fut.result()
+                else:
+                    fut.remove_done_callback(cb)
+                    # We must ensure that the task is not running
+                    # after wait_for() returns.
+                    # See https://bugs.python.org/issue32751
+                    await _cancel_and_wait(fut, loop=loop)
+                    raise
+    
+            if fut.done():
+                return fut.result()
+            else:
+                fut.remove_done_callback(cb)
+                # We must ensure that the task is not running
+                # after wait_for() returns.
+                # See https://bugs.python.org/issue32751
+                await _cancel_and_wait(fut, loop=loop)
+                # In case task cancellation failed with some
+                # exception, we should re-raise it
+                # See https://bugs.python.org/issue40607
+                try:
+>                   return fut.result()
+E                   asyncio.exceptions.CancelledError
+
+/opt/hostedtoolcache/Python/3.10.20/x64/lib/python3.10/asyncio/tasks.py:456: CancelledError
+
+The above exception was the direct cause of the following exception:
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f1c1a3d9fc0>
+
+    def test_terminate_escalates_to_kill_and_reaps_process(monkeypatch: pytest.MonkeyPatch) -> None:
+        """Verify a child that ignores terminate is killed after the bounded wait."""
+    
+        async def scenario() -> None:
+            process = ControlledProcess(ignore_terminate=True)
+            monkeypatch.setattr("tui_wifi.process.runner._TERMINATION_TIMEOUT_SECONDS", 0.001)
+            await RunnerProbe.stop_process(process)
+            verify(process.terminated is True)
+            verify(process.killed is True)
+            verify(process.wait_calls >= _EXPECTED_TERMINATION_WAITS)
+            verify(process.returncode == _SIGNAL_EXIT_CODE)
+    
+>       run(scenario())
+
+tests/unit/test_process.py:346: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/unit/test_process.py:35: in run
+    return asyncio.run(coroutine)
+/opt/hostedtoolcache/Python/3.10.20/x64/lib/python3.10/asyncio/runners.py:44: in run
+    return loop.run_until_complete(main)
+/opt/hostedtoolcache/Python/3.10.20/x64/lib/python3.10/asyncio/base_events.py:649: in run_until_complete
+    return future.result()
+tests/unit/test_process.py:340: in scenario
+    await RunnerProbe.stop_process(process)
+tests/unit/test_process.py:49: in stop_process
+    await cls._stop(process)
+src/tui_wifi/process/runner.py:146: in _stop
+    await asyncio.wait_for(process.wait(), timeout=_TERMINATION_TIMEOUT_SECONDS)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+fut = <Task cancelled name='Task-7439' coro=<ControlledProcess.wait() done, defined at /home/runner/work/tui-wifi/tui-wifi/tests/unit/test_process.py:85>>
+timeout = 0.001
+
+    async def wait_for(fut, timeout):
+        """Wait for the single Future or coroutine to complete, with timeout.
+    
+        Coroutine will be wrapped in Task.
+    
+        Returns result of the Future or coroutine.  When a timeout occurs,
+        it cancels the task and raises TimeoutError.  To avoid the task
+        cancellation, wrap it in shield().
+    
+        If the wait is cancelled, the task is also cancelled.
+    
+        This function is a coroutine.
+        """
+        loop = events.get_running_loop()
+    
+        if timeout is None:
+            return await fut
+    
+        if timeout <= 0:
+            fut = ensure_future(fut, loop=loop)
+    
+            if fut.done():
+                return fut.result()
+    
+            await _cancel_and_wait(fut, loop=loop)
+            try:
+                return fut.result()
+            except exceptions.CancelledError as exc:
+                raise exceptions.TimeoutError() from exc
+    
+        waiter = loop.create_future()
+        timeout_handle = loop.call_later(timeout, _release_waiter, waiter)
+        cb = functools.partial(_release_waiter, waiter)
+    
+        fut = ensure_future(fut, loop=loop)
+        fut.add_done_callback(cb)
+    
+        try:
+            # wait until the future completes or the timeout
+            try:
+                await waiter
+            except exceptions.CancelledError:
+                if fut.done():
+                    return fut.result()
+                else:
+                    fut.remove_done_callback(cb)
+                    # We must ensure that the task is not running
+                    # after wait_for() returns.
+                    # See https://bugs.python.org/issue32751
+                    await _cancel_and_wait(fut, loop=loop)
+                    raise
+    
+            if fut.done():
+                return fut.result()
+            else:
+                fut.remove_done_callback(cb)
+                # We must ensure that the task is not running
+                # after wait_for() returns.
+                # See https://bugs.python.org/issue32751
+                await _cancel_and_wait(fut, loop=loop)
+                # In case task cancellation failed with some
+                # exception, we should re-raise it
+                # See https://bugs.python.org/issue40607
+                try:
+                    return fut.result()
+                except exceptions.CancelledError as exc:
+>                   raise exceptions.TimeoutError() from exc
+E                   asyncio.exceptions.TimeoutError
+
+/opt/hostedtoolcache/Python/3.10.20/x64/lib/python3.10/asyncio/tasks.py:458: TimeoutError
+_______________ test_timeout_result_flags_duration_and_redaction _______________
+
+self = <StreamReader transport=<_UnixReadPipeTransport fd=15 open>>
+func_name = 'read'
+
+    async def _wait_for_data(self, func_name):
+        """Wait until feed_data() or feed_eof() is called.
+    
+        If stream was paused, automatically resume it.
+        """
+        # StreamReader uses a future to link the protocol feed_data() method
+        # to a read coroutine. Running two read coroutines at the same time
+        # would have an unexpected behaviour. It would not possible to know
+        # which coroutine would get the next data.
+        if self._waiter is not None:
+            raise RuntimeError(
+                f'{func_name}() called while another coroutine is '
+                f'already waiting for incoming data')
+    
+        assert not self._eof, '_wait_for_data after EOF'
+    
+        # Waiting for data while paused will make deadlock, so prevent it.
+        # This is essential for readexactly(n) for case when n > self._limit.
+        if self._paused:
+            self._paused = False
+            self._transport.resume_reading()
+    
+        self._waiter = self._loop.create_future()
+        try:
+>           await self._waiter
+E           asyncio.exceptions.CancelledError
+
+/opt/hostedtoolcache/Python/3.10.20/x64/lib/python3.10/asyncio/streams.py:501: CancelledError
+
+During handling of the above exception, another exception occurred:
+
+self = <Process 3235>, input = None
+
+    async def communicate(self, input=None):
+        if input is not None:
+            stdin = self._feed_stdin(input)
+        else:
+            stdin = self._noop()
+        if self.stdout is not None:
+            stdout = self._read_stream(1)
+        else:
+            stdout = self._noop()
+        if self.stderr is not None:
+            stderr = self._read_stream(2)
+        else:
+            stderr = self._noop()
+>       stdin, stdout, stderr = await tasks.gather(stdin, stdout, stderr)
+E       asyncio.exceptions.CancelledError
+
+/opt/hostedtoolcache/Python/3.10.20/x64/lib/python3.10/asyncio/subprocess.py:195: CancelledError
+
+During handling of the above exception, another exception occurred:
+
+fut = <Task cancelled name='Task-7444' coro=<Process.communicate() done, defined at /opt/hostedtoolcache/Python/3.10.20/x64/lib/python3.10/asyncio/subprocess.py:182>>
+timeout = 0.01
+
+    async def wait_for(fut, timeout):
+        """Wait for the single Future or coroutine to complete, with timeout.
+    
+        Coroutine will be wrapped in Task.
+    
+        Returns result of the Future or coroutine.  When a timeout occurs,
+        it cancels the task and raises TimeoutError.  To avoid the task
+        cancellation, wrap it in shield().
+    
+        If the wait is cancelled, the task is also cancelled.
+    
+        This function is a coroutine.
+        """
+        loop = events.get_running_loop()
+    
+        if timeout is None:
+            return await fut
+    
+        if timeout <= 0:
+            fut = ensure_future(fut, loop=loop)
+    
+            if fut.done():
+                return fut.result()
+    
+            await _cancel_and_wait(fut, loop=loop)
+            try:
+                return fut.result()
+            except exceptions.CancelledError as exc:
+                raise exceptions.TimeoutError() from exc
+    
+        waiter = loop.create_future()
+        timeout_handle = loop.call_later(timeout, _release_waiter, waiter)
+        cb = functools.partial(_release_waiter, waiter)
+    
+        fut = ensure_future(fut, loop=loop)
+        fut.add_done_callback(cb)
+    
+        try:
+            # wait until the future completes or the timeout
+            try:
+                await waiter
+            except exceptions.CancelledError:
+                if fut.done():
+                    return fut.result()
+                else:
+                    fut.remove_done_callback(cb)
+                    # We must ensure that the task is not running
+                    # after wait_for() returns.
+                    # See https://bugs.python.org/issue32751
+                    await _cancel_and_wait(fut, loop=loop)
+                    raise
+    
+            if fut.done():
+                return fut.result()
+            else:
+                fut.remove_done_callback(cb)
+                # We must ensure that the task is not running
+                # after wait_for() returns.
+                # See https://bugs.python.org/issue32751
+                await _cancel_and_wait(fut, loop=loop)
+                # In case task cancellation failed with some
+                # exception, we should re-raise it
+                # See https://bugs.python.org/issue40607
+                try:
+>                   return fut.result()
+E                   asyncio.exceptions.CancelledError
+
+/opt/hostedtoolcache/Python/3.10.20/x64/lib/python3.10/asyncio/tasks.py:456: CancelledError
+
+The above exception was the direct cause of the following exception:
+
+    def test_timeout_result_flags_duration_and_redaction() -> None:
+        """Verify interrupted timeout metadata is explicit and credential-safe."""
+    
+        async def scenario() -> None:
+            credential = "timeout-secret-value"
+            request = ProcessRequest(
+                sys.executable,
+                ("-c", "import time; time.sleep(10)", credential),
+                timeout=0.01,
+                sensitive_arg_indexes=frozenset({2}),
+            )
+            with pytest.raises(ProcessTimeoutError) as caught:
+                await AsyncProcessRunner().run(request)
+            result = caught.value.result
+            verify(result is not None)
+            verify(result.timed_out is True)
+            verify(result.cancelled is False)
+            verify(result.exit_code in {-1, -15, _SIGNAL_EXIT_CODE})
+            verify(result.stdout == "")
+            verify(result.stderr == "")
+            verify(result.duration >= 0)
+            verify(credential not in repr(result.command))
+    
+>       run(scenario())
+
+tests/unit/test_process.py:372: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/unit/test_process.py:35: in run
+    return asyncio.run(coroutine)
+/opt/hostedtoolcache/Python/3.10.20/x64/lib/python3.10/asyncio/runners.py:44: in run
+    return loop.run_until_complete(main)
+/opt/hostedtoolcache/Python/3.10.20/x64/lib/python3.10/asyncio/base_events.py:649: in run_until_complete
+    return future.result()
+tests/unit/test_process.py:361: in scenario
+    await AsyncProcessRunner().run(request)
+src/tui_wifi/process/runner.py:231: in run
+    stdout_bytes, stderr_bytes = await self._communicate(request, process, started)
+src/tui_wifi/process/runner.py:180: in _communicate
+    return await asyncio.wait_for(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+fut = <Task cancelled name='Task-7444' coro=<Process.communicate() done, defined at /opt/hostedtoolcache/Python/3.10.20/x64/lib/python3.10/asyncio/subprocess.py:182>>
+timeout = 0.01
+
+    async def wait_for(fut, timeout):
+        """Wait for the single Future or coroutine to complete, with timeout.
+    
+        Coroutine will be wrapped in Task.
+    
+        Returns result of the Future or coroutine.  When a timeout occurs,
+        it cancels the task and raises TimeoutError.  To avoid the task
+        cancellation, wrap it in shield().
+    
+        If the wait is cancelled, the task is also cancelled.
+    
+        This function is a coroutine.
+        """
+        loop = events.get_running_loop()
+    
+        if timeout is None:
+            return await fut
+    
+        if timeout <= 0:
+            fut = ensure_future(fut, loop=loop)
+    
+            if fut.done():
+                return fut.result()
+    
+            await _cancel_and_wait(fut, loop=loop)
+            try:
+                return fut.result()
+            except exceptions.CancelledError as exc:
+                raise exceptions.TimeoutError() from exc
+    
+        waiter = loop.create_future()
+        timeout_handle = loop.call_later(timeout, _release_waiter, waiter)
+        cb = functools.partial(_release_waiter, waiter)
+    
+        fut = ensure_future(fut, loop=loop)
+        fut.add_done_callback(cb)
+    
+        try:
+            # wait until the future completes or the timeout
+            try:
+                await waiter
+            except exceptions.CancelledError:
+                if fut.done():
+                    return fut.result()
+                else:
+                    fut.remove_done_callback(cb)
+                    # We must ensure that the task is not running
+                    # after wait_for() returns.
+                    # See https://bugs.python.org/issue32751
+                    await _cancel_and_wait(fut, loop=loop)
+                    raise
+    
+            if fut.done():
+                return fut.result()
+            else:
+                fut.remove_done_callback(cb)
+                # We must ensure that the task is not running
+                # after wait_for() returns.
+                # See https://bugs.python.org/issue32751
+                await _cancel_and_wait(fut, loop=loop)
+                # In case task cancellation failed with some
+                # exception, we should re-raise it
+                # See https://bugs.python.org/issue40607
+                try:
+                    return fut.result()
+                except exceptions.CancelledError as exc:
+>                   raise exceptions.TimeoutError() from exc
+E                   asyncio.exceptions.TimeoutError
+
+/opt/hostedtoolcache/Python/3.10.20/x64/lib/python3.10/asyncio/tasks.py:458: TimeoutError
+================================ tests coverage ================================
+_______________ coverage: platform linux, python 3.10.20-final-0 _______________
+
+Name                                       Stmts   Miss Branch BrPart  Cover   Missing
+--------------------------------------------------------------------------------------
+src/tui_wifi/__init__.py                       1      0      0      0   100%
+src/tui_wifi/backends/__init__.py              3      0      0      0   100%
+src/tui_wifi/backends/fake.py                 90      7     18      7    87%   57, 76->78, 109, 124, 139-140, 153->exit, 179, 181
+src/tui_wifi/backends/nmcli.py                 3      0      0      0   100%
+src/tui_wifi/backends/nmcli_core.py          110      2     34      2    97%   194, 238
+src/tui_wifi/backends/nmcli_mutations.py      70      1     28      0    99%   187
+src/tui_wifi/backends/nmcli_profiles.py       65      1     24      1    98%   138
+src/tui_wifi/backends/parsing.py             117      4     52      2    96%   68-69, 97, 127
+src/tui_wifi/cli.py                           26      4      4      2    80%   39, 48-49, 54
+src/tui_wifi/compat.py                         7      2      0      0    71%   14, 18
+src/tui_wifi/errors.py                        60      0      8      0   100%
+src/tui_wifi/grouping.py                      25      0     12      1    97%   19->18
+src/tui_wifi/logging_config.py                18      2      0      0    89%   28-29
+src/tui_wifi/models.py                       171     10      8      0    90%   129-137, 182
+src/tui_wifi/process/__init__.py               2      0      0      0   100%
+src/tui_wifi/process/fake.py                  38      7     10      4    77%   46-47, 51-56, 62, 70-71
+src/tui_wifi/process/runner.py               117      7      8      0    94%   105, 148-149, 185-193
+src/tui_wifi/secrets.py                       24      0      4      1    96%   50->49
+src/tui_wifi/services/__init__.py              2      0      0      0   100%
+src/tui_wifi/services/wifi.py                164      1     46      1    99%   263
+--------------------------------------------------------------------------------------
+TOTAL                                       1113     48    256     21    94%
+Coverage JSON written to file coverage.json
+Required test coverage of 90% reached. Total coverage: 94.38%
+=========================== short test summary info ============================
+FAILED tests/unit/test_process.py::test_terminate_escalates_to_kill_and_reaps_process - asyncio.exceptions.TimeoutError
+FAILED tests/unit/test_process.py::test_timeout_result_flags_duration_and_redaction - asyncio.exceptions.TimeoutError
+======================== 2 failed, 198 passed in 35.56s ========================
+status=1
+
+=== python scripts/check_critical_coverage.py coverage.json ===
+All critical module branch-coverage gates passed.
+status=0
+
+=== python -m build ===
+* Creating isolated environment: venv+pip...
+* Installing packages in isolated environment:
+  - setuptools>=77,<83
+  - wheel>=0.45,<1
+* Getting build dependencies for sdist...
+running egg_info
+writing src/tui_wifi.egg-info/PKG-INFO
+writing dependency_links to src/tui_wifi.egg-info/dependency_links.txt
+writing entry points to src/tui_wifi.egg-info/entry_points.txt
+writing requirements to src/tui_wifi.egg-info/requires.txt
+writing top-level names to src/tui_wifi.egg-info/top_level.txt
+reading manifest file 'src/tui_wifi.egg-info/SOURCES.txt'
+adding license file 'LICENSE'
+writing manifest file 'src/tui_wifi.egg-info/SOURCES.txt'
+* Building sdist...
+running sdist
+running egg_info
+writing src/tui_wifi.egg-info/PKG-INFO
+writing dependency_links to src/tui_wifi.egg-info/dependency_links.txt
+writing entry points to src/tui_wifi.egg-info/entry_points.txt
+writing requirements to src/tui_wifi.egg-info/requires.txt
+writing top-level names to src/tui_wifi.egg-info/top_level.txt
+reading manifest file 'src/tui_wifi.egg-info/SOURCES.txt'
+adding license file 'LICENSE'
+writing manifest file 'src/tui_wifi.egg-info/SOURCES.txt'
+running check
+creating tui_wifi-0.1.0
+creating tui_wifi-0.1.0/src/tui_wifi
+creating tui_wifi-0.1.0/src/tui_wifi.egg-info
+creating tui_wifi-0.1.0/src/tui_wifi/backends
+creating tui_wifi-0.1.0/src/tui_wifi/process
+creating tui_wifi-0.1.0/src/tui_wifi/services
+creating tui_wifi-0.1.0/src/tui_wifi/ui
+creating tui_wifi-0.1.0/src/tui_wifi/ui/dialogs
+creating tui_wifi-0.1.0/src/tui_wifi/ui/screens
+creating tui_wifi-0.1.0/src/tui_wifi/ui/widgets
+copying files to tui_wifi-0.1.0...
+copying LICENSE -> tui_wifi-0.1.0
+copying README.md -> tui_wifi-0.1.0
+copying pyproject.toml -> tui_wifi-0.1.0
+copying src/tui_wifi/__init__.py -> tui_wifi-0.1.0/src/tui_wifi
+copying src/tui_wifi/__main__.py -> tui_wifi-0.1.0/src/tui_wifi
+copying src/tui_wifi/app.py -> tui_wifi-0.1.0/src/tui_wifi
+copying src/tui_wifi/cli.py -> tui_wifi-0.1.0/src/tui_wifi
+copying src/tui_wifi/compat.py -> tui_wifi-0.1.0/src/tui_wifi
+copying src/tui_wifi/errors.py -> tui_wifi-0.1.0/src/tui_wifi
+copying src/tui_wifi/grouping.py -> tui_wifi-0.1.0/src/tui_wifi
+copying src/tui_wifi/logging_config.py -> tui_wifi-0.1.0/src/tui_wifi
+copying src/tui_wifi/models.py -> tui_wifi-0.1.0/src/tui_wifi
+copying src/tui_wifi/secrets.py -> tui_wifi-0.1.0/src/tui_wifi
+copying src/tui_wifi.egg-info/PKG-INFO -> tui_wifi-0.1.0/src/tui_wifi.egg-info
+copying src/tui_wifi.egg-info/SOURCES.txt -> tui_wifi-0.1.0/src/tui_wifi.egg-info
+copying src/tui_wifi.egg-info/dependency_links.txt -> tui_wifi-0.1.0/src/tui_wifi.egg-info
+copying src/tui_wifi.egg-info/entry_points.txt -> tui_wifi-0.1.0/src/tui_wifi.egg-info
+copying src/tui_wifi.egg-info/requires.txt -> tui_wifi-0.1.0/src/tui_wifi.egg-info
+copying src/tui_wifi.egg-info/top_level.txt -> tui_wifi-0.1.0/src/tui_wifi.egg-info
+copying src/tui_wifi/backends/__init__.py -> tui_wifi-0.1.0/src/tui_wifi/backends
+copying src/tui_wifi/backends/base.py -> tui_wifi-0.1.0/src/tui_wifi/backends
+copying src/tui_wifi/backends/fake.py -> tui_wifi-0.1.0/src/tui_wifi/backends
+copying src/tui_wifi/backends/nmcli.py -> tui_wifi-0.1.0/src/tui_wifi/backends
+copying src/tui_wifi/backends/nmcli_core.py -> tui_wifi-0.1.0/src/tui_wifi/backends
+copying src/tui_wifi/backends/nmcli_mutations.py -> tui_wifi-0.1.0/src/tui_wifi/backends
+copying src/tui_wifi/backends/nmcli_profiles.py -> tui_wifi-0.1.0/src/tui_wifi/backends
+copying src/tui_wifi/backends/parsing.py -> tui_wifi-0.1.0/src/tui_wifi/backends
+copying src/tui_wifi/process/__init__.py -> tui_wifi-0.1.0/src/tui_wifi/process
+copying src/tui_wifi/process/fake.py -> tui_wifi-0.1.0/src/tui_wifi/process
+copying src/tui_wifi/process/runner.py -> tui_wifi-0.1.0/src/tui_wifi/process
+copying src/tui_wifi/services/__init__.py -> tui_wifi-0.1.0/src/tui_wifi/services
+copying src/tui_wifi/services/wifi.py -> tui_wifi-0.1.0/src/tui_wifi/services
+copying src/tui_wifi/ui/__init__.py -> tui_wifi-0.1.0/src/tui_wifi/ui
+copying src/tui_wifi/ui/tui_wifi.tcss -> tui_wifi-0.1.0/src/tui_wifi/ui
+copying src/tui_wifi/ui/dialogs/__init__.py -> tui_wifi-0.1.0/src/tui_wifi/ui/dialogs
+copying src/tui_wifi/ui/dialogs/common.py -> tui_wifi-0.1.0/src/tui_wifi/ui/dialogs
+copying src/tui_wifi/ui/screens/__init__.py -> tui_wifi-0.1.0/src/tui_wifi/ui/screens
+copying src/tui_wifi/ui/screens/details.py -> tui_wifi-0.1.0/src/tui_wifi/ui/screens
+copying src/tui_wifi/ui/screens/main.py -> tui_wifi-0.1.0/src/tui_wifi/ui/screens
+copying src/tui_wifi/ui/screens/saved.py -> tui_wifi-0.1.0/src/tui_wifi/ui/screens
+copying src/tui_wifi/ui/widgets/__init__.py -> tui_wifi-0.1.0/src/tui_wifi/ui/widgets
+copying src/tui_wifi/ui/widgets/network_list.py -> tui_wifi-0.1.0/src/tui_wifi/ui/widgets
+copying src/tui_wifi.egg-info/SOURCES.txt -> tui_wifi-0.1.0/src/tui_wifi.egg-info
+Writing tui_wifi-0.1.0/setup.cfg
+Creating tar archive
+removing 'tui_wifi-0.1.0' (and everything under it)
+* Building wheel from sdist
+* Creating isolated environment: venv+pip...
+* Installing packages in isolated environment:
+  - setuptools>=77,<83
+  - wheel>=0.45,<1
+* Getting build dependencies for wheel...
+running egg_info
+writing src/tui_wifi.egg-info/PKG-INFO
+writing dependency_links to src/tui_wifi.egg-info/dependency_links.txt
+writing entry points to src/tui_wifi.egg-info/entry_points.txt
+writing requirements to src/tui_wifi.egg-info/requires.txt
+writing top-level names to src/tui_wifi.egg-info/top_level.txt
+reading manifest file 'src/tui_wifi.egg-info/SOURCES.txt'
+adding license file 'LICENSE'
+writing manifest file 'src/tui_wifi.egg-info/SOURCES.txt'
+* Building wheel...
+running bdist_wheel
+running build
+running build_py
+creating build/lib/tui_wifi
+copying src/tui_wifi/app.py -> build/lib/tui_wifi
+copying src/tui_wifi/logging_config.py -> build/lib/tui_wifi
+copying src/tui_wifi/errors.py -> build/lib/tui_wifi
+copying src/tui_wifi/__init__.py -> build/lib/tui_wifi
+copying src/tui_wifi/cli.py -> build/lib/tui_wifi
+copying src/tui_wifi/compat.py -> build/lib/tui_wifi
+copying src/tui_wifi/secrets.py -> build/lib/tui_wifi
+copying src/tui_wifi/grouping.py -> build/lib/tui_wifi
+copying src/tui_wifi/__main__.py -> build/lib/tui_wifi
+copying src/tui_wifi/models.py -> build/lib/tui_wifi
+creating build/lib/tui_wifi/ui
+copying src/tui_wifi/ui/__init__.py -> build/lib/tui_wifi/ui
+creating build/lib/tui_wifi/backends
+copying src/tui_wifi/backends/parsing.py -> build/lib/tui_wifi/backends
+copying src/tui_wifi/backends/nmcli.py -> build/lib/tui_wifi/backends
+copying src/tui_wifi/backends/nmcli_core.py -> build/lib/tui_wifi/backends
+copying src/tui_wifi/backends/fake.py -> build/lib/tui_wifi/backends
+copying src/tui_wifi/backends/__init__.py -> build/lib/tui_wifi/backends
+copying src/tui_wifi/backends/nmcli_mutations.py -> build/lib/tui_wifi/backends
+copying src/tui_wifi/backends/base.py -> build/lib/tui_wifi/backends
+copying src/tui_wifi/backends/nmcli_profiles.py -> build/lib/tui_wifi/backends
+creating build/lib/tui_wifi/process
+copying src/tui_wifi/process/runner.py -> build/lib/tui_wifi/process
+copying src/tui_wifi/process/fake.py -> build/lib/tui_wifi/process
+copying src/tui_wifi/process/__init__.py -> build/lib/tui_wifi/process
+creating build/lib/tui_wifi/services
+copying src/tui_wifi/services/__init__.py -> build/lib/tui_wifi/services
+copying src/tui_wifi/services/wifi.py -> build/lib/tui_wifi/services
+creating build/lib/tui_wifi/ui/dialogs
+copying src/tui_wifi/ui/dialogs/common.py -> build/lib/tui_wifi/ui/dialogs
+copying src/tui_wifi/ui/dialogs/__init__.py -> build/lib/tui_wifi/ui/dialogs
+creating build/lib/tui_wifi/ui/screens
+copying src/tui_wifi/ui/screens/main.py -> build/lib/tui_wifi/ui/screens
+copying src/tui_wifi/ui/screens/saved.py -> build/lib/tui_wifi/ui/screens
+copying src/tui_wifi/ui/screens/__init__.py -> build/lib/tui_wifi/ui/screens
+copying src/tui_wifi/ui/screens/details.py -> build/lib/tui_wifi/ui/screens
+creating build/lib/tui_wifi/ui/widgets
+copying src/tui_wifi/ui/widgets/__init__.py -> build/lib/tui_wifi/ui/widgets
+copying src/tui_wifi/ui/widgets/network_list.py -> build/lib/tui_wifi/ui/widgets
+running egg_info
+writing src/tui_wifi.egg-info/PKG-INFO
+writing dependency_links to src/tui_wifi.egg-info/dependency_links.txt
+writing entry points to src/tui_wifi.egg-info/entry_points.txt
+writing requirements to src/tui_wifi.egg-info/requires.txt
+writing top-level names to src/tui_wifi.egg-info/top_level.txt
+reading manifest file 'src/tui_wifi.egg-info/SOURCES.txt'
+adding license file 'LICENSE'
+writing manifest file 'src/tui_wifi.egg-info/SOURCES.txt'
+copying src/tui_wifi/ui/tui_wifi.tcss -> build/lib/tui_wifi/ui
+installing to build/bdist.linux-x86_64/wheel
+running install
+running install_lib
+creating build/bdist.linux-x86_64/wheel
+creating build/bdist.linux-x86_64/wheel/tui_wifi
+copying build/lib/tui_wifi/app.py -> build/bdist.linux-x86_64/wheel/./tui_wifi
+copying build/lib/tui_wifi/logging_config.py -> build/bdist.linux-x86_64/wheel/./tui_wifi
+copying build/lib/tui_wifi/errors.py -> build/bdist.linux-x86_64/wheel/./tui_wifi
+creating build/bdist.linux-x86_64/wheel/tui_wifi/ui
+copying build/lib/tui_wifi/ui/tui_wifi.tcss -> build/bdist.linux-x86_64/wheel/./tui_wifi/ui
+copying build/lib/tui_wifi/ui/__init__.py -> build/bdist.linux-x86_64/wheel/./tui_wifi/ui
+creating build/bdist.linux-x86_64/wheel/tui_wifi/ui/dialogs
+copying build/lib/tui_wifi/ui/dialogs/common.py -> build/bdist.linux-x86_64/wheel/./tui_wifi/ui/dialogs
+copying build/lib/tui_wifi/ui/dialogs/__init__.py -> build/bdist.linux-x86_64/wheel/./tui_wifi/ui/dialogs
+creating build/bdist.linux-x86_64/wheel/tui_wifi/ui/screens
+copying build/lib/tui_wifi/ui/screens/main.py -> build/bdist.linux-x86_64/wheel/./tui_wifi/ui/screens
+copying build/lib/tui_wifi/ui/screens/saved.py -> build/bdist.linux-x86_64/wheel/./tui_wifi/ui/screens
+copying build/lib/tui_wifi/ui/screens/__init__.py -> build/bdist.linux-x86_64/wheel/./tui_wifi/ui/screens
+copying build/lib/tui_wifi/ui/screens/details.py -> build/bdist.linux-x86_64/wheel/./tui_wifi/ui/screens
+creating build/bdist.linux-x86_64/wheel/tui_wifi/ui/widgets
+copying build/lib/tui_wifi/ui/widgets/__init__.py -> build/bdist.linux-x86_64/wheel/./tui_wifi/ui/widgets
+copying build/lib/tui_wifi/ui/widgets/network_list.py -> build/bdist.linux-x86_64/wheel/./tui_wifi/ui/widgets
+copying build/lib/tui_wifi/__init__.py -> build/bdist.linux-x86_64/wheel/./tui_wifi
+creating build/bdist.linux-x86_64/wheel/tui_wifi/backends
+copying build/lib/tui_wifi/backends/parsing.py -> build/bdist.linux-x86_64/wheel/./tui_wifi/backends
+copying build/lib/tui_wifi/backends/nmcli.py -> build/bdist.linux-x86_64/wheel/./tui_wifi/backends
+copying build/lib/tui_wifi/backends/nmcli_core.py -> build/bdist.linux-x86_64/wheel/./tui_wifi/backends
+copying build/lib/tui_wifi/backends/fake.py -> build/bdist.linux-x86_64/wheel/./tui_wifi/backends
+copying build/lib/tui_wifi/backends/__init__.py -> build/bdist.linux-x86_64/wheel/./tui_wifi/backends
+copying build/lib/tui_wifi/backends/nmcli_mutations.py -> build/bdist.linux-x86_64/wheel/./tui_wifi/backends
+copying build/lib/tui_wifi/backends/base.py -> build/bdist.linux-x86_64/wheel/./tui_wifi/backends
+copying build/lib/tui_wifi/backends/nmcli_profiles.py -> build/bdist.linux-x86_64/wheel/./tui_wifi/backends
+copying build/lib/tui_wifi/cli.py -> build/bdist.linux-x86_64/wheel/./tui_wifi
+creating build/bdist.linux-x86_64/wheel/tui_wifi/process
+copying build/lib/tui_wifi/process/runner.py -> build/bdist.linux-x86_64/wheel/./tui_wifi/process
+copying build/lib/tui_wifi/process/fake.py -> build/bdist.linux-x86_64/wheel/./tui_wifi/process
+copying build/lib/tui_wifi/process/__init__.py -> build/bdist.linux-x86_64/wheel/./tui_wifi/process
+creating build/bdist.linux-x86_64/wheel/tui_wifi/services
+copying build/lib/tui_wifi/services/__init__.py -> build/bdist.linux-x86_64/wheel/./tui_wifi/services
+copying build/lib/tui_wifi/services/wifi.py -> build/bdist.linux-x86_64/wheel/./tui_wifi/services
+copying build/lib/tui_wifi/compat.py -> build/bdist.linux-x86_64/wheel/./tui_wifi
+copying build/lib/tui_wifi/secrets.py -> build/bdist.linux-x86_64/wheel/./tui_wifi
+copying build/lib/tui_wifi/grouping.py -> build/bdist.linux-x86_64/wheel/./tui_wifi
+copying build/lib/tui_wifi/__main__.py -> build/bdist.linux-x86_64/wheel/./tui_wifi
+copying build/lib/tui_wifi/models.py -> build/bdist.linux-x86_64/wheel/./tui_wifi
+running install_egg_info
+Copying src/tui_wifi.egg-info to build/bdist.linux-x86_64/wheel/./tui_wifi-0.1.0-py3.10.egg-info
+running install_scripts
+creating build/bdist.linux-x86_64/wheel/tui_wifi-0.1.0.dist-info/WHEEL
+creating '/home/runner/work/tui-wifi/tui-wifi/dist/.tmp-2awnyv97/tui_wifi-0.1.0-py3-none-any.whl' and adding 'build/bdist.linux-x86_64/wheel' to it
+adding 'tui_wifi/__init__.py'
+adding 'tui_wifi/__main__.py'
+adding 'tui_wifi/app.py'
+adding 'tui_wifi/cli.py'
+adding 'tui_wifi/compat.py'
+adding 'tui_wifi/errors.py'
+adding 'tui_wifi/grouping.py'
+adding 'tui_wifi/logging_config.py'
+adding 'tui_wifi/models.py'
+adding 'tui_wifi/secrets.py'
+adding 'tui_wifi/backends/__init__.py'
+adding 'tui_wifi/backends/base.py'
+adding 'tui_wifi/backends/fake.py'
+adding 'tui_wifi/backends/nmcli.py'
+adding 'tui_wifi/backends/nmcli_core.py'
+adding 'tui_wifi/backends/nmcli_mutations.py'
+adding 'tui_wifi/backends/nmcli_profiles.py'
+adding 'tui_wifi/backends/parsing.py'
+adding 'tui_wifi/process/__init__.py'
+adding 'tui_wifi/process/fake.py'
+adding 'tui_wifi/process/runner.py'
+adding 'tui_wifi/services/__init__.py'
+adding 'tui_wifi/services/wifi.py'
+adding 'tui_wifi/ui/__init__.py'
+adding 'tui_wifi/ui/tui_wifi.tcss'
+adding 'tui_wifi/ui/dialogs/__init__.py'
+adding 'tui_wifi/ui/dialogs/common.py'
+adding 'tui_wifi/ui/screens/__init__.py'
+adding 'tui_wifi/ui/screens/details.py'
+adding 'tui_wifi/ui/screens/main.py'
+adding 'tui_wifi/ui/screens/saved.py'
+adding 'tui_wifi/ui/widgets/__init__.py'
+adding 'tui_wifi/ui/widgets/network_list.py'
+adding 'tui_wifi-0.1.0.dist-info/licenses/LICENSE'
+adding 'tui_wifi-0.1.0.dist-info/METADATA'
+adding 'tui_wifi-0.1.0.dist-info/WHEEL'
+adding 'tui_wifi-0.1.0.dist-info/entry_points.txt'
+adding 'tui_wifi-0.1.0.dist-info/top_level.txt'
+adding 'tui_wifi-0.1.0.dist-info/RECORD'
+removing build/bdist.linux-x86_64/wheel
+Successfully built tui_wifi-0.1.0.tar.gz and tui_wifi-0.1.0-py3-none-any.whl
+status=0
