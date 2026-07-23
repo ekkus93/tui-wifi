@@ -1,4 +1,4 @@
-"""Provide network list functionality."""
+"""Provide the nearby-network table widget."""
 
 from __future__ import annotations
 
@@ -11,16 +11,16 @@ if TYPE_CHECKING:
 
 
 class NetworkTable(DataTable[str]):
-    """A stable, color-independent list of visible Wi-Fi networks."""
+    """Display a stable, color-independent list of visible Wi-Fi networks."""
 
     def on_mount(self) -> None:
-        """Perform on mount."""
+        """Configure table columns and row selection."""
         self.cursor_type = "row"
         self.zebra_stripes = True
         self.add_columns("", "Network", "Signal", "Security", "Saved")
 
     def load_networks(self, networks: tuple[NetworkGroup, ...]) -> None:
-        """Perform load networks."""
+        """Replace table rows while preserving the selected network when possible."""
         current_identity = self.selected_identity
         self.clear()
         for network in networks:
@@ -38,20 +38,21 @@ class NetworkTable(DataTable[str]):
                 saved,
                 key=network.identity,
             )
-        if current_identity is not None:
-            try:
-                row = self.get_row_index(current_identity)
-            except Exception:
-                return
-            self.move_cursor(row=row)
+        if current_identity is None:
+            return
+        try:
+            row = self.get_row_index(current_identity)
+        except LookupError:
+            return
+        self.move_cursor(row=row)
 
     @property
     def selected_identity(self) -> str | None:
-        """Perform selected identity."""
+        """Return the stable identity of the selected row."""
         if self.row_count == 0:
             return None
-        coordinate = self.cursor_coordinate
         try:
-            return str(self.coordinate_to_cell_key(coordinate).row_key.value)
-        except Exception:
+            cell_key = self.coordinate_to_cell_key(self.cursor_coordinate)
+        except LookupError:
             return None
+        return str(cell_key.row_key.value)
