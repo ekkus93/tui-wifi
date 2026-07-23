@@ -1,4 +1,4 @@
-name: Temporary pytest diagnostics
+name: Temporary Ruff diagnostics
 
 on:
   push:
@@ -9,7 +9,6 @@ permissions:
   contents: write
 
 env:
-  PYTHONWARNINGS: error
   PIP_DISABLE_PIP_VERSION_CHECK: "1"
 
 jobs:
@@ -23,18 +22,18 @@ jobs:
           show-progress: false
       - uses: actions/setup-python@v6
         with:
-          python-version: "3.11"
+          python-version: "3.13"
           cache: pip
       - run: python -m pip install --quiet -e '.[dev]'
-      - name: Capture full test failure
+      - name: Capture full Ruff output
         shell: bash
         run: |
           set +e
-          pytest -m 'not real_network' -q --tb=short > STRICT_DIAGNOSTICS.txt 2>&1
+          ruff check . --output-format concise > STRICT_DIAGNOSTICS.txt 2>&1
           status=$?
           printf '\nexit_status=%s\n' "$status" >> STRICT_DIAGNOSTICS.txt
           git config user.name github-actions[bot]
           git config user.email 41898282+github-actions[bot]@users.noreply.github.com
           git add STRICT_DIAGNOSTICS.txt
-          git commit -m "Capture strict pytest diagnostics"
+          git commit -m "Capture complete Ruff diagnostics"
           git push origin HEAD:agent/enforce-zero-warnings
