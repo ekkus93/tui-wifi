@@ -1,4 +1,4 @@
-"""Provide saved functionality."""
+"""Provide the saved-network management screen."""
 
 from __future__ import annotations
 
@@ -20,7 +20,7 @@ if TYPE_CHECKING:
 
 
 class SavedNetworksScreen(Screen[None]):
-    """Represent SavedNetworksScreen."""
+    """Display and modify saved NetworkManager Wi-Fi profiles."""
 
     BINDINGS: ClassVar[list[BindingType]] = [
         ("escape", "app.pop_screen", "Back"),
@@ -28,12 +28,12 @@ class SavedNetworksScreen(Screen[None]):
     ]
 
     def __init__(self, service: WifiService) -> None:
-        """Initialize the instance."""
+        """Initialize the screen with its application service."""
         super().__init__()
         self.service = service
 
     def compose(self) -> ComposeResult:
-        """Perform compose."""
+        """Compose saved-profile widgets and actions."""
         yield Header()
         yield Static("Saved networks", classes="screen-title")
         yield DataTable(id="saved-table")
@@ -45,14 +45,14 @@ class SavedNetworksScreen(Screen[None]):
         yield Footer()
 
     def on_mount(self) -> None:
-        """Perform on mount."""
+        """Configure the saved-profile table and load its rows."""
         table = self.query_one("#saved-table", DataTable)
         table.cursor_type = "row"
         table.add_columns("Profile", "SSID", "Auto", "Active", "Interface")
         self._reload()
 
     def _reload(self) -> None:
-        """Perform reload."""
+        """Reload rows from the latest service snapshot."""
         table = self.query_one("#saved-table", DataTable)
         table.clear()
         for profile in self.service.snapshot.profiles:
@@ -66,17 +66,18 @@ class SavedNetworksScreen(Screen[None]):
             )
 
     def _selected_uuid(self) -> str | None:
-        """Perform selected uuid."""
+        """Return the UUID of the selected saved profile."""
         table = self.query_one("#saved-table", DataTable)
         if table.row_count == 0:
             return None
         try:
-            return str(table.coordinate_to_cell_key(table.cursor_coordinate).row_key.value)
-        except (KeyError, IndexError):
+            cell_key = table.coordinate_to_cell_key(table.cursor_coordinate)
+        except LookupError:
             return None
+        return str(cell_key.row_key.value)
 
     def on_button_pressed(self, event: Button.Pressed) -> None:
-        """Perform on button pressed."""
+        """Dispatch a saved-profile action button."""
         if event.button.id == "back":
             self.app.pop_screen()
             return
@@ -97,7 +98,10 @@ class SavedNetworksScreen(Screen[None]):
             )
         elif event.button.id == "autoconnect":
             self.run_worker(
-                self._set_autoconnect(profile_uuid, not profile.autoconnect),
+                self._set_autoconnect(
+                    profile_uuid,
+                    enabled=not profile.autoconnect,
+                ),
                 group="saved",
             )
         elif event.button.id == "connect":
@@ -113,11 +117,11 @@ class SavedNetworksScreen(Screen[None]):
             self.run_worker(self._activate(profile_uuid, selected), group="saved")
 
     def _start_delete(self, uuid: str) -> None:
-        """Perform start delete."""
+        """Start deletion for one saved profile."""
         self.run_worker(self._delete(uuid), group="saved")
 
     async def _delete(self, uuid: str) -> None:
-        """Perform delete."""
+        """Delete one saved profile and reload the table."""
         try:
             await self.service.delete_profile(uuid)
             self._reload()
@@ -125,17 +129,19 @@ class SavedNetworksScreen(Screen[None]):
             self.app.push_screen(MessageDialog("Could not forget network", exc.summary))
 
     async def _set_autoconnect(self, uuid: str, *, enabled: bool) -> None:
-        """Perform set autoconnect."""
+        """Update auto-connect for one saved profile."""
         try:
-            await self.service.set_profile_autoconnect(uuid, enabled)
+            await self.service.set_profile_autoconnect(uuid, enabled=enabled)
             self._reload()
         except WifiError as exc:
             self.app.push_screen(MessageDialog("Could not update network", exc.summary))
 
     async def _activate(self, uuid: str, interface: str) -> None:
-        """Perform activate."""
+        """Activate one saved profile on the selected interface."""
         try:
-            await self.service.backend.activate_saved_profile(SavedProfileRequest(uuid, interface))
+            await self.service.backend.activate_saved_profile(
+                SavedProfileRequest(uuid, interface),
+            )
             await self.service.refresh()
             self.app.pop_screen()
         except WifiError as exc:
