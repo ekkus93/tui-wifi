@@ -1,4 +1,4 @@
-"""Verify test logging behavior."""
+"""Verify bounded debug logging behavior."""
 
 from __future__ import annotations
 
@@ -15,9 +15,10 @@ if TYPE_CHECKING:
 
 
 def test_debug_logging_uses_xdg_and_is_bounded(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
 ) -> None:
-    """Verify test debug logging uses xdg and is bounded."""
+    """Verify debug logging uses the XDG state directory and bounded file output."""
     monkeypatch.setenv("XDG_STATE_HOME", str(tmp_path))
     path, warning = configure_debug_logging()
     verify(warning is None)
