@@ -1,0 +1,143 @@
+name: One-shot NetworkManager frequency fix
+
+on:
+  push:
+    branches:
+      - master
+
+permissions:
+  contents: write
+
+env:
+  PYTHONWARNINGS: error
+  PIP_DISABLE_PIP_VERSION_CHECK: "1"
+
+jobs:
+  fix:
+    if: github.event.head_commit.message == 'Run NetworkManager frequency compatibility fix'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v6
+        with:
+          show-progress: false
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.13"
+          cache: pip
+
+      - name: Install development dependencies
+        run: python -m pip install --quiet -e '.[dev]'
+
+      - name: Apply frequency compatibility fix and regression test
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          core_path = Path("src/tui_wifi/backends/nmcli_core.py")
+          core = core_path.read_text(encoding="utf-8")
+          core_anchor = """from tui_wifi.process import (
+              ProcessMissingExecutableError,
+              ProcessNonZeroExitError,
+              ProcessRequest,
+              ProcessRunner,
+              ProcessTimeoutError,
+          )
+
+
+          class NmcliCore:
+          """
+          core_replacement = """from tui_wifi.process import (
+              ProcessMissingExecutableError,
+              ProcessNonZeroExitError,
+              ProcessRequest,
+              ProcessRunner,
+              ProcessTimeoutError,
+          )
+
+          _MEGAHERTZ_SUFFIX = " MHz"
+
+
+          def _parse_frequency(value: str) -> int | None:
+              \"\"\"Parse nmcli frequencies with or without its legacy MHz suffix.\"\"\"
+              normalized = value.strip().removesuffix(_MEGAHERTZ_SUFFIX)
+              return parse_optional_int(normalized)
+
+
+          class NmcliCore:
+          """
+          if core.count(core_anchor) != 1:
+              raise SystemExit("nmcli_core insertion anchor was not found exactly once")
+          core = core.replace(core_anchor, core_replacement)
+          frequency_anchor = "frequency = parse_optional_int(frequency_text)"
+          if core.count(frequency_anchor) != 1:
+              raise SystemExit("frequency parser call anchor was not found exactly once")
+          core = core.replace(frequency_anchor, "frequency = _parse_frequency(frequency_text)")
+          core_path.write_text(core, encoding="utf-8")
+
+          test_path = Path("tests/unit/test_nmcli_scan.py")
+          test = test_path.read_text(encoding="utf-8")
+          constants_anchor = """EXPECTED_ACCESS_POINT_COUNT = 11
+          CHANNEL_14 = 14
+          CHANNEL_36 = 36
+          """
+          constants_replacement = """EXPECTED_ACCESS_POINT_COUNT = 11
+          CHANNEL_6 = 6
+          CHANNEL_14 = 14
+          CHANNEL_36 = 36
+          FREQUENCY_2437 = 2437
+          """
+          if test.count(constants_anchor) != 1:
+              raise SystemExit("scan test constants anchor was not found exactly once")
+          test = test.replace(constants_anchor, constants_replacement)
+          row_anchor = "*:Open:00\\:11\\:22\\:33\\:44\\:01:90:2412:--\\n"
+          row_replacement = "*:Open:00\\:11\\:22\\:33\\:44\\:01:90:2437 MHz:--\\n"
+          if test.count(row_anchor) != 1:
+              raise SystemExit("legacy frequency fixture row was not found exactly once")
+          test = test.replace(row_anchor, row_replacement)
+          assertions_anchor = """        verify(access_points[0].active is True)
+                  verify(access_points[0].security == SecurityClass.OPEN)
+          """
+          assertions_replacement = """        verify(access_points[0].active is True)
+                  verify(access_points[0].security == SecurityClass.OPEN)
+                  verify(access_points[0].frequency == FREQUENCY_2437)
+                  verify(access_points[0].channel == CHANNEL_6)
+          """
+          if test.count(assertions_anchor) != 1:
+              raise SystemExit("scan test assertions anchor was not found exactly once")
+          test = test.replace(assertions_anchor, assertions_replacement)
+          test_path.write_text(test, encoding="utf-8")
+          PY
+
+      - name: Apply canonical formatting
+        run: black .
+
+      - name: Run all Ruff checks
+        run: ruff check .
+
+      - name: Run strict Mypy
+        run: mypy src/tui_wifi
+
+      - name: Run tests
+        run: pytest -m 'not real_network'
+
+      - name: Enforce critical coverage
+        run: python scripts/check_critical_coverage.py coverage.json
+
+      - name: Build package
+        run: python -m build
+
+      - name: Remove one-shot files
+        run: |
+          rm .github/workflows/nmcli-frequency-fix.yml
+          rm .nmcli-frequency-fix-trigger
+
+      - name: Commit validated fix
+        run: |
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add -A
+          git commit -m 'Support NetworkManager frequency units'
+          git push origin HEAD:master
