@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import sys
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
@@ -35,15 +36,15 @@ def branch_percentage(report: dict[str, Any], path: str) -> float:
     file_report = files[path]
     if not isinstance(file_report, dict):
         message = f"coverage report contains invalid module data: {path}"
-        raise ValueError(message)
+        raise TypeError(message)
     summary = file_report.get("summary")
     if not isinstance(summary, dict):
         message = f"coverage report contains no summary for module: {path}"
-        raise ValueError(message)
+        raise TypeError(message)
     value = summary.get("percent_branches_covered")
     if not isinstance(value, int | float):
         message = f"coverage report contains no branch percentage for module: {path}"
-        raise ValueError(message)
+        raise TypeError(message)
     return float(value)
 
 
@@ -65,7 +66,7 @@ def load_report(path: Path) -> dict[str, Any]:
         value = json.load(handle)
     if not isinstance(value, dict):
         message = "coverage report root must be a JSON object"
-        raise ValueError(message)
+        raise TypeError(message)
     return value
 
 
@@ -87,15 +88,15 @@ def main(argv: list[str] | None = None) -> int:
     args = build_parser().parse_args(argv)
     try:
         failures = evaluate(load_report(args.report))
-    except (OSError, json.JSONDecodeError, ValueError) as exc:
-        print(f"critical coverage check failed: {exc}")
+    except (OSError, json.JSONDecodeError, TypeError, ValueError) as exc:
+        sys.stderr.write(f"critical coverage check failed: {exc}\n")
         return 2
     if failures:
-        print("critical coverage gates failed:")
+        sys.stderr.write("critical coverage gates failed:\n")
         for failure in failures:
-            print(f"- {failure}")
+            sys.stderr.write(f"- {failure}\n")
         return 1
-    print("All critical module branch-coverage gates passed.")
+    sys.stdout.write("All critical module branch-coverage gates passed.\n")
     return 0
 
 

@@ -3,19 +3,25 @@
 from __future__ import annotations
 
 import json
-from pathlib import Path
+from typing import TYPE_CHECKING
 
 import pytest
-from scripts.check_critical_coverage import GATES, branch_percentage, evaluate, load_report, main
 
+from scripts.check_critical_coverage import GATES, branch_percentage, evaluate, load_report, main
 from tests.assertions import verify
+
+if TYPE_CHECKING:
+    from pathlib import Path
+
+INVALID_INPUT_STATUS = 2
 
 
 def report_with_percentage(percentage: float) -> dict[str, object]:
     """Build a complete synthetic report with one percentage for every gate."""
     return {
         "files": {
-            gate.path: {"summary": {"percent_branches_covered": percentage}} for gate in GATES
+            gate.path: {"summary": {"percent_branches_covered": percentage}}
+            for gate in GATES
         },
     }
 
@@ -28,8 +34,14 @@ def write_report(path: Path, percentage: float) -> None:
 def test_all_module_gates_pass_at_or_above_threshold() -> None:
     """Verify equality with the strongest configured floor is accepted."""
     report = report_with_percentage(100.0)
+    files = report["files"]
+    verify(isinstance(files, dict))
     for gate in GATES:
-        report["files"][gate.path]["summary"]["percent_branches_covered"] = gate.minimum
+        module = files[gate.path]
+        verify(isinstance(module, dict))
+        summary = module["summary"]
+        verify(isinstance(summary, dict))
+        summary["percent_branches_covered"] = gate.minimum
     verify(evaluate(report) == ())
 
 
@@ -45,9 +57,11 @@ def test_missing_or_invalid_module_data_fails_explicitly() -> None:
     """Verify absent and malformed structured fields are never treated as zero or success."""
     with pytest.raises(ValueError, match="required module"):
         branch_percentage({"files": {}}, GATES[0].path)
-    with pytest.raises(ValueError, match="no summary"):
+    with pytest.raises(TypeError, match="invalid module data"):
+        branch_percentage({"files": {GATES[0].path: []}}, GATES[0].path)
+    with pytest.raises(TypeError, match="no summary"):
         branch_percentage({"files": {GATES[0].path: {}}}, GATES[0].path)
-    with pytest.raises(ValueError, match="no branch percentage"):
+    with pytest.raises(TypeError, match="no branch percentage"):
         branch_percentage(
             {"files": {GATES[0].path: {"summary": {}}}},
             GATES[0].path,
@@ -58,7 +72,7 @@ def test_load_report_rejects_non_object_root(tmp_path: Path) -> None:
     """Verify malformed JSON report shapes fail before gate evaluation."""
     report_path = tmp_path / "coverage.json"
     report_path.write_text("[]", encoding="utf-8")
-    with pytest.raises(ValueError, match="root"):
+    with pytest.raises(TypeError, match="root"):
         load_report(report_path)
 
 
@@ -74,8 +88,8 @@ def test_main_statuses_cover_success_regression_and_invalid_input(
 
     write_report(report_path, 0.0)
     verify(main([str(report_path)]) == 1)
-    verify("gates failed" in capsys.readouterr().out)
+    verify("gates failed" in capsys.readouterr().err)
 
     report_path.write_text("not-json", encoding="utf-8")
-    verify(main([str(report_path)]) == 2)
-    verify("check failed" in capsys.readouterr().out)
+    verify(main([str(report_path)]) == INVALID_INPUT_STATUS)
+    verify("check failed" in capsys.readouterr().err)
