@@ -1,4 +1,4 @@
-"""Verify test parsing behavior."""
+"""Verify strict NetworkManager output parsing."""
 
 from __future__ import annotations
 
@@ -8,22 +8,26 @@ from tests.assertions import verify
 from tui_wifi.backends.parsing import (
     frequency_to_channel,
     parse_bool,
+    parse_device_state,
+    parse_ip_values,
+    parse_nm_state,
+    parse_optional_int,
     parse_security,
     parse_signal,
     split_escaped,
     validate_uuid,
 )
 from tui_wifi.errors import ErrorCategory, WifiError
-from tui_wifi.models import SecurityClass
+from tui_wifi.models import DeviceState, NetworkManagerState, SecurityClass
 
-_COMPARISON_VALUE_14 = 14
-_COMPARISON_VALUE_36 = 36
-_COMPARISON_VALUE_75 = 75
-_COMPARISON_VALUE_5180 = 5180
+_CHANNEL_14 = 14
+_CHANNEL_36 = 36
+_SIGNAL_75 = 75
+_FREQUENCY_5180 = 5180
 
 
 def test_split_escaped_colon_and_backslash() -> None:
-    """Verify test split escaped colon and backslash."""
+    """Verify escaped separators and backslashes are decoded."""
     verify(
         split_escaped(r"Cafe\:West:path\\name::", 4)
         == [
@@ -36,14 +40,14 @@ def test_split_escaped_colon_and_backslash() -> None:
 
 
 def test_split_escaped_rejects_dangling_escape() -> None:
-    """Verify test split escaped rejects dangling escape."""
+    """Verify a dangling escape fails parsing."""
     with pytest.raises(WifiError) as caught:
         split_escaped("bad\\")
     verify(caught.value.category == ErrorCategory.PARSE_FAILURE)
 
 
 def test_split_escaped_rejects_wrong_field_count() -> None:
-    """Verify test split escaped rejects wrong field count."""
+    """Verify an unexpected field count fails parsing."""
     with pytest.raises(WifiError):
         split_escaped("one:two", 3)
 
@@ -53,14 +57,14 @@ def test_split_escaped_rejects_wrong_field_count() -> None:
     [("yes", True), ("disabled", False), ("1", True), ("0", False)],
 )
 def test_parse_bool(raw: str, *, expected: bool) -> None:
-    """Verify test parse bool."""
+    """Verify supported NetworkManager boolean spellings."""
     verify(parse_bool(raw) is expected)
 
 
 def test_parse_signal_validates_range() -> None:
-    """Verify test parse signal validates range."""
+    """Verify signal values are optional and range checked."""
     verify(parse_signal("") is None)
-    verify(parse_signal("75") == _COMPARISON_VALUE_75)
+    verify(parse_signal("75") == _SIGNAL_75)
     with pytest.raises(WifiError):
         parse_signal("101")
 
@@ -79,21 +83,21 @@ def test_parse_signal_validates_range() -> None:
     ],
 )
 def test_security_classification(raw: str, expected: SecurityClass) -> None:
-    """Verify test security classification."""
+    """Verify security modes are classified without unsafe downgrades."""
     verify(parse_security(raw) == expected)
 
 
 def test_frequency_to_channel() -> None:
-    """Verify test frequency to channel."""
+    """Verify supported Wi-Fi frequencies map to channels."""
     verify(frequency_to_channel(2412) == 1)
-    verify(frequency_to_channel(2484) == _COMPARISON_VALUE_14)
-    verify(frequency_to_channel(5180) == _COMPARISON_VALUE_36)
+    verify(frequency_to_channel(2484) == _CHANNEL_14)
+    verify(frequency_to_channel(5180) == _CHANNEL_36)
     verify(frequency_to_channel(5955) == 1)
     verify(frequency_to_channel(1234) is None)
 
 
 def test_validate_uuid() -> None:
-    """Verify test validate uuid."""
+    """Verify connection UUID validation and normalization."""
     value = "00000000-0000-0000-0000-000000000001"
     verify(validate_uuid(value) == value)
     with pytest.raises(WifiError):
@@ -101,17 +105,9 @@ def test_validate_uuid() -> None:
 
 
 def test_additional_scalar_and_state_parsers() -> None:
-    """Verify test additional scalar and state parsers."""
-    from tui_wifi.backends.parsing import (
-        parse_device_state,
-        parse_ip_values,
-        parse_nm_state,
-        parse_optional_int,
-    )
-    from tui_wifi.models import DeviceState, NetworkManagerState
-
+    """Verify integer, state, and IP-address parsing."""
     verify(parse_optional_int("") is None)
-    verify(parse_optional_int("5180") == _COMPARISON_VALUE_5180)
+    verify(parse_optional_int("5180") == _FREQUENCY_5180)
     verify(parse_device_state("connected") == DeviceState.ACTIVATED)
     verify(parse_device_state("future-state") == DeviceState.UNKNOWN)
     verify(parse_nm_state("connected (global)") == NetworkManagerState.CONNECTED_GLOBAL)
