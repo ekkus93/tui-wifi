@@ -143,8 +143,9 @@ def test_saved_empty_selection_no_adapter_and_backend_failure_are_visible() -> N
                     generation=2,
                 ),
             )
-            app.screen.query_one("#saved-table", DataTable).clear()
-            app.screen.query_one("#saved-table", DataTable).add_row(
+            table = app.screen.query_one("#saved-table", DataTable)
+            table.clear()
+            table.add_row(
                 profile.name,
                 profile.ssid,
                 "on",
@@ -152,6 +153,7 @@ def test_saved_empty_selection_no_adapter_and_backend_failure_are_visible() -> N
                 "any",
                 key=profile.uuid,
             )
+            table.move_cursor(row=0)
             await pilot.click("#connect")
             await settle(pilot)
             verify(isinstance(app.screen, MessageDialog))
@@ -160,8 +162,9 @@ def test_saved_empty_selection_no_adapter_and_backend_failure_are_visible() -> N
             await settle(pilot)
 
             service.publish(application_snapshot(profiles=(profile,), generation=3))
-            app.screen.query_one("#saved-table", DataTable).clear()
-            app.screen.query_one("#saved-table", DataTable).add_row(
+            table = app.screen.query_one("#saved-table", DataTable)
+            table.clear()
+            table.add_row(
                 profile.name,
                 profile.ssid,
                 "on",
@@ -169,6 +172,7 @@ def test_saved_empty_selection_no_adapter_and_backend_failure_are_visible() -> N
                 "wlan0",
                 key=profile.uuid,
             )
+            table.move_cursor(row=0)
             backend.failures["set_profile_autoconnect"] = WifiError(ErrorCategory.COMMAND_FAILURE)
             await pilot.click("#autoconnect")
             await settle(pilot)

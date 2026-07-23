@@ -74,14 +74,20 @@ def test_subscription_snapshot_and_idempotent_unsubscribe() -> None:
     service = WifiService(backend)
     first: list[int] = []
     second: list[int] = []
-    unsubscribe_first = lambda: None
 
-    def first_listener(snapshot: object) -> None:
+    def no_op_unsubscribe() -> None:
+        """Provide the initial unsubscribe placeholder."""
+
+    unsubscribe_first = no_op_unsubscribe
+
+    def first_listener(_snapshot: object) -> None:
         first.append(service.snapshot.generation)
         unsubscribe_first()
 
     unsubscribe_first = service.subscribe(first_listener)
-    unsubscribe_second = service.subscribe(lambda _snapshot: second.append(service.snapshot.generation))
+    unsubscribe_second = service.subscribe(
+        lambda _snapshot: second.append(service.snapshot.generation)
+    )
     service.publish(service.snapshot)
     service.publish(service.snapshot)
     unsubscribe_first()
@@ -179,9 +185,11 @@ def test_visible_connection_bssid_policy_is_conservative(bssid_mode: str) -> Non
             network_group(member_bssids=members),
             password=None,
         )
-        request = next(payload for name, payload in backend.calls if name == "connect_visible_network")
+        request = next(
+            payload for name, payload in backend.calls if name == "connect_visible_network"
+        )
         expected = DEFAULT_BSSID if bssid_mode == "single" else None
-        verify(getattr(request, "bssid") == expected)
+        verify(request.bssid == expected)
 
     asyncio.run(scenario())
 

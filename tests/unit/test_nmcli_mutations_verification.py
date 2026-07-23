@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import asyncio
+from typing import TYPE_CHECKING
 
 import pytest
 
@@ -24,8 +25,10 @@ from tui_wifi.backends.base import (
 )
 from tui_wifi.backends.nmcli import NmcliWifiBackend
 from tui_wifi.errors import ErrorCategory, WifiError
-from tui_wifi.models import ActiveWifiConnection
 from tui_wifi.process.fake import FakeProcessRunner
+
+if TYPE_CHECKING:
+    from tui_wifi.models import ActiveWifiConnection
 
 OTHER_UUID = "00000000-0000-0000-0000-000000000002"
 

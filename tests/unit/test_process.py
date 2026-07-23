@@ -6,8 +6,7 @@ from __future__ import annotations
 import asyncio
 import os
 import sys
-from collections.abc import Coroutine
-from typing import Any, TypeVar
+from typing import TYPE_CHECKING, Any, TypeVar
 
 import pytest
 
@@ -21,6 +20,9 @@ from tui_wifi.process import (
     ProcessSpawnError,
     ProcessTimeoutError,
 )
+
+if TYPE_CHECKING:
+    from collections.abc import Coroutine
 
 T = TypeVar("T")
 _EXPECTED_EXIT_CODE = 7
@@ -149,7 +151,8 @@ def test_generic_spawn_failure_redacts_operating_system_message(
 
     async def failing_spawn(*_args: object, **_kwargs: object) -> ControlledProcess:
         """Raise a synthetic operating-system error."""
-        raise OSError("password=spawn-secret")
+        msg = "password=spawn-secret"
+        raise OSError(msg)
 
     monkeypatch.setattr(asyncio, "create_subprocess_exec", failing_spawn)
     request = ProcessRequest("command")
@@ -168,8 +171,10 @@ def test_stdin_delivery_and_none_stdin_behavior() -> None:
                 sys.executable,
                 (
                     "-c",
-                    "import sys; data=sys.stdin.buffer.read(); "
-                    "sys.stdout.buffer.write(data); sys.stderr.buffer.write(data)",
+                    (
+                        "import sys; data=sys.stdin.buffer.read(); "
+                        "sys.stdout.buffer.write(data); sys.stderr.buffer.write(data)"
+                    ),
                 ),
                 stdin="line one\nline two",
             ),
@@ -252,9 +257,11 @@ def test_combined_argument_and_stdin_redaction_preserves_neighboring_text() -> N
                 sys.executable,
                 (
                     "-c",
-                    "import sys; data=sys.stdin.read(); "
-                    "print('prefix', sys.argv[1], data, 'suffix'); "
-                    "print('error', sys.argv[1], data, file=sys.stderr)",
+                    (
+                        "import sys; data=sys.stdin.read(); "
+                        "print('prefix', sys.argv[1], data, 'suffix'); "
+                        "print('error', sys.argv[1], data, file=sys.stderr)"
+                    ),
                     argument_secret,
                 ),
                 stdin=stdin_secret,

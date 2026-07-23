@@ -38,6 +38,8 @@ from tui_wifi.ui.screens.details import DetailsScreen
 from tui_wifi.ui.screens.saved import SavedNetworksScreen
 from tui_wifi.ui.widgets.network_list import NetworkTable
 
+EXPECTED_DUPLICATE_ROWS = 2
+
 
 def test_main_screen_renders_status_priority_connection_and_stale_marker() -> None:
     """Verify every main status state is rendered visibly in priority order."""
@@ -378,14 +380,14 @@ def test_wifi_disable_confirmation_enable_directly_and_failure_visibility() -> N
             service.publish(application_snapshot(active=active_connection()))
             await pilot.pause()
             backend.calls.clear()
-            await pilot.click("#wifi")
+            app.screen.action_toggle_wifi()
             await settle(pilot)
             verify(isinstance(app.screen, ConfirmDialog))
             await pilot.click("#cancel")
             await settle(pilot)
             verify(not any(name == "set_wifi_radio_state" for name, _ in backend.calls))
 
-            await pilot.click("#wifi")
+            app.screen.action_toggle_wifi()
             await settle(pilot)
             await pilot.click("#confirm")
             await settle(pilot)
@@ -399,7 +401,7 @@ def test_wifi_disable_confirmation_enable_directly_and_failure_visibility() -> N
             )
             await pilot.pause()
             backend.failures["set_wifi_radio_state"] = WifiError(ErrorCategory.RADIO_BLOCKED)
-            await pilot.click("#wifi")
+            app.screen.action_toggle_wifi()
             await settle(pilot)
             verify(isinstance(app.screen, MessageDialog))
             verify(len([name for name, _ in backend.calls if name == "set_wifi_radio_state"]) == 1)
@@ -426,7 +428,7 @@ def test_network_selection_persists_and_duplicates_remain_distinct(
             service.publish(application_snapshot(networks=(secured, open_group)))
             await pilot.pause()
             table = app.screen.query_one(NetworkTable)
-            verify(table.row_count == 2)
+            verify(table.row_count == EXPECTED_DUPLICATE_ROWS)
             table.move_cursor(row=1)
             selected = table.selected_identity
             service.publish(application_snapshot(networks=(open_group, secured), generation=2))
@@ -437,11 +439,11 @@ def test_network_selection_persists_and_duplicates_remain_distinct(
             await pilot.pause()
             verify(table.selected_identity != selected)
 
-            monkeypatch.setattr(
-                table,
-                "coordinate_to_cell_key",
-                lambda _coordinate: (_ for _item in ()).throw(LookupError),
-            )
+            def raise_lookup(_coordinate: object) -> object:
+                """Raise the lookup failure exercised by this test."""
+                raise LookupError
+
+            monkeypatch.setattr(table, "coordinate_to_cell_key", raise_lookup)
             verify(table.selected_identity is None)
 
     asyncio.run(scenario())

@@ -4,12 +4,12 @@
 from __future__ import annotations
 
 import asyncio
+from typing import TYPE_CHECKING
 
 import pytest
 
 from tests.assertions import verify
 from tests.factories import access_point, network_group
-from tui_wifi.backends.base import HiddenConnectRequest, VisibleConnectRequest
 from tui_wifi.backends.fake import FakeWifiBackend
 from tui_wifi.errors import ErrorCategory, WifiError
 from tui_wifi.models import (
@@ -21,6 +21,9 @@ from tui_wifi.models import (
 )
 from tui_wifi.secrets import SecretValue
 from tui_wifi.services.wifi import WifiService
+
+if TYPE_CHECKING:
+    from tui_wifi.backends.base import HiddenConnectRequest, VisibleConnectRequest
 
 
 class SequencedRefreshBackend(FakeWifiBackend):

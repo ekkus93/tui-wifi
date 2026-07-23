@@ -40,8 +40,10 @@ def active_detail_command(interface: str = "wlan0") -> tuple[str, ...]:
         "-e",
         "yes",
         "-f",
-        "GENERAL.CONNECTION,GENERAL.CON-UUID,GENERAL.STATE,IP4.ADDRESS,IP4.GATEWAY,"
-        "IP4.DNS,IP6.ADDRESS,IP6.GATEWAY,IP6.DNS",
+        (
+            "GENERAL.CONNECTION,GENERAL.CON-UUID,GENERAL.STATE,IP4.ADDRESS,IP4.GATEWAY,"
+            "IP4.DNS,IP6.ADDRESS,IP6.GATEWAY,IP6.DNS"
+        ),
         "device",
         "show",
         interface,
@@ -83,8 +85,10 @@ def profile_detail_command(uuid: str) -> tuple[str, ...]:
         "-e",
         "yes",
         "-g",
-        "802-11-wireless.ssid,802-11-wireless-security.key-mgmt,"
-        "connection.interface-name,connection.autoconnect",
+        (
+            "802-11-wireless.ssid,802-11-wireless-security.key-mgmt,"
+            "connection.interface-name,connection.autoconnect"
+        ),
         "connection",
         "show",
         "uuid",
