@@ -9,6 +9,11 @@ from tests.assertions import verify
 from tui_wifi import cli
 
 
+def test_cli_program_name_matches_distribution() -> None:
+    """Verify the displayed command name matches the project and distribution."""
+    verify(cli.build_parser().prog == "tui-wifi")
+
+
 def test_cli_interface_and_debug_options() -> None:
     """Verify interface, debug, and mouse command-line options."""
     args = cli.build_parser().parse_args(["--interface", "wlan1", "--debug", "--no-mouse"])
