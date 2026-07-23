@@ -6,11 +6,13 @@ from __future__ import annotations
 import asyncio
 
 import pytest
+
 from tests.assertions import verify
 
 pytest.importorskip("textual")
 
 from textual.binding import Binding
+
 from tui_wifi.app import WifiTuiApp
 from tui_wifi.backends.fake import FakeWifiBackend
 from tui_wifi.models import AccessPoint, SecurityClass
