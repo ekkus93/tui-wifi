@@ -25,28 +25,7 @@ from tui_wifi.process.fake import FakeProcessRunner
 
 OTHER_UUID = "00000000-0000-0000-0000-000000000002"
 THIRD_UUID = "00000000-0000-0000-0000-000000000003"
-
-
-def queue_profile(
-    runner: FakeProcessRunner,
-    *,
-    name: str = "Home profile",
-    uuid: str = DEFAULT_UUID,
-    connection_type: str = "wifi",
-    device: str = "--",
-    summary_autoconnect: str = "yes",
-    detail: str = "Home\nwpa-psk\nwlan0\nyes\n",
-) -> None:
-    """Queue a single profile summary and detail response."""
-    runner.queue(
-        NMCLI_PATH,
-        profile_summary_command(),
-        process_result(
-            stdout=f"{name}:{uuid}:{connection_type}:{device}:{summary_autoconnect}\n",
-        ),
-    )
-    if connection_type in {"wifi", "802-11-wireless"}:
-        runner.queue(NMCLI_PATH, profile_detail_command(uuid), process_result(stdout=detail))
+EXPECTED_ACTIVE_QUERY_COUNT = 2
 
 
 def test_saved_profile_list_filters_non_wifi_rows_and_preserves_order() -> None:
@@ -85,14 +64,7 @@ def test_saved_profile_list_filters_non_wifi_rows_and_preserves_order() -> None:
 
 
 @pytest.mark.parametrize(
-    (
-        "key_mgmt",
-        "security",
-        "device",
-        "expected_active",
-        "ssid",
-        "interface_name",
-    ),
+    "case",
     [
         ("wpa-psk", SecurityClass.WPA2_PERSONAL, "--", False, "Home", "wlan0"),
         ("sae", SecurityClass.WPA3_PERSONAL, "", False, "Home", "wlan0"),
@@ -103,14 +75,10 @@ def test_saved_profile_list_filters_non_wifi_rows_and_preserves_order() -> None:
     ],
 )
 def test_profile_detail_parsing_matrix(
-    key_mgmt: str,
-    security: SecurityClass,
-    device: str,
-    expected_active: bool,
-    ssid: str,
-    interface_name: str,
+    case: tuple[str, SecurityClass, str, bool, str, str],
 ) -> None:
     """Verify profile security, optional fields, and active-state parsing."""
+    key_mgmt, security, device, expected_active, ssid, interface_name = case
 
     async def scenario() -> None:
         runner = FakeProcessRunner()
@@ -150,6 +118,7 @@ def test_profile_detail_parsing_matrix(
 def test_partial_profile_detail_fallbacks(
     detail: str,
     summary_value: str,
+    *,
     expected_autoconnect: bool,
     expected_interface: str | None,
 ) -> None:
@@ -441,7 +410,7 @@ def test_active_connection_uuid_failures_prevent_ssid_query(
 
         verify(caught.value.category == ErrorCategory.PARSE_FAILURE)
         verify(technical_fragment in (caught.value.technical_details or ""))
-        verify(len(runner.requests) == 2)
+        verify(len(runner.requests) == EXPECTED_ACTIVE_QUERY_COUNT)
         runner.assert_finished()
 
     asyncio.run(scenario())
