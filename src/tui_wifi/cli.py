@@ -17,7 +17,7 @@ if TYPE_CHECKING:
 def build_parser() -> argparse.ArgumentParser:
     """Build the command-line argument parser."""
     parser = argparse.ArgumentParser(
-        prog="wifi-tui",
+        prog="tui-wifi",
         description="A desktop-like terminal Wi-Fi manager for NetworkManager.",
     )
     parser.add_argument("--version", action="version", version=f"%(prog)s {__version__}")
