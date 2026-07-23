@@ -78,7 +78,7 @@ line-length = 100
 src = ["src", "tests"]
 
 [tool.ruff.lint]
-select = ["E", "F", "I", "UP", "B", "ASYNC", "C4", "SIM", "RUF"]
+select = ["ALL"]
 
 [tool.mypy]
 python_version = "3.11"
