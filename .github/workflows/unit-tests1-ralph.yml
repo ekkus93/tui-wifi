@@ -14,7 +14,7 @@ env:
 
 jobs:
   implement-and-audit:
-    if: github.actor != 'github-actions[bot]'
+    if: github.actor != 'github-actions[bot]' && github.event.head_commit.message == 'Execute Unit Test Expansion 1'
     runs-on: ubuntu-latest
     steps:
       - name: Check out master
@@ -49,6 +49,7 @@ jobs:
       - name: Remove one-shot staging machinery
         run: |
           rm -rf .github/unit-tests1-payload
+          rm -f .github/unit-tests1-trigger
           rm .github/workflows/unit-tests1-ralph.yml
 
       - name: Run strict implementation audit
