@@ -129,7 +129,7 @@ jobs:
         run: |
           black tests/unit/test_nmcli_profiles.py
           ruff check tests/unit/test_nmcli_profiles.py
-          pytest -q tests/unit/test_nmcli_profiles.py
+          pytest -q tests/unit/test_nmcli_profiles.py --no-cov
       - name: Remove workflow
         run: rm .github/workflows/profile-test-fix.yml
       - name: Commit directly to master
