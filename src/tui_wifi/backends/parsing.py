@@ -1,3 +1,5 @@
+"""Provide parsing functionality."""
+
 from __future__ import annotations
 
 import ipaddress
@@ -8,6 +10,7 @@ from tui_wifi.models import DeviceState, NetworkManagerState, SecurityClass
 
 
 def split_escaped(line: str, expected_fields: int | None = None, separator: str = ":") -> list[str]:
+    """Perform split escaped."""
     fields: list[str] = []
     current: list[str] = []
     escaped = False
@@ -37,6 +40,7 @@ def split_escaped(line: str, expected_fields: int | None = None, separator: str 
 
 
 def parse_bool(value: str) -> bool:
+    """Perform parse bool."""
     normalized = value.strip().lower()
     if normalized in {"yes", "true", "on", "enabled", "1"}:
         return True
@@ -46,33 +50,39 @@ def parse_bool(value: str) -> bool:
 
 
 def parse_signal(value: str) -> int | None:
+    """Perform parse signal."""
     if not value.strip():
         return None
     try:
         signal = int(value)
     except ValueError as exc:
         raise WifiError(
-            ErrorCategory.PARSE_FAILURE, technical_details=f"invalid signal value: {value!r}"
+            ErrorCategory.PARSE_FAILURE,
+            technical_details=f"invalid signal value: {value!r}",
         ) from exc
     if not 0 <= signal <= 100:
         raise WifiError(
-            ErrorCategory.PARSE_FAILURE, technical_details=f"signal outside 0..100: {signal}"
+            ErrorCategory.PARSE_FAILURE,
+            technical_details=f"signal outside 0..100: {signal}",
         )
     return signal
 
 
 def parse_optional_int(value: str) -> int | None:
+    """Perform parse optional int."""
     if not value.strip():
         return None
     try:
         return int(value)
     except ValueError as exc:
         raise WifiError(
-            ErrorCategory.PARSE_FAILURE, technical_details=f"invalid integer: {value!r}"
+            ErrorCategory.PARSE_FAILURE,
+            technical_details=f"invalid integer: {value!r}",
         ) from exc
 
 
 def frequency_to_channel(frequency: int | None) -> int | None:
+    """Perform frequency to channel."""
     if frequency is None:
         return None
     if frequency == 2484:
@@ -87,6 +97,7 @@ def frequency_to_channel(frequency: int | None) -> int | None:
 
 
 def parse_security(value: str) -> SecurityClass:
+    """Perform parse security."""
     normalized = " ".join(value.upper().replace("_", "-").split())
     if normalized in {"", "--", "NONE", "OPEN"}:
         return SecurityClass.OPEN
@@ -111,6 +122,7 @@ def parse_security(value: str) -> SecurityClass:
 
 
 def parse_device_state(value: str) -> DeviceState:
+    """Perform parse device state."""
     normalized = value.strip().lower().replace(" ", "-")
     mapping = {
         "unmanaged": DeviceState.UNMANAGED,
@@ -135,6 +147,7 @@ def parse_device_state(value: str) -> DeviceState:
 
 
 def parse_nm_state(value: str) -> NetworkManagerState:
+    """Perform parse nm state."""
     normalized = value.strip().lower().replace(" ", "-")
     mapping = {
         "connected-(global)": NetworkManagerState.CONNECTED_GLOBAL,
@@ -148,6 +161,7 @@ def parse_nm_state(value: str) -> NetworkManagerState:
 
 
 def validate_uuid(value: str) -> str:
+    """Perform validate uuid."""
     try:
         return str(uuid_module.UUID(value))
     except ValueError as exc:
@@ -158,6 +172,7 @@ def validate_uuid(value: str) -> str:
 
 
 def parse_ip_values(values: list[str]) -> tuple[str, ...]:
+    """Perform parse ip values."""
     parsed: list[str] = []
     for value in values:
         stripped = value.strip()
@@ -167,7 +182,8 @@ def parse_ip_values(values: list[str]) -> tuple[str, ...]:
             ipaddress.ip_interface(stripped)
         except ValueError as exc:
             raise WifiError(
-                ErrorCategory.PARSE_FAILURE, technical_details=f"invalid IP address: {stripped!r}"
+                ErrorCategory.PARSE_FAILURE,
+                technical_details=f"invalid IP address: {stripped!r}",
             ) from exc
         parsed.append(stripped)
     return tuple(parsed)

@@ -1,19 +1,26 @@
+"""Provide network list functionality."""
+
 from __future__ import annotations
+
+from typing import TYPE_CHECKING
 
 from textual.widgets import DataTable
 
-from tui_wifi.models import NetworkGroup
+if TYPE_CHECKING:
+    from tui_wifi.models import NetworkGroup
 
 
 class NetworkTable(DataTable[str]):
     """A stable, color-independent list of visible Wi-Fi networks."""
 
     def on_mount(self) -> None:
+        """Perform on mount."""
         self.cursor_type = "row"
         self.zebra_stripes = True
         self.add_columns("", "Network", "Signal", "Security", "Saved")
 
     def load_networks(self, networks: tuple[NetworkGroup, ...]) -> None:
+        """Perform load networks."""
         current_identity = self.selected_identity
         self.clear()
         for network in networks:
@@ -40,6 +47,7 @@ class NetworkTable(DataTable[str]):
 
     @property
     def selected_identity(self) -> str | None:
+        """Perform selected identity."""
         if self.row_count == 0:
             return None
         coordinate = self.cursor_coordinate

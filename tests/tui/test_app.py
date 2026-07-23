@@ -1,8 +1,12 @@
+"""Verify test app behavior."""
+
 from __future__ import annotations
 
 import asyncio
 
 import pytest
+
+from tests.assertions import verify
 
 pytest.importorskip("textual")
 
@@ -14,7 +18,10 @@ from tui_wifi.ui.widgets.network_list import NetworkTable
 
 
 def test_main_screen_loads_fake_network_without_real_wifi() -> None:
+    """Verify test main screen loads fake network without real wifi."""
+
     async def scenario() -> None:
+        """Perform scenario."""
         backend = FakeWifiBackend()
         backend.access_points["wlan0"] = (
             AccessPoint(
@@ -33,6 +40,6 @@ def test_main_screen_loads_fake_network_without_real_wifi() -> None:
         async with app.run_test(size=(100, 30)) as pilot:
             await pilot.pause()
             await pilot.pause()
-            assert app.screen.query_one(NetworkTable).row_count == 1
+            verify(app.screen.query_one(NetworkTable).row_count == 1)
 
     asyncio.run(scenario())

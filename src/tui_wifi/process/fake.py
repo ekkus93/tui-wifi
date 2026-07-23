@@ -1,3 +1,5 @@
+"""Provide fake functionality."""
+
 from __future__ import annotations
 
 import asyncio
@@ -9,6 +11,8 @@ from tui_wifi.process.runner import ProcessRequest, ProcessResult, ProcessRunner
 
 @dataclass(slots=True)
 class ExpectedProcess:
+    """Represent ExpectedProcess."""
+
     executable: str
     args: tuple[str, ...]
     result: ProcessResult | Exception
@@ -16,7 +20,10 @@ class ExpectedProcess:
 
 
 class FakeProcessRunner(ProcessRunner):
+    """Represent FakeProcessRunner."""
+
     def __init__(self) -> None:
+        """Initialize the instance."""
         self.expected: deque[ExpectedProcess] = deque()
         self.invocations: list[tuple[str, ...]] = []
 
@@ -28,18 +35,24 @@ class FakeProcessRunner(ProcessRunner):
         *,
         delay: float = 0.0,
     ) -> None:
+        """Perform queue."""
         self.expected.append(ExpectedProcess(executable, args, result, delay))
 
     async def run(self, request: ProcessRequest) -> ProcessResult:
+        """Perform run."""
         if not self.expected:
-            raise AssertionError(f"unexpected command: {request.redacted_command!r}")
+            msg = f"unexpected command: {request.redacted_command!r}"
+            raise AssertionError(msg)
         expected = self.expected.popleft()
         actual = (request.executable, *request.args)
         if actual != (expected.executable, *expected.args):
-            raise AssertionError(
+            msg = (
                 "command mismatch\n"
                 f"expected={(expected.executable, *expected.args)!r}\n"
                 f"actual={actual!r}"
+            )
+            raise AssertionError(
+                msg,
             )
         self.invocations.append(request.redacted_command)
         if expected.delay:
@@ -49,5 +62,7 @@ class FakeProcessRunner(ProcessRunner):
         return expected.result
 
     def assert_finished(self) -> None:
+        """Perform assert finished."""
         if self.expected:
-            raise AssertionError(f"{len(self.expected)} expected commands were not executed")
+            msg = f"{len(self.expected)} expected commands were not executed"
+            raise AssertionError(msg)

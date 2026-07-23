@@ -1,26 +1,34 @@
+"""Provide details functionality."""
+
 from __future__ import annotations
 
-from typing import ClassVar
+from typing import TYPE_CHECKING, ClassVar
 
-from textual.app import ComposeResult
-from textual.binding import BindingType
 from textual.screen import Screen
 from textual.widgets import Footer, Header, Static
 
-from tui_wifi.models import ActiveWifiConnection
+if TYPE_CHECKING:
+    from textual.app import ComposeResult
+    from textual.binding import BindingType
+
+    from tui_wifi.models import ActiveWifiConnection
 
 
 class DetailsScreen(Screen[None]):
+    """Represent DetailsScreen."""
+
     BINDINGS: ClassVar[list[BindingType]] = [
         ("escape", "app.pop_screen", "Back"),
         ("q", "app.pop_screen", "Back"),
     ]
 
     def __init__(self, connection: ActiveWifiConnection | None) -> None:
+        """Initialize the instance."""
         super().__init__()
         self.connection = connection
 
     def compose(self) -> ComposeResult:
+        """Perform compose."""
         yield Header()
         if self.connection is None:
             yield Static("No active Wi-Fi connection.", classes="empty-state")

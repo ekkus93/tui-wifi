@@ -1,3 +1,5 @@
+"""Provide models functionality."""
+
 from __future__ import annotations
 
 from dataclasses import dataclass, field
@@ -6,6 +8,8 @@ from enum import StrEnum
 
 
 class BackendAvailability(StrEnum):
+    """Represent BackendAvailability."""
+
     AVAILABLE = "available"
     MISSING_EXECUTABLE = "missing_executable"
     UNAVAILABLE = "unavailable"
@@ -14,6 +18,8 @@ class BackendAvailability(StrEnum):
 
 
 class NetworkManagerState(StrEnum):
+    """Represent NetworkManagerState."""
+
     CONNECTED_GLOBAL = "connected_global"
     CONNECTED_SITE = "connected_site"
     CONNECTED_LOCAL = "connected_local"
@@ -24,6 +30,8 @@ class NetworkManagerState(StrEnum):
 
 
 class WifiRadioState(StrEnum):
+    """Represent WifiRadioState."""
+
     ENABLED = "enabled"
     DISABLED = "disabled"
     HARDWARE_BLOCKED = "hardware_blocked"
@@ -31,6 +39,8 @@ class WifiRadioState(StrEnum):
 
 
 class DeviceState(StrEnum):
+    """Represent DeviceState."""
+
     UNKNOWN = "unknown"
     UNMANAGED = "unmanaged"
     UNAVAILABLE = "unavailable"
@@ -47,6 +57,8 @@ class DeviceState(StrEnum):
 
 
 class OperationKind(StrEnum):
+    """Represent OperationKind."""
+
     NONE = "none"
     REFRESH = "refresh"
     SCAN = "scan"
@@ -58,6 +70,8 @@ class OperationKind(StrEnum):
 
 
 class OperationPhase(StrEnum):
+    """Represent OperationPhase."""
+
     IDLE = "idle"
     RUNNING = "running"
     SUCCEEDED = "succeeded"
@@ -66,6 +80,8 @@ class OperationPhase(StrEnum):
 
 
 class SecurityClass(StrEnum):
+    """Represent SecurityClass."""
+
     OPEN = "open"
     WEP = "wep"
     WPA_PERSONAL = "wpa_personal"
@@ -77,6 +93,7 @@ class SecurityClass(StrEnum):
 
     @property
     def supported(self) -> bool:
+        """Perform supported."""
         return self in {
             SecurityClass.OPEN,
             SecurityClass.WPA_PERSONAL,
@@ -87,10 +104,13 @@ class SecurityClass(StrEnum):
 
     @property
     def requires_password(self) -> bool:
+        """Perform requires password."""
         return self not in {SecurityClass.OPEN, SecurityClass.UNKNOWN}
 
 
 class SignalQuality(StrEnum):
+    """Represent SignalQuality."""
+
     EXCELLENT = "excellent"
     GOOD = "good"
     FAIR = "fair"
@@ -99,6 +119,7 @@ class SignalQuality(StrEnum):
 
     @classmethod
     def from_percent(cls, value: int | None) -> SignalQuality:
+        """Perform from percent."""
         if value is None:
             return cls.UNKNOWN
         if value >= 75:
@@ -112,6 +133,8 @@ class SignalQuality(StrEnum):
 
 @dataclass(frozen=True, slots=True)
 class WifiDevice:
+    """Represent WifiDevice."""
+
     interface: str
     state: DeviceState
     managed: bool
@@ -121,6 +144,8 @@ class WifiDevice:
 
 @dataclass(frozen=True, slots=True)
 class AccessPoint:
+    """Represent AccessPoint."""
+
     ssid: bytes
     display_ssid: str
     bssid: str
@@ -134,6 +159,8 @@ class AccessPoint:
 
 @dataclass(frozen=True, slots=True)
 class NetworkGroup:
+    """Represent NetworkGroup."""
+
     identity: str
     display_ssid: str
     security: SecurityClass
@@ -145,11 +172,14 @@ class NetworkGroup:
 
     @property
     def quality(self) -> SignalQuality:
+        """Perform quality."""
         return SignalQuality.from_percent(self.signal)
 
 
 @dataclass(frozen=True, slots=True)
 class SavedProfile:
+    """Represent SavedProfile."""
+
     name: str
     uuid: str
     ssid: str | None
@@ -161,6 +191,8 @@ class SavedProfile:
 
 @dataclass(frozen=True, slots=True)
 class IPConfiguration:
+    """Represent IPConfiguration."""
+
     addresses: tuple[str, ...] = ()
     gateway: str | None = None
     dns: tuple[str, ...] = ()
@@ -168,6 +200,8 @@ class IPConfiguration:
 
 @dataclass(frozen=True, slots=True)
 class ActiveWifiConnection:
+    """Represent ActiveWifiConnection."""
+
     profile_name: str
     uuid: str
     ssid: str | None
@@ -180,6 +214,8 @@ class ActiveWifiConnection:
 
 @dataclass(frozen=True, slots=True)
 class BackendStatus:
+    """Represent BackendStatus."""
+
     availability: BackendAvailability
     network_manager_state: NetworkManagerState = NetworkManagerState.UNKNOWN
     wifi_radio: WifiRadioState = WifiRadioState.UNKNOWN
@@ -190,6 +226,8 @@ class BackendStatus:
 
 @dataclass(frozen=True, slots=True)
 class OperationStatus:
+    """Represent OperationStatus."""
+
     kind: OperationKind = OperationKind.NONE
     phase: OperationPhase = OperationPhase.IDLE
     target: str | None = None
@@ -199,6 +237,8 @@ class OperationStatus:
 
 @dataclass(frozen=True, slots=True)
 class ApplicationSnapshot:
+    """Represent ApplicationSnapshot."""
+
     status: BackendStatus
     devices: tuple[WifiDevice, ...] = ()
     selected_device: str | None = None

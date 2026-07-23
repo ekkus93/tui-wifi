@@ -1,30 +1,39 @@
+"""Provide saved functionality."""
+
 from __future__ import annotations
 
-from typing import ClassVar
+from typing import TYPE_CHECKING, ClassVar
 
-from textual.app import ComposeResult
-from textual.binding import BindingType
 from textual.containers import Horizontal
 from textual.screen import Screen
 from textual.widgets import Button, DataTable, Footer, Header, Static
 
 from tui_wifi.backends.base import SavedProfileRequest
 from tui_wifi.errors import WifiError
-from tui_wifi.services.wifi import WifiService
 from tui_wifi.ui.dialogs.common import ConfirmDialog, MessageDialog
+
+if TYPE_CHECKING:
+    from textual.app import ComposeResult
+    from textual.binding import BindingType
+
+    from tui_wifi.services.wifi import WifiService
 
 
 class SavedNetworksScreen(Screen[None]):
+    """Represent SavedNetworksScreen."""
+
     BINDINGS: ClassVar[list[BindingType]] = [
         ("escape", "app.pop_screen", "Back"),
         ("q", "app.pop_screen", "Back"),
     ]
 
     def __init__(self, service: WifiService) -> None:
+        """Initialize the instance."""
         super().__init__()
         self.service = service
 
     def compose(self) -> ComposeResult:
+        """Perform compose."""
         yield Header()
         yield Static("Saved networks", classes="screen-title")
         yield DataTable(id="saved-table")
@@ -36,12 +45,14 @@ class SavedNetworksScreen(Screen[None]):
         yield Footer()
 
     def on_mount(self) -> None:
+        """Perform on mount."""
         table = self.query_one("#saved-table", DataTable)
         table.cursor_type = "row"
         table.add_columns("Profile", "SSID", "Auto", "Active", "Interface")
         self._reload()
 
     def _reload(self) -> None:
+        """Perform reload."""
         table = self.query_one("#saved-table", DataTable)
         table.clear()
         for profile in self.service.snapshot.profiles:
@@ -55,6 +66,7 @@ class SavedNetworksScreen(Screen[None]):
             )
 
     def _selected_uuid(self) -> str | None:
+        """Perform selected uuid."""
         table = self.query_one("#saved-table", DataTable)
         if table.row_count == 0:
             return None
@@ -64,6 +76,7 @@ class SavedNetworksScreen(Screen[None]):
             return None
 
     def on_button_pressed(self, event: Button.Pressed) -> None:
+        """Perform on button pressed."""
         if event.button.id == "back":
             self.app.pop_screen()
             return
@@ -94,15 +107,17 @@ class SavedNetworksScreen(Screen[None]):
                     MessageDialog(
                         "Cannot connect",
                         "No Wi-Fi adapter is available.",
-                    )
+                    ),
                 )
                 return
             self.run_worker(self._activate(profile_uuid, selected), group="saved")
 
     def _start_delete(self, uuid: str) -> None:
+        """Perform start delete."""
         self.run_worker(self._delete(uuid), group="saved")
 
     async def _delete(self, uuid: str) -> None:
+        """Perform delete."""
         try:
             await self.service.delete_profile(uuid)
             self._reload()
@@ -110,6 +125,7 @@ class SavedNetworksScreen(Screen[None]):
             self.app.push_screen(MessageDialog("Could not forget network", exc.summary))
 
     async def _set_autoconnect(self, uuid: str, enabled: bool) -> None:
+        """Perform set autoconnect."""
         try:
             await self.service.set_profile_autoconnect(uuid, enabled)
             self._reload()
@@ -117,6 +133,7 @@ class SavedNetworksScreen(Screen[None]):
             self.app.push_screen(MessageDialog("Could not update network", exc.summary))
 
     async def _activate(self, uuid: str, interface: str) -> None:
+        """Perform activate."""
         try:
             await self.service.backend.activate_saved_profile(SavedProfileRequest(uuid, interface))
             await self.service.refresh()

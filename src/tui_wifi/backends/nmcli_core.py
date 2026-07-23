@@ -1,3 +1,5 @@
+"""Provide nmcli core functionality."""
+
 from __future__ import annotations
 
 import shutil
@@ -31,6 +33,8 @@ from tui_wifi.process import (
 
 
 class NmcliCore:
+    """Represent NmcliCore."""
+
     STATUS_TIMEOUT = 5.0
     QUERY_TIMEOUT = 10.0
     SCAN_TIMEOUT = 20.0
@@ -39,10 +43,12 @@ class NmcliCore:
     PROFILE_DETAIL_LIMIT = 128
 
     def __init__(self, runner: ProcessRunner, nmcli_path: str | None = None) -> None:
+        """Initialize the instance."""
         self._runner = runner
         self._nmcli_path = nmcli_path
 
     def _resolve_nmcli(self) -> str:
+        """Perform resolve nmcli."""
         path = self._nmcli_path or shutil.which("nmcli")
         if not path:
             raise WifiError(ErrorCategory.MISSING_NMCLI)
@@ -55,6 +61,7 @@ class NmcliCore:
         timeout_seconds: float,
         sensitive_arg_indexes: frozenset[int] = frozenset(),
     ) -> str:
+        """Perform run."""
         request = ProcessRequest(
             executable=self._resolve_nmcli(),
             args=args,
@@ -75,6 +82,7 @@ class NmcliCore:
 
     @staticmethod
     def _classify_command_error(stderr: str, exit_code: int | None, operation: str) -> WifiError:
+        """Perform classify command error."""
         lower = stderr.lower()
         if any(
             token in lower
@@ -116,6 +124,7 @@ class NmcliCore:
         )
 
     async def check_status(self) -> BackendStatus:
+        """Perform check status."""
         try:
             executable = self._resolve_nmcli()
         except WifiError:
@@ -144,6 +153,7 @@ class NmcliCore:
             return BackendStatus(availability, technical_details=exc.diagnostic_text())
 
     async def get_wifi_radio_state(self) -> WifiRadioState:
+        """Perform get wifi radio state."""
         output = await self._run(
             ("-t", "-e", "yes", "-f", "WIFI,WIFI-HW", "radio"),
             timeout_seconds=self.STATUS_TIMEOUT,
@@ -156,6 +166,7 @@ class NmcliCore:
         return WifiRadioState.ENABLED if software_enabled else WifiRadioState.DISABLED
 
     async def set_wifi_radio_state(self, enabled: bool) -> WifiRadioState:
+        """Perform set wifi radio state."""
         await self._run(
             ("radio", "wifi", "on" if enabled else "off"),
             timeout_seconds=self.MUTATION_TIMEOUT,
@@ -171,6 +182,7 @@ class NmcliCore:
         return state
 
     async def list_wifi_devices(self) -> tuple[WifiDevice, ...]:
+        """Perform list wifi devices."""
         output = await self._run(
             ("-t", "-e", "yes", "-f", "DEVICE,TYPE,STATE,CONNECTION", "device", "status"),
             timeout_seconds=self.QUERY_TIMEOUT,
@@ -189,17 +201,19 @@ class NmcliCore:
                     state=state,
                     managed=state != DeviceState.UNMANAGED,
                     active_connection=None if connection in {"", "--"} else connection,
-                )
+                ),
             )
         return tuple(devices)
 
     async def request_scan(self, interface: str) -> None:
+        """Perform request scan."""
         await self._run(
             ("device", "wifi", "rescan", "ifname", interface),
             timeout_seconds=self.SCAN_TIMEOUT,
         )
 
     async def list_access_points(self, interface: str) -> tuple[AccessPoint, ...]:
+        """Perform list access points."""
         output = await self._run(
             (
                 "-t",
@@ -236,6 +250,6 @@ class NmcliCore:
                     security=parse_security(security_text),
                     active=active.strip() in {"*", "yes"},
                     device=interface,
-                )
+                ),
             )
         return tuple(access_points)

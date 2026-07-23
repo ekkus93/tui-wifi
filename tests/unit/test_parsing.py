@@ -1,7 +1,10 @@
+"""Verify test parsing behavior."""
+
 from __future__ import annotations
 
 import pytest
 
+from tests.assertions import verify
 from tui_wifi.backends.parsing import (
     frequency_to_channel,
     parse_bool,
@@ -15,21 +18,27 @@ from tui_wifi.models import SecurityClass
 
 
 def test_split_escaped_colon_and_backslash() -> None:
-    assert split_escaped(r"Cafe\:West:path\\name::", 4) == [
-        "Cafe:West",
-        r"path\name",
-        "",
-        "",
-    ]
+    """Verify test split escaped colon and backslash."""
+    verify(
+        split_escaped(r"Cafe\:West:path\\name::", 4)
+        == [
+            "Cafe:West",
+            r"path\name",
+            "",
+            "",
+        ]
+    )
 
 
 def test_split_escaped_rejects_dangling_escape() -> None:
+    """Verify test split escaped rejects dangling escape."""
     with pytest.raises(WifiError) as caught:
         split_escaped("bad\\")
-    assert caught.value.category == ErrorCategory.PARSE_FAILURE
+    verify(caught.value.category == ErrorCategory.PARSE_FAILURE)
 
 
 def test_split_escaped_rejects_wrong_field_count() -> None:
+    """Verify test split escaped rejects wrong field count."""
     with pytest.raises(WifiError):
         split_escaped("one:two", 3)
 
@@ -39,12 +48,14 @@ def test_split_escaped_rejects_wrong_field_count() -> None:
     [("yes", True), ("disabled", False), ("1", True), ("0", False)],
 )
 def test_parse_bool(raw: str, expected: bool) -> None:
-    assert parse_bool(raw) is expected
+    """Verify test parse bool."""
+    verify(parse_bool(raw) is expected)
 
 
 def test_parse_signal_validates_range() -> None:
-    assert parse_signal("") is None
-    assert parse_signal("75") == 75
+    """Verify test parse signal validates range."""
+    verify(parse_signal("") is None)
+    verify(parse_signal("75") == 75)
     with pytest.raises(WifiError):
         parse_signal("101")
 
@@ -63,25 +74,29 @@ def test_parse_signal_validates_range() -> None:
     ],
 )
 def test_security_classification(raw: str, expected: SecurityClass) -> None:
-    assert parse_security(raw) == expected
+    """Verify test security classification."""
+    verify(parse_security(raw) == expected)
 
 
 def test_frequency_to_channel() -> None:
-    assert frequency_to_channel(2412) == 1
-    assert frequency_to_channel(2484) == 14
-    assert frequency_to_channel(5180) == 36
-    assert frequency_to_channel(5955) == 1
-    assert frequency_to_channel(1234) is None
+    """Verify test frequency to channel."""
+    verify(frequency_to_channel(2412) == 1)
+    verify(frequency_to_channel(2484) == 14)
+    verify(frequency_to_channel(5180) == 36)
+    verify(frequency_to_channel(5955) == 1)
+    verify(frequency_to_channel(1234) is None)
 
 
 def test_validate_uuid() -> None:
+    """Verify test validate uuid."""
     value = "00000000-0000-0000-0000-000000000001"
-    assert validate_uuid(value) == value
+    verify(validate_uuid(value) == value)
     with pytest.raises(WifiError):
         validate_uuid("not-a-uuid")
 
 
 def test_additional_scalar_and_state_parsers() -> None:
+    """Verify test additional scalar and state parsers."""
     from tui_wifi.backends.parsing import (
         parse_device_state,
         parse_ip_values,
@@ -90,15 +105,18 @@ def test_additional_scalar_and_state_parsers() -> None:
     )
     from tui_wifi.models import DeviceState, NetworkManagerState
 
-    assert parse_optional_int("") is None
-    assert parse_optional_int("5180") == 5180
-    assert parse_device_state("connected") == DeviceState.ACTIVATED
-    assert parse_device_state("future-state") == DeviceState.UNKNOWN
-    assert parse_nm_state("connected (global)") == NetworkManagerState.CONNECTED_GLOBAL
-    assert parse_nm_state("future-state") == NetworkManagerState.UNKNOWN
-    assert parse_ip_values(["192.0.2.1/24", "", "2001:db8::1/64"]) == (
-        "192.0.2.1/24",
-        "2001:db8::1/64",
+    verify(parse_optional_int("") is None)
+    verify(parse_optional_int("5180") == 5180)
+    verify(parse_device_state("connected") == DeviceState.ACTIVATED)
+    verify(parse_device_state("future-state") == DeviceState.UNKNOWN)
+    verify(parse_nm_state("connected (global)") == NetworkManagerState.CONNECTED_GLOBAL)
+    verify(parse_nm_state("future-state") == NetworkManagerState.UNKNOWN)
+    verify(
+        parse_ip_values(["192.0.2.1/24", "", "2001:db8::1/64"])
+        == (
+            "192.0.2.1/24",
+            "2001:db8::1/64",
+        )
     )
     with pytest.raises(WifiError):
         parse_optional_int("not-int")

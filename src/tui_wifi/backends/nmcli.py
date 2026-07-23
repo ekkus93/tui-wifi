@@ -1,3 +1,5 @@
+"""Provide nmcli functionality."""
+
 from __future__ import annotations
 
 from tui_wifi.backends.nmcli_mutations import NmcliMutationsMixin

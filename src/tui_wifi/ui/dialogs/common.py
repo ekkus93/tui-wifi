@@ -1,9 +1,10 @@
+"""Provide common functionality."""
+
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import ClassVar
+from typing import TYPE_CHECKING, ClassVar
 
-from textual.app import ComposeResult
 from textual.containers import Horizontal, Vertical
 from textual.screen import ModalScreen
 from textual.widgets import Button, Checkbox, Input, Label, Select, Static
@@ -11,15 +12,22 @@ from textual.widgets import Button, Checkbox, Input, Label, Select, Static
 from tui_wifi.models import SecurityClass
 from tui_wifi.secrets import SecretValue
 
+if TYPE_CHECKING:
+    from textual.app import ComposeResult
+
 
 @dataclass(frozen=True, slots=True)
 class PasswordAnswer:
+    """Represent PasswordAnswer."""
+
     password: SecretValue
     autoconnect: bool
 
 
 @dataclass(frozen=True, slots=True)
 class HiddenNetworkAnswer:
+    """Represent HiddenNetworkAnswer."""
+
     ssid: str
     security: SecurityClass
     password: SecretValue | None
@@ -27,13 +35,17 @@ class HiddenNetworkAnswer:
 
 
 class ConfirmDialog(ModalScreen[bool]):
+    """Represent ConfirmDialog."""
+
     def __init__(self, title: str, message: str, confirm_label: str = "Confirm") -> None:
+        """Initialize the instance."""
         super().__init__()
         self.dialog_title = title
         self.message = message
         self.confirm_label = confirm_label
 
     def compose(self) -> ComposeResult:
+        """Perform compose."""
         with Vertical(classes="dialog"):
             yield Label(self.dialog_title, classes="dialog-title")
             yield Static(self.message)
@@ -42,17 +54,22 @@ class ConfirmDialog(ModalScreen[bool]):
                 yield Button("Cancel", id="cancel")
 
     def on_button_pressed(self, event: Button.Pressed) -> None:
+        """Perform on button pressed."""
         self.dismiss(event.button.id == "confirm")
 
 
 class MessageDialog(ModalScreen[None]):
+    """Represent MessageDialog."""
+
     def __init__(self, title: str, message: str, technical_details: str | None = None) -> None:
+        """Initialize the instance."""
         super().__init__()
         self.dialog_title = title
         self.message = message
         self.technical_details = technical_details
 
     def compose(self) -> ComposeResult:
+        """Perform compose."""
         with Vertical(classes="dialog"):
             yield Label(self.dialog_title, classes="dialog-title")
             yield Static(self.message)
@@ -61,15 +78,20 @@ class MessageDialog(ModalScreen[None]):
             yield Button("Close", id="close", variant="primary")
 
     def on_button_pressed(self, _event: Button.Pressed) -> None:
+        """Perform on button pressed."""
         self.dismiss(None)
 
 
 class PasswordDialog(ModalScreen[PasswordAnswer | None]):
+    """Represent PasswordDialog."""
+
     def __init__(self, ssid: str) -> None:
+        """Initialize the instance."""
         super().__init__()
         self.ssid = ssid
 
     def compose(self) -> ComposeResult:
+        """Perform compose."""
         with Vertical(classes="dialog"):
             yield Label(f"Connect to {self.ssid}", classes="dialog-title")
             yield Input(placeholder="Wi-Fi password", password=True, id="password")
@@ -81,10 +103,12 @@ class PasswordDialog(ModalScreen[PasswordAnswer | None]):
                 yield Button("Cancel", id="cancel")
 
     def on_checkbox_changed(self, event: Checkbox.Changed) -> None:
+        """Perform on checkbox changed."""
         if event.checkbox.id == "show-password":
             self.query_one("#password", Input).password = not event.value
 
     def on_button_pressed(self, event: Button.Pressed) -> None:
+        """Perform on button pressed."""
         if event.button.id == "cancel":
             self._clear_and_dismiss(None)
             return
@@ -96,17 +120,21 @@ class PasswordDialog(ModalScreen[PasswordAnswer | None]):
         self._clear_and_dismiss(answer)
 
     def _clear_and_dismiss(self, answer: PasswordAnswer | None) -> None:
+        """Perform clear and dismiss."""
         self.query_one("#password", Input).value = ""
         self.dismiss(answer)
 
 
 class HiddenNetworkDialog(ModalScreen[HiddenNetworkAnswer | None]):
+    """Represent HiddenNetworkDialog."""
+
     OPTIONS: ClassVar[list[tuple[str, str]]] = [
         ("Open", SecurityClass.OPEN.value),
         ("WPA/WPA2/WPA3 Personal", SecurityClass.MIXED_PERSONAL.value),
     ]
 
     def compose(self) -> ComposeResult:
+        """Perform compose."""
         with Vertical(classes="dialog"):
             yield Label("Connect to a hidden network", classes="dialog-title")
             yield Input(placeholder="Network name (SSID)", id="ssid")
@@ -125,15 +153,18 @@ class HiddenNetworkDialog(ModalScreen[HiddenNetworkAnswer | None]):
                 yield Button("Cancel", id="cancel")
 
     def on_checkbox_changed(self, event: Checkbox.Changed) -> None:
+        """Perform on checkbox changed."""
         if event.checkbox.id == "show-password":
             self.query_one("#password", Input).password = not event.value
 
     def on_select_changed(self, event: Select.Changed) -> None:
+        """Perform on select changed."""
         if event.select.id == "security":
             is_open = event.value == SecurityClass.OPEN.value
             self.query_one("#password", Input).disabled = is_open
 
     def on_button_pressed(self, event: Button.Pressed) -> None:
+        """Perform on button pressed."""
         if event.button.id == "cancel":
             self._clear_and_dismiss(None)
             return
@@ -159,5 +190,6 @@ class HiddenNetworkDialog(ModalScreen[HiddenNetworkAnswer | None]):
         self._clear_and_dismiss(answer)
 
     def _clear_and_dismiss(self, answer: HiddenNetworkAnswer | None) -> None:
+        """Perform clear and dismiss."""
         self.query_one("#password", Input).value = ""
         self.dismiss(answer)

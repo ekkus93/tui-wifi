@@ -1,3 +1,5 @@
+"""Provide grouping functionality."""
+
 from __future__ import annotations
 
 from collections import defaultdict
@@ -10,6 +12,7 @@ def group_networks(
     profiles: tuple[SavedProfile, ...],
     active: ActiveWifiConnection | None,
 ) -> tuple[NetworkGroup, ...]:
+    """Perform group networks."""
     buckets: dict[tuple[str, str], list[AccessPoint]] = defaultdict(list)
     for ap in access_points:
         if ap.display_ssid:
@@ -34,10 +37,11 @@ def group_networks(
                 saved_profile_uuids=compatible_profiles,
                 supported=strongest.security.supported,
                 member_bssids=tuple(sorted(ap.bssid for ap in members)),
-            )
+            ),
         )
 
     def sort_key(group: NetworkGroup) -> tuple[int, int, str]:
+        """Perform sort key."""
         if group.connected:
             bucket = 0
         elif group.saved_profile_uuids and group.supported:

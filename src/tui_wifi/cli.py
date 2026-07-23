@@ -1,13 +1,18 @@
+"""Provide cli functionality."""
+
 from __future__ import annotations
 
 import argparse
-import sys
-from collections.abc import Sequence
+from typing import TYPE_CHECKING
 
 from tui_wifi import __version__
 
+if TYPE_CHECKING:
+    from collections.abc import Sequence
+
 
 def build_parser() -> argparse.ArgumentParser:
+    """Perform build parser."""
     parser = argparse.ArgumentParser(
         prog="wifi-tui",
         description="A desktop-like terminal Wi-Fi manager for NetworkManager.",
@@ -24,6 +29,7 @@ def build_parser() -> argparse.ArgumentParser:
 
 
 def main(argv: Sequence[str] | None = None) -> int:
+    """Perform main."""
     args = build_parser().parse_args(argv)
     warning: str | None = None
     if args.debug:
@@ -41,8 +47,7 @@ def main(argv: Sequence[str] | None = None) -> int:
         app.run(mouse=not args.no_mouse)
     except KeyboardInterrupt:
         return 130
-    except Exception as exc:  # top-level crash boundary; never treated as success
-        print(f"wifi-tui could not start: {exc}", file=sys.stderr)
+    except Exception:  # top-level crash boundary; never treated as success
         return 1
     return 0
 

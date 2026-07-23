@@ -1,9 +1,9 @@
+"""Provide main functionality."""
+
 from __future__ import annotations
 
-from collections.abc import Callable
-from typing import ClassVar
+from typing import TYPE_CHECKING, ClassVar
 
-from textual.app import ComposeResult
 from textual.binding import Binding, BindingType
 from textual.containers import Horizontal, Vertical
 from textual.screen import Screen
@@ -11,8 +11,6 @@ from textual.widgets import Button, Footer, Header, Label, Static
 
 from tui_wifi.errors import WifiError
 from tui_wifi.models import ApplicationSnapshot, NetworkGroup, OperationPhase, WifiRadioState
-from tui_wifi.secrets import SecretValue
-from tui_wifi.services.wifi import WifiService
 from tui_wifi.ui.dialogs.common import (
     ConfirmDialog,
     HiddenNetworkAnswer,
@@ -25,8 +23,18 @@ from tui_wifi.ui.screens.details import DetailsScreen
 from tui_wifi.ui.screens.saved import SavedNetworksScreen
 from tui_wifi.ui.widgets.network_list import NetworkTable
 
+if TYPE_CHECKING:
+    from collections.abc import Callable
+
+    from textual.app import ComposeResult
+
+    from tui_wifi.secrets import SecretValue
+    from tui_wifi.services.wifi import WifiService
+
 
 class MainScreen(Screen[None]):
+    """Represent MainScreen."""
+
     BINDINGS: ClassVar[list[BindingType]] = [
         ("r", "refresh_networks", "Refresh"),
         ("d", "disconnect", "Disconnect"),
@@ -41,12 +49,14 @@ class MainScreen(Screen[None]):
     ]
 
     def __init__(self, service: WifiService, startup_warning: str | None = None) -> None:
+        """Initialize the instance."""
         super().__init__()
         self.service = service
         self.startup_warning = startup_warning
         self._unsubscribe: Callable[[], None] | None = None
 
     def compose(self) -> ComposeResult:
+        """Perform compose."""
         yield Header(show_clock=True)
         with Vertical(id="main-body"):
             with Horizontal(id="status-row"):
@@ -66,16 +76,19 @@ class MainScreen(Screen[None]):
         yield Footer()
 
     def on_mount(self) -> None:
+        """Perform on mount."""
         self._unsubscribe = self.service.subscribe(self._on_snapshot)
         if self.startup_warning:
             self.notify(self.startup_warning, severity="warning", timeout=8)
         self.run_worker(self.service.startup(), group="startup", exclusive=True)
 
     def on_unmount(self) -> None:
+        """Perform on unmount."""
         if self._unsubscribe is not None:
             self._unsubscribe()
 
     def _on_snapshot(self, snapshot: ApplicationSnapshot) -> None:
+        """Perform on snapshot."""
         if not self.is_mounted:
             return
         self.query_one("#networks", NetworkTable).load_networks(snapshot.networks)
@@ -128,6 +141,7 @@ class MainScreen(Screen[None]):
         )
 
     def _selected_group(self) -> NetworkGroup | None:
+        """Perform selected group."""
         identity = self.query_one("#networks", NetworkTable).selected_identity
         return next(
             (network for network in self.service.snapshot.networks if network.identity == identity),
@@ -135,9 +149,11 @@ class MainScreen(Screen[None]):
         )
 
     def on_data_table_row_selected(self, _event: NetworkTable.RowSelected) -> None:
+        """Perform on data table row selected."""
         self.action_connect()
 
     def on_button_pressed(self, event: Button.Pressed) -> None:
+        """Perform on button pressed."""
         actions = {
             "connect": self.action_connect,
             "disconnect": self.action_disconnect,
@@ -152,18 +168,23 @@ class MainScreen(Screen[None]):
             action()
 
     def action_cursor_down(self) -> None:
+        """Perform action cursor down."""
         self.query_one("#networks", NetworkTable).action_cursor_down()
 
     def action_cursor_up(self) -> None:
+        """Perform action cursor up."""
         self.query_one("#networks", NetworkTable).action_cursor_up()
 
     def action_refresh_networks(self) -> None:
+        """Perform action refresh networks."""
         self.run_worker(self._refresh(), group="refresh", exclusive=True)
 
     async def _refresh(self) -> None:
+        """Perform refresh."""
         await self.service.refresh(request_scan=True)
 
     def action_connect(self) -> None:
+        """Perform action connect."""
         group = self._selected_group()
         if group is None:
             self.app.push_screen(MessageDialog("Connect", "Select a network first."))
@@ -175,7 +196,7 @@ class MainScreen(Screen[None]):
                     "This network uses an authentication method that "
                     "tui-wifi does not yet support.",
                     f"Detected security: {group.security.value}",
-                )
+                ),
             )
             return
         if len(group.saved_profile_uuids) == 1:
@@ -191,7 +212,7 @@ class MainScreen(Screen[None]):
                     "Multiple saved profiles",
                     "More than one saved profile matches this network. "
                     "Open Saved Networks and select the exact profile.",
-                )
+                ),
             )
             return
         if not group.security.requires_password:
@@ -210,9 +231,11 @@ class MainScreen(Screen[None]):
         )
 
     def _start_open(self, group: NetworkGroup) -> None:
+        """Perform start open."""
         self.run_worker(self._connect(group, None, True), group="mutation", exclusive=True)
 
     def _start_password(self, group: NetworkGroup, answer: PasswordAnswer | None) -> None:
+        """Perform start password."""
         if answer is not None:
             self.run_worker(
                 self._connect(group, answer.password, answer.autoconnect),
@@ -226,6 +249,7 @@ class MainScreen(Screen[None]):
         password: SecretValue | None,
         autoconnect: bool,
     ) -> None:
+        """Perform connect."""
         try:
             snapshot = await self.service.connect_network(
                 group,
@@ -238,7 +262,7 @@ class MainScreen(Screen[None]):
                     exc.summary,
                     exc.guidance or "The connection did not succeed.",
                     exc.diagnostic_text(),
-                )
+                ),
             )
         except Exception as exc:
             self.app.push_screen(MessageDialog("Unexpected connection error", str(exc)))
@@ -248,6 +272,7 @@ class MainScreen(Screen[None]):
                 self.notify(f"Connected to {active.ssid or active.profile_name}", timeout=5)
 
     def action_disconnect(self) -> None:
+        """Perform action disconnect."""
         active = self.service.snapshot.active_connection
         if active is None:
             return
@@ -261,22 +286,27 @@ class MainScreen(Screen[None]):
         )
 
     def _start_disconnect(self) -> None:
+        """Perform start disconnect."""
         self.run_worker(self._disconnect(), group="mutation", exclusive=True)
 
     async def _disconnect(self) -> None:
+        """Perform disconnect."""
         try:
             await self.service.disconnect()
         except WifiError as exc:
             self.app.push_screen(MessageDialog(exc.summary, exc.guidance or "Disconnect failed."))
 
     def action_hidden(self) -> None:
+        """Perform action hidden."""
         self.app.push_screen(HiddenNetworkDialog(), self._start_hidden)
 
     def _start_hidden(self, answer: HiddenNetworkAnswer | None) -> None:
+        """Perform start hidden."""
         if answer is not None:
             self.run_worker(self._connect_hidden(answer), group="mutation", exclusive=True)
 
     async def _connect_hidden(self, answer: HiddenNetworkAnswer) -> None:
+        """Perform connect hidden."""
         try:
             await self.service.connect_hidden(
                 answer.ssid,
@@ -290,12 +320,15 @@ class MainScreen(Screen[None]):
             self.notify(f"Connected to {answer.ssid}", timeout=5)
 
     def action_saved(self) -> None:
+        """Perform action saved."""
         self.app.push_screen(SavedNetworksScreen(self.service))
 
     def action_details(self) -> None:
+        """Perform action details."""
         self.app.push_screen(DetailsScreen(self.service.snapshot.active_connection))
 
     def action_toggle_wifi(self) -> None:
+        """Perform action toggle wifi."""
         enabled = self.service.snapshot.status.wifi_radio != WifiRadioState.ENABLED
         if not enabled and self.service.snapshot.active_connection is not None:
             self.app.push_screen(
@@ -310,9 +343,11 @@ class MainScreen(Screen[None]):
             self._start_toggle(enabled)
 
     def _start_toggle(self, enabled: bool) -> None:
+        """Perform start toggle."""
         self.run_worker(self._toggle(enabled), group="mutation", exclusive=True)
 
     async def _toggle(self, enabled: bool) -> None:
+        """Perform toggle."""
         try:
             await self.service.set_wifi_enabled(enabled)
         except WifiError as exc:
@@ -320,5 +355,5 @@ class MainScreen(Screen[None]):
                 MessageDialog(
                     exc.summary,
                     exc.guidance or "Wi-Fi state did not change.",
-                )
+                ),
             )

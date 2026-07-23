@@ -1,3 +1,5 @@
+"""Provide nmcli profiles functionality."""
+
 from __future__ import annotations
 
 from collections import defaultdict
@@ -15,7 +17,10 @@ from tui_wifi.models import (
 
 
 class NmcliProfilesMixin(NmcliCore):
+    """Represent NmcliProfilesMixin."""
+
     async def list_saved_wifi_profiles(self) -> tuple[SavedProfile, ...]:
+        """Perform list saved wifi profiles."""
         output = await self._run(
             (
                 "-t",
@@ -73,12 +78,13 @@ class NmcliProfilesMixin(NmcliCore):
                     autoconnect=parse_bool(detail_autoconnect),
                     security=self._profile_security(key_mgmt),
                     active=device not in {"", "--"},
-                )
+                ),
             )
         return tuple(profiles)
 
     @staticmethod
     def _profile_security(key_mgmt: str) -> SecurityClass:
+        """Perform profile security."""
         normalized = key_mgmt.strip().lower()
         if not normalized or normalized == "none":
             return SecurityClass.OPEN
@@ -93,6 +99,7 @@ class NmcliProfilesMixin(NmcliCore):
         return SecurityClass.UNKNOWN
 
     async def get_active_wifi_connection(self) -> ActiveWifiConnection | None:
+        """Perform get active wifi connection."""
         devices = await self.list_wifi_devices()
         active_device = next(
             (device for device in devices if device.state == DeviceState.ACTIVATED),
@@ -165,5 +172,6 @@ class NmcliProfilesMixin(NmcliCore):
 
     @staticmethod
     def _first(values: dict[str, list[str]], key: str) -> str | None:
+        """Perform first."""
         entries = values.get(key, [])
         return entries[0] if entries and entries[0] else None

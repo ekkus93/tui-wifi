@@ -1,3 +1,5 @@
+"""Provide wifi functionality."""
+
 from __future__ import annotations
 
 import asyncio
@@ -5,6 +7,7 @@ import sys
 from collections.abc import Callable
 from dataclasses import replace
 from datetime import UTC, datetime
+from typing import TYPE_CHECKING
 
 from tui_wifi.backends.base import (
     DisconnectRequest,
@@ -30,13 +33,18 @@ from tui_wifi.models import (
     WifiDevice,
     WifiRadioState,
 )
-from tui_wifi.secrets import SecretValue
+
+if TYPE_CHECKING:
+    from tui_wifi.secrets import SecretValue
 
 SnapshotListener = Callable[[ApplicationSnapshot], None]
 
 
 class WifiService:
+    """Represent WifiService."""
+
     def __init__(self, backend: WifiBackend, preferred_interface: str | None = None) -> None:
+        """Initialize the instance."""
         self.backend = backend
         self.preferred_interface = preferred_interface
         self.snapshot = ApplicationSnapshot(BackendStatus(BackendAvailability.UNKNOWN))
@@ -47,20 +55,24 @@ class WifiService:
         self._closed = False
 
     def subscribe(self, listener: SnapshotListener) -> Callable[[], None]:
+        """Perform subscribe."""
         self._listeners.append(listener)
 
         def unsubscribe() -> None:
+            """Perform unsubscribe."""
             if listener in self._listeners:
                 self._listeners.remove(listener)
 
         return unsubscribe
 
     def _publish(self, snapshot: ApplicationSnapshot) -> None:
+        """Perform publish."""
         self.snapshot = snapshot
         for listener in tuple(self._listeners):
             listener(snapshot)
 
     async def startup(self) -> ApplicationSnapshot:
+        """Perform startup."""
         if not sys.platform.startswith("linux"):
             error = WifiError(
                 ErrorCategory.INTERNAL_FAILURE,
@@ -71,6 +83,7 @@ class WifiService:
         return await self.refresh(request_scan=True)
 
     async def refresh(self, *, request_scan: bool = False) -> ApplicationSnapshot:
+        """Perform refresh."""
         if self._closed:
             return self.snapshot
         self._refresh_generation += 1
@@ -140,6 +153,7 @@ class WifiService:
 
     @staticmethod
     def _status_error(status: BackendStatus) -> WifiError:
+        """Perform status error."""
         if status.availability == BackendAvailability.MISSING_EXECUTABLE:
             return WifiError(ErrorCategory.MISSING_NMCLI)
         if status.availability == BackendAvailability.UNAUTHORIZED:
@@ -147,6 +161,7 @@ class WifiService:
         return WifiError(ErrorCategory.NETWORK_MANAGER_UNAVAILABLE)
 
     def _select_device(self, devices: tuple[WifiDevice, ...]) -> str | None:
+        """Perform select device."""
         managed = tuple(device for device in devices if device.managed)
         if self.preferred_interface:
             selected = next(
@@ -185,6 +200,7 @@ class WifiService:
         password: SecretValue | None = None,
         autoconnect: bool = True,
     ) -> ApplicationSnapshot:
+        """Perform connect network."""
         if not group.supported:
             raise WifiError(ErrorCategory.UNSUPPORTED_SECURITY)
         interface = self._require_interface()
@@ -196,7 +212,7 @@ class WifiService:
             ):
                 if len(group.saved_profile_uuids) == 1 and password is None:
                     await self.backend.activate_saved_profile(
-                        SavedProfileRequest(group.saved_profile_uuids[0], interface)
+                        SavedProfileRequest(group.saved_profile_uuids[0], interface),
                     )
                 else:
                     bssid = group.member_bssids[0] if len(group.member_bssids) == 1 else None
@@ -208,7 +224,7 @@ class WifiService:
                             password,
                             bssid,
                             autoconnect,
-                        )
+                        ),
                     )
         finally:
             if password is not None:
@@ -222,6 +238,7 @@ class WifiService:
         password: SecretValue | None,
         autoconnect: bool,
     ) -> ApplicationSnapshot:
+        """Perform connect hidden."""
         interface = self._require_interface()
         try:
             async with self._mutation(
@@ -236,7 +253,7 @@ class WifiService:
                         security,
                         password,
                         autoconnect,
-                    )
+                    ),
                 )
         finally:
             if password is not None:
@@ -244,6 +261,7 @@ class WifiService:
         return await self.refresh()
 
     async def disconnect(self) -> ApplicationSnapshot:
+        """Perform disconnect."""
         active = self.snapshot.active_connection
         if active is None:
             return self.snapshot
@@ -256,6 +274,7 @@ class WifiService:
         return await self.refresh()
 
     async def set_wifi_enabled(self, enabled: bool) -> ApplicationSnapshot:
+        """Perform set wifi enabled."""
         async with self._mutation(
             OperationKind.RADIO,
             "Wi-Fi",
@@ -265,6 +284,7 @@ class WifiService:
         return await self.refresh(request_scan=enabled)
 
     async def delete_profile(self, uuid: str) -> ApplicationSnapshot:
+        """Perform delete profile."""
         async with self._mutation(
             OperationKind.DELETE_PROFILE,
             uuid,
@@ -274,6 +294,7 @@ class WifiService:
         return await self.refresh()
 
     async def set_profile_autoconnect(self, uuid: str, enabled: bool) -> ApplicationSnapshot:
+        """Perform set profile autoconnect."""
         async with self._mutation(
             OperationKind.AUTOCONNECT,
             uuid,
@@ -283,17 +304,21 @@ class WifiService:
         return await self.refresh()
 
     def profile_by_uuid(self, uuid: str) -> SavedProfile | None:
+        """Perform profile by uuid."""
         return next(
             (profile for profile in self.snapshot.profiles if profile.uuid == uuid),
             None,
         )
 
     def _require_interface(self) -> str:
+        """Perform require interface."""
         if not self.snapshot.selected_device:
             raise WifiError(ErrorCategory.NO_ADAPTER)
         return self.snapshot.selected_device
 
     class _MutationContext:
+        """Represent MutationContext."""
+
         def __init__(
             self,
             service: WifiService,
@@ -301,12 +326,14 @@ class WifiService:
             target: str | None,
             message: str,
         ) -> None:
+            """Initialize the instance."""
             self.service = service
             self.kind = kind
             self.target = target
             self.message = message
 
         async def __aenter__(self) -> None:
+            """Enter the asynchronous context."""
             await self.service._mutation_lock.acquire()
             self.service._operation_counter += 1
             self.service._publish(
@@ -320,7 +347,7 @@ class WifiService:
                         self.service._operation_counter,
                     ),
                     error=None,
-                )
+                ),
             )
 
         async def __aexit__(
@@ -329,6 +356,7 @@ class WifiService:
             exc: object,
             traceback: object,
         ) -> bool:
+            """Exit the asynchronous context."""
             try:
                 if isinstance(exc, WifiError):
                     self.service._publish(
@@ -343,7 +371,7 @@ class WifiService:
                             ),
                             error=exc.summary,
                             warning=exc.guidance,
-                        )
+                        ),
                     )
                 elif isinstance(exc, asyncio.CancelledError):
                     self.service._publish(
@@ -356,7 +384,7 @@ class WifiService:
                                 "Operation cancelled.",
                                 self.service._operation_counter,
                             ),
-                        )
+                        ),
                     )
             finally:
                 self.service._mutation_lock.release()
@@ -368,7 +396,9 @@ class WifiService:
         target: str | None,
         message: str,
     ) -> _MutationContext:
+        """Perform mutation."""
         return self._MutationContext(self, kind, target, message)
 
     async def close(self) -> None:
+        """Perform close."""
         self._closed = True

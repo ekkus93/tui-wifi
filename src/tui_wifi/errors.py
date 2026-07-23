@@ -1,9 +1,13 @@
+"""Provide errors functionality."""
+
 from __future__ import annotations
 
 from enum import StrEnum
 
 
 class ErrorCategory(StrEnum):
+    """Represent ErrorCategory."""
+
     MISSING_NMCLI = "missing_nmcli"
     NETWORK_MANAGER_UNAVAILABLE = "network_manager_unavailable"
     NO_ADAPTER = "no_adapter"
@@ -113,6 +117,7 @@ class WifiError(Exception):
         retriable: bool | None = None,
         operation: str | None = None,
     ) -> None:
+        """Initialize the instance."""
         default_summary, default_guidance, default_retriable = _DEFAULTS[category]
         self.category = category
         self.summary = summary or default_summary
@@ -125,9 +130,11 @@ class WifiError(Exception):
         super().__init__(self.summary)
 
     def __str__(self) -> str:
+        """Return the user-facing string representation."""
         return self.summary
 
     def diagnostic_text(self) -> str:
+        """Perform diagnostic text."""
         fields = [f"category={self.category.value}"]
         if self.operation:
             fields.append(f"operation={self.operation}")

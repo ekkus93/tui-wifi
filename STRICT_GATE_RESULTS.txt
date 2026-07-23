@@ -1,0 +1,161 @@
+=== BLACK ===
+All done! ✨ 🍰 ✨
+48 files would be left unchanged.
+status=0
+
+=== RUFF ===
+src/tui_wifi/backends/base.py:71:42: FBT001 Boolean-typed positional argument in function definition
+src/tui_wifi/backends/base.py:124:56: FBT001 Boolean-typed positional argument in function definition
+src/tui_wifi/backends/fake.py:39:59: FBT003 Boolean positional value in function call
+src/tui_wifi/backends/fake.py:66:42: FBT001 Boolean-typed positional argument in function definition
+src/tui_wifi/backends/fake.py:156:56: FBT001 Boolean-typed positional argument in function definition
+src/tui_wifi/backends/nmcli_core.py:168:42: FBT001 Boolean-typed positional argument in function definition
+src/tui_wifi/backends/nmcli_mutations.py:66:61: FBT003 Boolean positional value in function call
+src/tui_wifi/backends/nmcli_mutations.py:100:61: FBT003 Boolean positional value in function call
+src/tui_wifi/backends/nmcli_mutations.py:104:61: FBT001 Boolean-typed positional argument in function definition
+src/tui_wifi/backends/nmcli_mutations.py:162:56: FBT001 Boolean-typed positional argument in function definition
+src/tui_wifi/backends/nmcli_profiles.py:70:69: PLR2004 Magic value used in comparison, consider replacing `2` with a constant variable
+src/tui_wifi/backends/nmcli_profiles.py:71:73: PLR2004 Magic value used in comparison, consider replacing `3` with a constant variable
+src/tui_wifi/backends/parsing.py:63:27: PLR2004 Magic value used in comparison, consider replacing `100` with a constant variable
+src/tui_wifi/backends/parsing.py:88:21: PLR2004 Magic value used in comparison, consider replacing `2484` with a constant variable
+src/tui_wifi/backends/parsing.py:90:8: PLR2004 Magic value used in comparison, consider replacing `2412` with a constant variable
+src/tui_wifi/backends/parsing.py:90:29: PLR2004 Magic value used in comparison, consider replacing `2472` with a constant variable
+src/tui_wifi/backends/parsing.py:92:8: PLR2004 Magic value used in comparison, consider replacing `5000` with a constant variable
+src/tui_wifi/backends/parsing.py:92:29: PLR2004 Magic value used in comparison, consider replacing `5895` with a constant variable
+src/tui_wifi/backends/parsing.py:94:8: PLR2004 Magic value used in comparison, consider replacing `5955` with a constant variable
+src/tui_wifi/backends/parsing.py:94:29: PLR2004 Magic value used in comparison, consider replacing `7115` with a constant variable
+src/tui_wifi/backends/parsing.py:99:5: PLR0911 Too many return statements (9 > 6)
+src/tui_wifi/cli.py:36:9: PLC0415 `import` should be at the top-level of a file
+src/tui_wifi/cli.py:40:9: PLC0415 `import` should be at the top-level of a file
+src/tui_wifi/cli.py:50:12: BLE001 Do not catch blind exception: `Exception`
+src/tui_wifi/errors.py:108:9: PLR0913 Too many arguments in function definition (8 > 5)
+src/tui_wifi/models.py:125:21: PLR2004 Magic value used in comparison, consider replacing `75` with a constant variable
+src/tui_wifi/models.py:127:21: PLR2004 Magic value used in comparison, consider replacing `50` with a constant variable
+src/tui_wifi/models.py:129:21: PLR2004 Magic value used in comparison, consider replacing `25` with a constant variable
+src/tui_wifi/process/runner.py:77:7: N818 Exception name `ProcessMissingExecutable` should be named with an Error suffix
+src/tui_wifi/process/runner.py:81:7: N818 Exception name `ProcessTimeout` should be named with an Error suffix
+src/tui_wifi/process/runner.py:85:7: N818 Exception name `ProcessCancelled` should be named with an Error suffix
+src/tui_wifi/process/runner.py:93:7: N818 Exception name `ProcessNonZeroExit` should be named with an Error suffix
+src/tui_wifi/process/runner.py:108:15: PLR0915 Too many statements (51 > 50)
+src/tui_wifi/services/wifi.py:239:9: FBT001 Boolean-typed positional argument in function definition
+src/tui_wifi/services/wifi.py:276:38: FBT001 Boolean-typed positional argument in function definition
+src/tui_wifi/services/wifi.py:296:56: FBT001 Boolean-typed positional argument in function definition
+src/tui_wifi/services/wifi.py:337:19: SLF001 Private member accessed: `_mutation_lock`
+src/tui_wifi/services/wifi.py:338:13: SLF001 Private member accessed: `_operation_counter`
+src/tui_wifi/services/wifi.py:339:13: SLF001 Private member accessed: `_publish`
+src/tui_wifi/services/wifi.py:347:25: SLF001 Private member accessed: `_operation_counter`
+src/tui_wifi/services/wifi.py:362:21: SLF001 Private member accessed: `_publish`
+src/tui_wifi/services/wifi.py:370:33: SLF001 Private member accessed: `_operation_counter`
+src/tui_wifi/services/wifi.py:377:21: SLF001 Private member accessed: `_publish`
+src/tui_wifi/services/wifi.py:385:33: SLF001 Private member accessed: `_operation_counter`
+src/tui_wifi/services/wifi.py:390:17: SLF001 Private member accessed: `_mutation_lock`
+src/tui_wifi/ui/screens/main.py:90:9: C901 `_on_snapshot` is too complex (11 > 10)
+src/tui_wifi/ui/screens/main.py:204:44: FBT003 Boolean positional value in function call
+src/tui_wifi/ui/screens/main.py:235:52: FBT003 Boolean positional value in function call
+src/tui_wifi/ui/screens/main.py:250:9: FBT001 Boolean-typed positional argument in function definition
+src/tui_wifi/ui/screens/main.py:267:16: BLE001 Do not catch blind exception: `Exception`
+src/tui_wifi/ui/screens/main.py:340:54: FBT003 Boolean positional value in function call
+src/tui_wifi/ui/screens/main.py:345:29: FBT001 Boolean-typed positional argument in function definition
+src/tui_wifi/ui/screens/main.py:349:29: FBT001 Boolean-typed positional argument in function definition
+src/tui_wifi/ui/screens/saved.py:127:49: FBT001 Boolean-typed positional argument in function definition
+src/tui_wifi/ui/widgets/network_list.py:44:20: BLE001 Do not catch blind exception: `Exception`
+src/tui_wifi/ui/widgets/network_list.py:56:16: BLE001 Do not catch blind exception: `Exception`
+tests/tui/test_app.py:35:17: FBT003 Boolean positional value in function call
+tests/unit/test_cli.py:26:53: ANN001 Missing type annotation for function argument `monkeypatch`
+tests/unit/test_cli.py:28:5: PLC0415 `import` should be at the top-level of a file
+tests/unit/test_cli.py:29:5: PLC0415 `import` should be at the top-level of a file
+tests/unit/test_cli.py:48:5: PLC0415 `import` should be at the top-level of a file
+tests/unit/test_cli.py:58:10: COM812 [*] Trailing comma missing
+tests/unit/test_grouping.py:35:9: FBT003 Boolean positional value in function call
+tests/unit/test_grouping.py:64:35: PLR2004 Magic value used in comparison, consider replacing `90` with a constant variable
+tests/unit/test_grouping.py:65:47: PLR2004 Magic value used in comparison, consider replacing `2` with a constant variable
+tests/unit/test_logging.py:15:64: ANN001 Missing type annotation for function argument `monkeypatch`
+tests/unit/test_nmcli.py:48:9: SLF001 Private member accessed: `_classify_command_error`
+tests/unit/test_nmcli.py:52:9: SLF001 Private member accessed: `_classify_command_error`
+tests/unit/test_nmcli.py:56:9: SLF001 Private member accessed: `_classify_command_error`
+tests/unit/test_nmcli.py:63:12: SLF001 Private member accessed: `_profile_security`
+tests/unit/test_nmcli.py:64:12: SLF001 Private member accessed: `_profile_security`
+tests/unit/test_nmcli.py:65:12: SLF001 Private member accessed: `_profile_security`
+tests/unit/test_nmcli.py:66:12: SLF001 Private member accessed: `_profile_security`
+tests/unit/test_parsing.py:29:10: COM812 [*] Trailing comma missing
+tests/unit/test_parsing.py:50:31: FBT001 Boolean-typed positional argument in function definition
+tests/unit/test_parsing.py:58:34: PLR2004 Magic value used in comparison, consider replacing `75` with a constant variable
+tests/unit/test_parsing.py:84:42: PLR2004 Magic value used in comparison, consider replacing `14` with a constant variable
+tests/unit/test_parsing.py:85:42: PLR2004 Magic value used in comparison, consider replacing `36` with a constant variable
+tests/unit/test_parsing.py:100:5: PLC0415 `import` should be at the top-level of a file
+tests/unit/test_parsing.py:106:5: PLC0415 `import` should be at the top-level of a file
+tests/unit/test_parsing.py:109:42: PLR2004 Magic value used in comparison, consider replacing `5180` with a constant variable
+tests/unit/test_parsing.py:119:10: COM812 [*] Trailing comma missing
+tests/unit/test_process.py:52:49: PLR2004 Magic value used in comparison, consider replacing `7` with a constant variable
+tests/unit/test_process.py:62:18: S105 Possible hardcoded password assigned to: "secret"
+tests/unit/test_process.py:107:24: PT011 `pytest.raises(ValueError)` is too broad, set the `match` parameter or use a more specific exception
+tests/unit/test_secrets.py:33:5: PLC0415 `import` should be at the top-level of a file
+tests/unit/test_service.py:27:9: FBT003 Boolean positional value in function call
+tests/unit/test_service.py:93:9: PLC0415 `import` should be at the top-level of a file
+tests/unit/test_service.py:95:76: FBT003 Boolean positional value in function call
+tests/unit/test_service.py:109:9: PLC0415 `import` should be at the top-level of a file
+tests/unit/test_service.py:110:9: PLC0415 `import` should be at the top-level of a file
+tests/unit/test_service.py:118:13: FBT003 Boolean positional value in function call
+tests/unit/test_service.py:124:71: FBT003 Boolean positional value in function call
+tests/unit/test_service.py:144:9: PLC0415 `import` should be at the top-level of a file
+tests/unit/test_service.py:148:59: FBT003 Boolean positional value in function call
+tests/unit/test_service.py:149:59: FBT003 Boolean positional value in function call
+Found 96 errors.
+[*] 3 fixable with the `--fix` option.
+status=1
+
+=== MYPY ===
+src/tui_wifi/app.py:21: error: Cannot override instance variable (previously declared on base class "App") with class variable  [misc]
+Found 1 error in 1 file (checked 31 source files)
+status=1
+
+=== PYTEST ===
+============================= test session starts ==============================
+platform linux -- Python 3.13.14, pytest-9.1.1, pluggy-1.6.0
+rootdir: /home/runner/work/tui-wifi/tui-wifi
+configfile: pyproject.toml
+testpaths: tests
+plugins: cov-6.3.0
+collected 46 items
+
+tests/integration/test_fake_nmcli_executable.py .                        [  2%]
+tests/tui/test_app.py .                                                  [  4%]
+tests/unit/test_cli.py ...                                               [ 10%]
+tests/unit/test_errors.py ..                                             [ 15%]
+tests/unit/test_grouping.py .                                            [ 17%]
+tests/unit/test_logging.py .                                             [ 19%]
+tests/unit/test_nmcli.py ....                                            [ 28%]
+tests/unit/test_parsing.py ...................                           [ 69%]
+tests/unit/test_process.py .....                                         [ 80%]
+tests/unit/test_secrets.py ...                                           [ 86%]
+tests/unit/test_service.py ......                                        [100%]
+
+================================ tests coverage ================================
+_______________ coverage: platform linux, python 3.13.14-final-0 _______________
+
+Name                                       Stmts   Miss Branch BrPart  Cover   Missing
+--------------------------------------------------------------------------------------
+src/tui_wifi/__init__.py                       1      0      0      0   100%
+src/tui_wifi/backends/__init__.py              3      0      0      0   100%
+src/tui_wifi/backends/fake.py                 90      7     18      7    87%   52, 71->73, 104, 119, 134-135, 148->exit, 174, 176
+src/tui_wifi/backends/nmcli.py                 3      0      0      0   100%
+src/tui_wifi/backends/nmcli_core.py          110     31     34     11    69%   54, 73-80, 91, 105, 107, 112, 114, 116, 130-131, 147-153, 165, 170-182, 193, 210, 237, 240
+src/tui_wifi/backends/nmcli_mutations.py      70     55     28      0    15%   25-38, 42-67, 71-101, 106-109, 118-134, 138-144, 151-157, 164-182, 186
+src/tui_wifi/backends/nmcli_profiles.py       62     39     24      2    36%   24-83, 94, 99, 103-154, 176-177
+src/tui_wifi/backends/parsing.py             108      5     52      3    95%   49, 58-59, 87, 116
+src/tui_wifi/cli.py                           28      7      4      2    72%   36-38, 48-51, 56
+src/tui_wifi/errors.py                        47      0      8      0   100%
+src/tui_wifi/grouping.py                      25      0     12      1    97%   18->17
+src/tui_wifi/logging_config.py                18      2      0      0    89%   27-28
+src/tui_wifi/models.py                       168     11      8      0    89%   108, 123-131, 176
+src/tui_wifi/process/__init__.py               2      0      0      0   100%
+src/tui_wifi/process/fake.py                  36      8     10      5    72%   44-45, 49-54, 59, 61, 67-68
+src/tui_wifi/process/runner.py               103     26      8      2    75%   45, 102, 111-112, 127-135, 150-152, 163-179, 184-186
+src/tui_wifi/secrets.py                       24      0      4      1    96%   49->48
+src/tui_wifi/services/__init__.py              2      0      0      0   100%
+src/tui_wifi/services/wifi.py                163     34     46     14    74%   63->exit, 77-82, 88, 102, 115-116, 150->152, 157-161, 176, 182, 186, 214, 230->232, 242-261, 267, 288-294, 298-304, 308, 316, 362, 377
+--------------------------------------------------------------------------------------
+TOTAL                                       1063    225    256     48    75%
+Required test coverage of 70% reached. Total coverage: 74.91%
+============================== 46 passed in 1.65s ==============================
+status=0

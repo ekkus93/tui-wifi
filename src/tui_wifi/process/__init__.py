@@ -1,3 +1,5 @@
+"""Provide the process package."""
+
 from tui_wifi.process.runner import (
     AsyncProcessRunner,
     ProcessCancelled,
