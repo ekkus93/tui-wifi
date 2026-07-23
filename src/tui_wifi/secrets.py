@@ -26,8 +26,7 @@ class SecretValue:
 
 def redact_arguments(args: Iterable[str], sensitive_indexes: frozenset[int]) -> tuple[str, ...]:
     return tuple(
-        _REDACTED if index in sensitive_indexes else value
-        for index, value in enumerate(args)
+        _REDACTED if index in sensitive_indexes else value for index, value in enumerate(args)
     )
 
 

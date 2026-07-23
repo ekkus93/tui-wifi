@@ -118,9 +118,7 @@ class SavedNetworksScreen(Screen[None]):
 
     async def _activate(self, uuid: str, interface: str) -> None:
         try:
-            await self.service.backend.activate_saved_profile(
-                SavedProfileRequest(uuid, interface)
-            )
+            await self.service.backend.activate_saved_profile(SavedProfileRequest(uuid, interface))
             await self.service.refresh()
             self.app.pop_screen()
         except WifiError as exc:

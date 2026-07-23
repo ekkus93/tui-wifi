@@ -15,9 +15,7 @@ def configure_debug_logging() -> tuple[Path | None, str | None]:
         handler = logging.handlers.RotatingFileHandler(
             path, maxBytes=1_000_000, backupCount=2, encoding="utf-8"
         )
-        handler.setFormatter(
-            logging.Formatter("%(asctime)s %(levelname)s %(name)s %(message)s")
-        )
+        handler.setFormatter(logging.Formatter("%(asctime)s %(levelname)s %(name)s %(message)s"))
         root = logging.getLogger("tui_wifi")
         root.setLevel(logging.DEBUG)
         root.addHandler(handler)

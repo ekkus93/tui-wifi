@@ -76,9 +76,7 @@ def test_unsupported_connection_is_rejected_before_backend() -> None:
         await service.startup()
         from tui_wifi.models import NetworkGroup
 
-        group = NetworkGroup(
-            "corp", "Corp", SecurityClass.ENTERPRISE, 80, False, supported=False
-        )
+        group = NetworkGroup("corp", "Corp", SecurityClass.ENTERPRISE, 80, False, supported=False)
         with pytest.raises(WifiError) as caught:
             await service.connect_network(group)
         assert caught.value.category == ErrorCategory.UNSUPPORTED_SECURITY
@@ -102,18 +100,16 @@ def test_fake_backend_saved_profile_workflows() -> None:
             SecurityClass.WPA2_PERSONAL,
         )
         backend.profiles = (profile,)
-        active = await backend.activate_saved_profile(
-            SavedProfileRequest(profile.uuid, "wlan0")
-        )
+        active = await backend.activate_saved_profile(SavedProfileRequest(profile.uuid, "wlan0"))
         assert active.uuid == profile.uuid
         changed = await backend.set_profile_autoconnect(profile.uuid, False)
         assert changed.autoconnect is False
         await backend.delete_saved_profile(profile.uuid)
         assert backend.profiles == ()
         await backend.disconnect(
-            __import__(
-                "tui_wifi.backends.base", fromlist=["DisconnectRequest"]
-            ).DisconnectRequest("wlan0", active.uuid)
+            __import__("tui_wifi.backends.base", fromlist=["DisconnectRequest"]).DisconnectRequest(
+                "wlan0", active.uuid
+            )
         )
         assert await backend.get_connection_details() is None
 

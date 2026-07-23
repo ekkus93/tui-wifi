@@ -12,9 +12,7 @@ from tui_wifi.models import ActiveWifiConnection, SavedProfile, SecurityClass
 
 
 class NmcliMutationsMixin(NmcliProfilesMixin):
-    async def activate_saved_profile(
-        self, request: SavedProfileRequest
-    ) -> ActiveWifiConnection:
+    async def activate_saved_profile(self, request: SavedProfileRequest) -> ActiveWifiConnection:
         await self._run(
             (
                 "--wait",
@@ -30,9 +28,7 @@ class NmcliMutationsMixin(NmcliProfilesMixin):
         )
         return await self._verify_active(request.interface, request.uuid)
 
-    async def connect_visible_network(
-        self, request: VisibleConnectRequest
-    ) -> ActiveWifiConnection:
+    async def connect_visible_network(self, request: VisibleConnectRequest) -> ActiveWifiConnection:
         self._validate_connect_security(request.security, request.password is not None)
         args = [
             "--wait",
@@ -60,9 +56,7 @@ class NmcliMutationsMixin(NmcliProfilesMixin):
             await self.set_profile_autoconnect(active.uuid, False)
         return active
 
-    async def connect_hidden_network(
-        self, request: HiddenConnectRequest
-    ) -> ActiveWifiConnection:
+    async def connect_hidden_network(self, request: HiddenConnectRequest) -> ActiveWifiConnection:
         if not request.ssid:
             raise WifiError(
                 ErrorCategory.NETWORK_UNAVAILABLE,

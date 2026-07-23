@@ -150,11 +150,7 @@ class WifiService:
         managed = tuple(device for device in devices if device.managed)
         if self.preferred_interface:
             selected = next(
-                (
-                    device
-                    for device in managed
-                    if device.interface == self.preferred_interface
-                ),
+                (device for device in managed if device.interface == self.preferred_interface),
                 None,
             )
             if selected is None:
@@ -203,11 +199,7 @@ class WifiService:
                         SavedProfileRequest(group.saved_profile_uuids[0], interface)
                     )
                 else:
-                    bssid = (
-                        group.member_bssids[0]
-                        if len(group.member_bssids) == 1
-                        else None
-                    )
+                    bssid = group.member_bssids[0] if len(group.member_bssids) == 1 else None
                     await self.backend.connect_visible_network(
                         VisibleConnectRequest(
                             group.display_ssid,
@@ -281,9 +273,7 @@ class WifiService:
             await self.backend.delete_saved_profile(uuid)
         return await self.refresh()
 
-    async def set_profile_autoconnect(
-        self, uuid: str, enabled: bool
-    ) -> ApplicationSnapshot:
+    async def set_profile_autoconnect(self, uuid: str, enabled: bool) -> ApplicationSnapshot:
         async with self._mutation(
             OperationKind.AUTOCONNECT,
             uuid,

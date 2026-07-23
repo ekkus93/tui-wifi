@@ -121,9 +121,7 @@ class NmcliCore:
         except WifiError:
             return BackendStatus(BackendAvailability.MISSING_EXECUTABLE)
         try:
-            version = (
-                await self._run(("--version",), timeout_seconds=self.STATUS_TIMEOUT)
-            ).strip()
+            version = (await self._run(("--version",), timeout_seconds=self.STATUS_TIMEOUT)).strip()
             state_output = await self._run(
                 ("-t", "-e", "yes", "-f", "STATE", "general"),
                 timeout_seconds=self.STATUS_TIMEOUT,
@@ -223,9 +221,7 @@ class NmcliCore:
         for line in output.splitlines():
             if not line:
                 continue
-            active, ssid, bssid, signal_text, frequency_text, security_text = split_escaped(
-                line, 6
-            )
+            active, ssid, bssid, signal_text, frequency_text, security_text = split_escaped(line, 6)
             if not ssid:
                 continue
             frequency = parse_optional_int(frequency_text)

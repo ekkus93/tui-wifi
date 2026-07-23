@@ -96,9 +96,7 @@ class FakeWifiBackend:
         )
         return self.active
 
-    async def connect_visible_network(
-        self, request: VisibleConnectRequest
-    ) -> ActiveWifiConnection:
+    async def connect_visible_network(self, request: VisibleConnectRequest) -> ActiveWifiConnection:
         await self._before("connect_visible_network", request)
         if not request.security.supported:
             raise WifiError(ErrorCategory.UNSUPPORTED_SECURITY)

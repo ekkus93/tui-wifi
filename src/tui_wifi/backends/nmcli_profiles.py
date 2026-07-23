@@ -122,9 +122,7 @@ class NmcliProfilesMixin(NmcliCore):
             key, value = split_escaped(line, 2)
             values[key].append(value)
         profile_name = (
-            self._first(values, "GENERAL.CONNECTION")
-            or active_device.active_connection
-            or ""
+            self._first(values, "GENERAL.CONNECTION") or active_device.active_connection or ""
         )
         uuid = self._first(values, "GENERAL.CON-UUID") or ""
         if not uuid:
