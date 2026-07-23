@@ -36,12 +36,7 @@ _INDEXED_IP_PROPERTIES = frozenset(
 def _normalize_detail_key(key: str) -> str:
     """Normalize indexed IP property names emitted by older NetworkManager releases."""
     base, bracket, index = key.rpartition("[")
-    if (
-        bracket
-        and base in _INDEXED_IP_PROPERTIES
-        and index.endswith("]")
-        and index[:-1].isdigit()
-    ):
+    if bracket and base in _INDEXED_IP_PROPERTIES and index.endswith("]") and index[:-1].isdigit():
         return base
     return key
 

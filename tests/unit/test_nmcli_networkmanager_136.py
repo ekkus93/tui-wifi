@@ -27,8 +27,7 @@ def test_property_split_preserves_literal_and_escaped_ipv6_colons() -> None:
         == ("IP6.ADDRESS[1]", "fe80::3aff:3dfc:c7b9:dbaa/64"),
     )
     verify(
-        split_escaped_key_value(r"IP6.GATEWAY:2001\:db8\:\:1")
-        == ("IP6.GATEWAY", "2001:db8::1"),
+        split_escaped_key_value(r"IP6.GATEWAY:2001\:db8\:\:1") == ("IP6.GATEWAY", "2001:db8::1"),
     )
 
 
