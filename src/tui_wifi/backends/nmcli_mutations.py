@@ -6,11 +6,12 @@ from tui_wifi.backends.base import (
     SavedProfileRequest,
     VisibleConnectRequest,
 )
+from tui_wifi.backends.nmcli_profiles import NmcliProfilesMixin
 from tui_wifi.errors import ErrorCategory, WifiError
 from tui_wifi.models import ActiveWifiConnection, SavedProfile, SecurityClass
 
 
-class NmcliMutationsMixin:
+class NmcliMutationsMixin(NmcliProfilesMixin):
     async def activate_saved_profile(
         self, request: SavedProfileRequest
     ) -> ActiveWifiConnection:
@@ -25,7 +26,7 @@ class NmcliMutationsMixin:
                 "ifname",
                 request.interface,
             ),
-            timeout=self.CONNECT_TIMEOUT,
+            timeout_seconds=self.CONNECT_TIMEOUT,
         )
         return await self._verify_active(request.interface, request.uuid)
 
@@ -51,7 +52,7 @@ class NmcliMutationsMixin:
             sensitive.add(len(args) - 1)
         await self._run(
             tuple(args),
-            timeout=self.CONNECT_TIMEOUT,
+            timeout_seconds=self.CONNECT_TIMEOUT,
             sensitive_arg_indexes=frozenset(sensitive),
         )
         active = await self._verify_active(request.interface, None, request.ssid)
@@ -86,7 +87,7 @@ class NmcliMutationsMixin:
             sensitive.add(len(args) - 1)
         await self._run(
             tuple(args),
-            timeout=self.CONNECT_TIMEOUT,
+            timeout_seconds=self.CONNECT_TIMEOUT,
             sensitive_arg_indexes=frozenset(sensitive),
         )
         active = await self._verify_active(request.interface, None, request.ssid)
@@ -95,9 +96,7 @@ class NmcliMutationsMixin:
         return active
 
     @staticmethod
-    def _validate_connect_security(
-        security: SecurityClass, has_password: bool
-    ) -> None:
+    def _validate_connect_security(security: SecurityClass, has_password: bool) -> None:
         if not security.supported:
             raise WifiError(ErrorCategory.UNSUPPORTED_SECURITY)
         if security.requires_password and not has_password:
@@ -127,7 +126,7 @@ class NmcliMutationsMixin:
     async def disconnect(self, request: DisconnectRequest) -> None:
         await self._run(
             ("--wait", "15", "device", "disconnect", request.interface),
-            timeout=self.MUTATION_TIMEOUT,
+            timeout_seconds=self.MUTATION_TIMEOUT,
         )
         active = await self.get_active_wifi_connection()
         if active is not None and active.device == request.interface:
@@ -139,7 +138,7 @@ class NmcliMutationsMixin:
     async def delete_saved_profile(self, uuid: str) -> None:
         await self._run(
             ("connection", "delete", "uuid", uuid),
-            timeout=self.MUTATION_TIMEOUT,
+            timeout_seconds=self.MUTATION_TIMEOUT,
         )
         profiles = await self.list_saved_wifi_profiles()
         if any(profile.uuid == uuid for profile in profiles):
@@ -148,9 +147,7 @@ class NmcliMutationsMixin:
                 technical_details=f"profile {uuid} still exists after deletion",
             )
 
-    async def set_profile_autoconnect(
-        self, uuid: str, enabled: bool
-    ) -> SavedProfile:
+    async def set_profile_autoconnect(self, uuid: str, enabled: bool) -> SavedProfile:
         await self._run(
             (
                 "connection",
@@ -160,7 +157,7 @@ class NmcliMutationsMixin:
                 "connection.autoconnect",
                 "yes" if enabled else "no",
             ),
-            timeout=self.MUTATION_TIMEOUT,
+            timeout_seconds=self.MUTATION_TIMEOUT,
         )
         profiles = await self.list_saved_wifi_profiles()
         profile = next((item for item in profiles if item.uuid == uuid), None)
