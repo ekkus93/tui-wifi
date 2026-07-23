@@ -1,14 +1,17 @@
 from __future__ import annotations
 
 from collections.abc import Callable
+from typing import ClassVar
 
 from textual.app import ComposeResult
+from textual.binding import Binding, BindingType
 from textual.containers import Horizontal, Vertical
 from textual.screen import Screen
 from textual.widgets import Button, Footer, Header, Label, Static
 
 from tui_wifi.errors import WifiError
 from tui_wifi.models import ApplicationSnapshot, NetworkGroup, OperationPhase, WifiRadioState
+from tui_wifi.secrets import SecretValue
 from tui_wifi.services.wifi import WifiService
 from tui_wifi.ui.dialogs.common import (
     ConfirmDialog,
@@ -24,7 +27,7 @@ from tui_wifi.ui.widgets.network_list import NetworkTable
 
 
 class MainScreen(Screen[None]):
-    BINDINGS = [
+    BINDINGS: ClassVar[list[BindingType]] = [
         ("r", "refresh_networks", "Refresh"),
         ("d", "disconnect", "Disconnect"),
         ("h", "hidden", "Hidden"),
@@ -33,8 +36,8 @@ class MainScreen(Screen[None]):
         ("i", "details", "Details"),
         ("enter", "connect", "Connect"),
         ("q", "quit", "Quit"),
-        ("j", "cursor_down", "Down", False),
-        ("k", "cursor_up", "Up", False),
+        Binding("j", "cursor_down", "Down", show=False),
+        Binding("k", "cursor_up", "Up", show=False),
     ]
 
     def __init__(self, service: WifiService, startup_warning: str | None = None) -> None:
@@ -217,13 +220,17 @@ class MainScreen(Screen[None]):
                 exclusive=True,
             )
 
-    async def _connect(self, group: NetworkGroup, password: object, autoconnect: bool) -> None:
-        from tui_wifi.secrets import SecretValue
-
-        secret = password if isinstance(password, SecretValue) else None
+    async def _connect(
+        self,
+        group: NetworkGroup,
+        password: SecretValue | None,
+        autoconnect: bool,
+    ) -> None:
         try:
             snapshot = await self.service.connect_network(
-                group, password=secret, autoconnect=autoconnect
+                group,
+                password=password,
+                autoconnect=autoconnect,
             )
         except WifiError as exc:
             self.app.push_screen(
@@ -272,7 +279,10 @@ class MainScreen(Screen[None]):
     async def _connect_hidden(self, answer: HiddenNetworkAnswer) -> None:
         try:
             await self.service.connect_hidden(
-                answer.ssid, answer.security, answer.password, answer.autoconnect
+                answer.ssid,
+                answer.security,
+                answer.password,
+                answer.autoconnect,
             )
         except WifiError as exc:
             self.app.push_screen(MessageDialog(exc.summary, exc.guidance or "Connection failed."))
