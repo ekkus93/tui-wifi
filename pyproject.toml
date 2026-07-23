@@ -80,6 +80,9 @@ src = ["src", "tests"]
 [tool.ruff.lint]
 select = ["ALL"]
 
+[tool.ruff.lint.pydocstyle]
+convention = "google"
+
 [tool.mypy]
 python_version = "3.11"
 packages = ["tui_wifi"]
