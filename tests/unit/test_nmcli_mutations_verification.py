@@ -287,7 +287,7 @@ def test_disconnect_fails_when_requested_interface_remains_active() -> None:
 
 
 @pytest.mark.parametrize("profile_remains", [False, True])
-def test_delete_saved_profile_verifies_uuid_absence(profile_remains: bool) -> None:
+def test_delete_saved_profile_verifies_uuid_absence(*, profile_remains: bool) -> None:
     """Verify deletion re-reads profiles and rejects a retained UUID."""
 
     async def scenario() -> None:
@@ -316,7 +316,7 @@ def test_delete_saved_profile_verifies_uuid_absence(profile_remains: bool) -> No
 
 
 @pytest.mark.parametrize("enabled", [True, False])
-def test_set_profile_autoconnect_emits_and_verifies_requested_value(enabled: bool) -> None:
+def test_set_profile_autoconnect_emits_and_verifies_requested_value(*, enabled: bool) -> None:
     """Verify auto-connect mutation emits yes/no and returns the stored profile."""
 
     async def scenario() -> None:

@@ -16,6 +16,9 @@ from tui_wifi.process import ProcessNonZeroExitError, ProcessRequest
 from tui_wifi.process.fake import FakeProcessRunner
 
 NONZERO_EXIT = 10
+EXPECTED_ACCESS_POINT_COUNT = 11
+CHANNEL_14 = 14
+CHANNEL_36 = 36
 
 
 def test_device_parsing_covers_states_filters_and_escaped_connections() -> None:
@@ -153,11 +156,11 @@ def test_access_point_parsing_covers_security_channels_and_blank_policy() -> Non
 
         access_points = await backend.list_access_points("wlan0")
 
-        verify(len(access_points) == 11)
+        verify(len(access_points) == EXPECTED_ACCESS_POINT_COUNT)
         verify(access_points[0].active is True)
         verify(access_points[0].security == SecurityClass.OPEN)
-        verify(access_points[1].channel == 14)
-        verify(access_points[2].channel == 36)
+        verify(access_points[1].channel == CHANNEL_14)
+        verify(access_points[2].channel == CHANNEL_36)
         verify(access_points[3].channel == 1)
         verify(access_points[4].security == SecurityClass.MIXED_PERSONAL)
         verify(access_points[5].security == SecurityClass.ENTERPRISE)

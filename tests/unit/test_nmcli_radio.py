@@ -126,7 +126,7 @@ def test_radio_state_rejects_malformed_output(output: str) -> None:
 
 
 @pytest.mark.parametrize("enabled", [True, False])
-def test_radio_mutation_emits_command_and_verifies_state(enabled: bool) -> None:
+def test_radio_mutation_emits_command_and_verifies_state(*, enabled: bool) -> None:
     """Verify radio mutation re-reads and returns the requested state."""
 
     async def scenario() -> None:

@@ -5,7 +5,7 @@ from __future__ import annotations
 
 import asyncio
 
-from textual.widgets import DataTable, Static
+from textual.widgets import Button, DataTable, Static
 
 from tests.assertions import verify
 from tests.factories import DEFAULT_UUID, application_snapshot, saved_profile
@@ -154,7 +154,12 @@ def test_saved_empty_selection_no_adapter_and_backend_failure_are_visible() -> N
                 key=profile.uuid,
             )
             table.move_cursor(row=0)
-            await pilot.click("#connect")
+            await settle(pilot)
+            verify(service.snapshot.selected_device is None)
+            screen = app.screen
+            verify(isinstance(screen, SavedNetworksScreen))
+            button = screen.query_one("#connect", Button)
+            screen.on_button_pressed(Button.Pressed(button))
             await settle(pilot)
             verify(isinstance(app.screen, MessageDialog))
             verify("No Wi-Fi adapter" in " ".join(static_text(w) for w in app.screen.query(Static)))

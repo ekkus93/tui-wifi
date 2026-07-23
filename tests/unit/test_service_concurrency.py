@@ -22,6 +22,9 @@ from tui_wifi.models import (
 from tui_wifi.secrets import SecretValue
 from tui_wifi.services.wifi import WifiService
 
+EXPECTED_SECOND_VALUE = 2
+
+
 if TYPE_CHECKING:
     from tui_wifi.backends.base import HiddenConnectRequest, VisibleConnectRequest
 
@@ -117,7 +120,7 @@ def test_older_refresh_cannot_overwrite_newer_generation() -> None:
         verify(tuple(group.display_ssid for group in second_result.networks) == ("New",))
         backend.release_first.set()
         await first
-        verify(service.snapshot.generation == 2)
+        verify(service.snapshot.generation == EXPECTED_SECOND_VALUE)
         verify(tuple(group.display_ssid for group in service.snapshot.networks) == ("New",))
         verify((1, ("Old",)) not in published)
 
@@ -193,7 +196,7 @@ def test_wifi_error_releases_lock_and_publishes_failed_operation() -> None:
 
         backend.failure = None
         await service.connect_network(network_group(display_ssid="Second"))
-        verify(backend.mutation_entries == 2)
+        verify(backend.mutation_entries == EXPECTED_SECOND_VALUE)
 
     asyncio.run(scenario())
 
@@ -221,7 +224,7 @@ def test_cancellation_clears_password_releases_lock_and_sets_cancelled_phase() -
 
         backend.release_first.set()
         await service.connect_network(network_group(display_ssid="Second"))
-        verify(backend.mutation_entries == 2)
+        verify(backend.mutation_entries == EXPECTED_SECOND_VALUE)
 
     asyncio.run(scenario())
 
@@ -242,7 +245,7 @@ def test_unexpected_exception_propagates_and_releases_lock() -> None:
 
         backend.failure = None
         await service.connect_network(network_group(display_ssid="Second"))
-        verify(backend.mutation_entries == 2)
+        verify(backend.mutation_entries == EXPECTED_SECOND_VALUE)
 
     asyncio.run(scenario())
 

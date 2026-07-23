@@ -27,6 +27,7 @@ if TYPE_CHECKING:
 T = TypeVar("T")
 _EXPECTED_EXIT_CODE = 7
 _SIGNAL_EXIT_CODE = -9
+_EXPECTED_TERMINATION_WAITS = 2
 
 
 def run(coroutine: Coroutine[Any, Any, T]) -> T:
@@ -250,8 +251,8 @@ def test_combined_argument_and_stdin_redaction_preserves_neighboring_text() -> N
     """Verify argument and stdin values are independently removed."""
 
     async def scenario() -> None:
-        argument_secret = "argument-secret-value"
-        stdin_secret = "stdin-secret-value"
+        argument_value = "argument-secret-value"
+        stdin_value = "stdin-secret-value"
         result = await AsyncProcessRunner().run(
             ProcessRequest(
                 sys.executable,
@@ -262,16 +263,16 @@ def test_combined_argument_and_stdin_redaction_preserves_neighboring_text() -> N
                         "print('prefix', sys.argv[1], data, 'suffix'); "
                         "print('error', sys.argv[1], data, file=sys.stderr)"
                     ),
-                    argument_secret,
+                    argument_value,
                 ),
-                stdin=stdin_secret,
+                stdin=stdin_value,
                 sensitive_arg_indexes=frozenset({2}),
                 sensitive_stdin=True,
             ),
         )
         for output in (result.stdout, result.stderr):
-            verify(argument_secret not in output)
-            verify(stdin_secret not in output)
+            verify(argument_value not in output)
+            verify(stdin_value not in output)
             verify("<redacted>" in output)
         verify("prefix" in result.stdout)
         verify("suffix" in result.stdout)
@@ -339,7 +340,7 @@ def test_terminate_escalates_to_kill_and_reaps_process(monkeypatch: pytest.Monke
         await RunnerProbe.stop_process(process)
         verify(process.terminated is True)
         verify(process.killed is True)
-        verify(process.wait_calls >= 2)
+        verify(process.wait_calls >= _EXPECTED_TERMINATION_WAITS)
         verify(process.returncode == _SIGNAL_EXIT_CODE)
 
     run(scenario())

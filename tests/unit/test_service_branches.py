@@ -86,7 +86,7 @@ def test_subscription_snapshot_and_idempotent_unsubscribe() -> None:
 
     unsubscribe_first = service.subscribe(first_listener)
     unsubscribe_second = service.subscribe(
-        lambda _snapshot: second.append(service.snapshot.generation)
+        lambda _snapshot: second.append(service.snapshot.generation),
     )
     service.publish(service.snapshot)
     service.publish(service.snapshot)
