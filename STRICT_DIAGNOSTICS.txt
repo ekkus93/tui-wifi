@@ -1,0 +1,77 @@
+tests/integration/test_fake_nmcli_executable.py::test_fake_executable_receives_exact_arguments_and_locale
+tests/tui/test_app.py::test_main_screen_loads_fake_network_without_real_wifi
+tests/unit/test_cli.py::test_cli_interface_and_debug_options
+tests/unit/test_cli.py::test_cli_rejects_unknown_option
+tests/unit/test_cli.py::test_main_runs_app_and_propagates_mouse_setting
+tests/unit/test_errors.py::test_every_error_has_friendly_summary
+tests/unit/test_errors.py::test_diagnostics_include_structured_context
+tests/unit/test_grouping.py::test_grouping_preserves_security_boundaries_and_sorting
+tests/unit/test_logging.py::test_debug_logging_uses_xdg_and_is_bounded
+tests/unit/test_nmcli.py::test_status_uses_explicit_machine_readable_commands
+tests/unit/test_nmcli.py::test_command_error_classification_is_conservative
+tests/unit/test_nmcli.py::test_profile_security
+tests/unit/test_nmcli.py::test_read_devices_and_access_points
+tests/unit/test_parsing.py::test_split_escaped_colon_and_backslash
+tests/unit/test_parsing.py::test_split_escaped_rejects_dangling_escape
+tests/unit/test_parsing.py::test_split_escaped_rejects_wrong_field_count
+tests/unit/test_parsing.py::test_parse_bool[yes-True]
+tests/unit/test_parsing.py::test_parse_bool[disabled-False]
+tests/unit/test_parsing.py::test_parse_bool[1-True]
+tests/unit/test_parsing.py::test_parse_bool[0-False]
+tests/unit/test_parsing.py::test_parse_signal_validates_range
+tests/unit/test_parsing.py::test_security_classification[---open]
+tests/unit/test_parsing.py::test_security_classification[WEP-wep]
+tests/unit/test_parsing.py::test_security_classification[WPA1-wpa_personal]
+tests/unit/test_parsing.py::test_security_classification[WPA2-wpa2_personal]
+tests/unit/test_parsing.py::test_security_classification[WPA3 SAE-wpa3_personal]
+tests/unit/test_parsing.py::test_security_classification[WPA2 WPA3 SAE-mixed_personal]
+tests/unit/test_parsing.py::test_security_classification[WPA2 802.1X-enterprise]
+tests/unit/test_parsing.py::test_security_classification[mystery-unknown]
+tests/unit/test_parsing.py::test_frequency_to_channel
+tests/unit/test_parsing.py::test_validate_uuid
+tests/unit/test_parsing.py::test_additional_scalar_and_state_parsers
+tests/unit/test_process.py::test_process_success_and_no_shell_interpretation
+tests/unit/test_process.py::test_process_nonzero_keeps_stdout_and_stderr_separate
+tests/unit/test_process.py::test_process_output_redacts_sensitive_argument_values
+tests/unit/test_process.py::test_process_timeout_redacts_sensitive_metadata
+tests/unit/test_process.py::test_sensitive_argument_indexes_must_be_valid
+tests/unit/test_secrets.py::test_secret_never_formats_as_plaintext
+tests/unit/test_secrets.py::test_argument_and_text_redaction
+tests/unit/test_secrets.py::test_process_request_repr_hides_raw_arguments_and_stdin
+tests/unit/test_service.py::test_startup_connect_disconnect_and_radio
+tests/unit/test_service.py::test_refresh_failure_preserves_last_valid_state
+tests/unit/test_service.py::test_explicit_missing_interface_is_visible
+tests/unit/test_service.py::test_unsupported_connection_is_rejected_before_backend
+tests/unit/test_service.py::test_fake_backend_saved_profile_workflows
+tests/unit/test_service.py::test_multiple_idle_adapters_require_explicit_selection
+
+================================ tests coverage ================================
+_______________ coverage: platform linux, python 3.11.15-final-0 _______________
+
+Name                                       Stmts   Miss Branch BrPart  Cover   Missing
+--------------------------------------------------------------------------------------
+src/tui_wifi/__init__.py                       1      0      0      0   100%
+src/tui_wifi/backends/__init__.py              3      0      0      0   100%
+src/tui_wifi/backends/fake.py                 90     66     18      0    22%   28-40, 43-47, 50-51, 54-55, 58-63, 66-67, 70, 73-74, 77-78, 81-82, 85-97, 100-113, 116-117, 128-130, 133-134, 137-157, 160-161
+src/tui_wifi/backends/nmcli.py                 3      0      0      0   100%
+src/tui_wifi/backends/nmcli_core.py          110     86     34      0    17%   42-43, 46-49, 58-74, 78-111, 119-144, 147-156, 159-171, 174-194, 197, 203-241
+src/tui_wifi/backends/nmcli_mutations.py      71     55     28      0    16%   16-29, 32-57, 60-90, 94-97, 102-118, 121-127, 133-139, 145-163, 166
+src/tui_wifi/backends/nmcli_profiles.py       62     49     24      0    15%   19-78, 82-93, 96-147, 168-169
+src/tui_wifi/backends/parsing.py             108     93     52      0     9%   11-36, 40-45, 49-61, 65-70, 76-86, 90-110, 114-134, 138-147, 151-154, 161-173
+src/tui_wifi/cli.py                           30     22      4      1    26%   11-23, 27-47, 51
+src/tui_wifi/errors.py                        47     21      8      0    47%   116-125, 128, 131-140
+src/tui_wifi/grouping.py                      25     21     12      0    11%   13-52
+src/tui_wifi/logging_config.py                18     12      0      0    33%   11-24
+src/tui_wifi/models.py                       168     12      8      0    89%   80, 90, 102-110, 148
+src/tui_wifi/process/__init__.py               2      0      0      0   100%
+src/tui_wifi/process/fake.py                  33     17     10      0    37%   20-21, 31, 34-49, 52-53
+src/tui_wifi/process/runner.py                99     53     10      1    43%   23-27, 31, 35-38, 56-58, 82->exit, 87-167
+src/tui_wifi/secrets.py                       25     11      4      0    48%   15, 18, 21, 24, 28, 34-43
+src/tui_wifi/services/__init__.py              2      0      0      0   100%
+src/tui_wifi/services/wifi.py                163    128     46      0    17%   40-47, 50-56, 59-61, 64-71, 74-139, 143-147, 150-173, 188-216, 225-244, 247-256, 259-265, 268-274, 277-283, 286, 292-294, 304-307, 310-312, 332-363, 371, 374
+--------------------------------------------------------------------------------------
+TOTAL                                       1060    646    258      2    32%
+FAIL Required test coverage of 70% not reached. Total coverage: 31.56%
+46 tests collected in 0.54s
+
+exit_status=0
