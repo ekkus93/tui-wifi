@@ -1,3 +1,8 @@
+=== BLACK ===
+All done! ✨ 🍰 ✨
+43 files would be left unchanged.
+
+=== RUFF ===
 src/tui_wifi/__main__.py:1:1: D100 Missing docstring in public module
 src/tui_wifi/app.py:1:1: D100 Missing docstring in public module
 src/tui_wifi/app.py:13:7: D101 Missing docstring in public class
