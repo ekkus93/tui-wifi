@@ -51,7 +51,7 @@ python -m pip install --upgrade --force-reinstall \
 After installation, start the application with:
 
 ```bash
-wifi-tui
+tui-wifi
 ```
 
 ### Install from a checkout
@@ -60,23 +60,23 @@ wifi-tui
 python -m venv .venv
 . .venv/bin/activate
 python -m pip install -e .
-wifi-tui
+tui-wifi
 ```
 
 ### Install with pipx after cloning
 
 ```bash
 pipx install .
-wifi-tui
+tui-wifi
 ```
 
 ## Usage
 
 ```bash
-wifi-tui
-wifi-tui --interface wlan0
-wifi-tui --debug
-wifi-tui --version
+tui-wifi
+tui-wifi --interface wlan0
+tui-wifi --debug
+tui-wifi --version
 ```
 
 ### Keyboard shortcuts
