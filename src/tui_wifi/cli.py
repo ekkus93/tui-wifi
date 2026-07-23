@@ -1,4 +1,4 @@
-"""Provide cli functionality."""
+"""Provide the command-line entry point for tui-wifi."""
 
 from __future__ import annotations
 
@@ -6,13 +6,15 @@ import argparse
 from typing import TYPE_CHECKING
 
 from tui_wifi import __version__
+from tui_wifi.app import WifiTuiApp
+from tui_wifi.logging_config import configure_debug_logging
 
 if TYPE_CHECKING:
     from collections.abc import Sequence
 
 
 def build_parser() -> argparse.ArgumentParser:
-    """Perform build parser."""
+    """Build the command-line argument parser."""
     parser = argparse.ArgumentParser(
         prog="wifi-tui",
         description="A desktop-like terminal Wi-Fi manager for NetworkManager.",
@@ -29,26 +31,21 @@ def build_parser() -> argparse.ArgumentParser:
 
 
 def main(argv: Sequence[str] | None = None) -> int:
-    """Perform main."""
+    """Parse arguments and run the TUI until it exits."""
     args = build_parser().parse_args(argv)
     warning: str | None = None
     if args.debug:
-        from tui_wifi.logging_config import configure_debug_logging
-
         _, warning = configure_debug_logging()
-    try:
-        from tui_wifi.app import WifiTuiApp
 
-        app = WifiTuiApp(
-            preferred_interface=args.interface,
-            mouse_enabled=not args.no_mouse,
-            startup_warning=warning,
-        )
+    app = WifiTuiApp(
+        preferred_interface=args.interface,
+        mouse_enabled=not args.no_mouse,
+        startup_warning=warning,
+    )
+    try:
         app.run(mouse=not args.no_mouse)
     except KeyboardInterrupt:
         return 130
-    except Exception:  # top-level crash boundary; never treated as success
-        return 1
     return 0
 
 
