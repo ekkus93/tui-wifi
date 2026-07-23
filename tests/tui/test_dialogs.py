@@ -86,6 +86,7 @@ def test_hidden_dialog_open_personal_validation_and_cancel() -> None:
                 in static_text(app.screen.query_one("#validation", Static)),
             )
             app.screen.query_one("#ssid", Input).value = "Hidden Personal"
+            await settle(pilot)
             await pilot.click("#connect")
             await settle(pilot)
             verify(

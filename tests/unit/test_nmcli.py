@@ -125,7 +125,10 @@ def test_process_failures_translate_to_typed_wifi_errors(
 
 
 @pytest.mark.parametrize("with_result", [True, False])
-def test_nonzero_process_failure_preserves_safe_stderr_and_exit_code(with_result: bool) -> None:
+def test_nonzero_process_failure_preserves_safe_stderr_and_exit_code(
+    *,
+    with_result: bool,
+) -> None:
     """Verify command failures use captured data or conservative defaults."""
 
     async def scenario() -> None:
