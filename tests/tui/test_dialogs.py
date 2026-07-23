@@ -37,7 +37,7 @@ def test_password_dialog_validation_visibility_and_submission() -> None:
             verify(password.password is True)
 
             await pilot.click("#connect")
-            await pilot.pause()
+            await settle(pilot)
             verify(
                 "Enter the network password"
                 in static_text(app.screen.query_one("#validation", Static)),
@@ -80,12 +80,14 @@ def test_hidden_dialog_open_personal_validation_and_cancel() -> None:
             await settle(pilot)
 
             await pilot.click("#connect")
+            await settle(pilot)
             verify(
                 "Enter the network name"
                 in static_text(app.screen.query_one("#validation", Static)),
             )
             app.screen.query_one("#ssid", Input).value = "Hidden Personal"
             await pilot.click("#connect")
+            await settle(pilot)
             verify(
                 "Enter the network password"
                 in static_text(app.screen.query_one("#validation", Static)),
@@ -109,7 +111,7 @@ def test_hidden_dialog_open_personal_validation_and_cancel() -> None:
             await settle(pilot)
             app.screen.query_one("#ssid", Input).value = "Hidden Open"
             app.screen.query_one("#security", Select).value = SecurityClass.OPEN.value
-            await pilot.pause()
+            await settle(pilot)
             verify(app.screen.query_one("#password", Input).disabled is True)
             await pilot.click("#connect")
             await settle(pilot)
@@ -138,13 +140,19 @@ def test_confirm_and_message_dialog_callbacks() -> None:
         messages: list[None] = []
         async with app.run_test(size=(100, 30)) as pilot:
             await settle(pilot)
-            app.push_screen(ConfirmDialog("Delete", "Delete it?", "Delete"), confirmations.append)
+            app.push_screen(
+                ConfirmDialog("Delete", "Delete it?", "Delete"),
+                confirmations.append,
+            )
             await settle(pilot)
             await pilot.click("#cancel")
             await settle(pilot)
             verify(confirmations == [False])
 
-            app.push_screen(ConfirmDialog("Delete", "Delete it?", "Delete"), confirmations.append)
+            app.push_screen(
+                ConfirmDialog("Delete", "Delete it?", "Delete"),
+                confirmations.append,
+            )
             await settle(pilot)
             await pilot.click("#confirm")
             await settle(pilot)
@@ -155,10 +163,9 @@ def test_confirm_and_message_dialog_callbacks() -> None:
                 messages.append,
             )
             await settle(pilot)
-            verify("Friendly text" in static_text(app.screen.query_one(Static)))
-            verify(
-                any("safe details" in static_text(widget) for widget in app.screen.query(Static)),
-            )
+            visible_text = " ".join(static_text(widget) for widget in app.screen.query(Static))
+            verify("Friendly text" in visible_text)
+            verify("safe details" in visible_text)
             await pilot.click("#close")
             await settle(pilot)
             verify(messages == [None])
