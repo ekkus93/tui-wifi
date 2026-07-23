@@ -51,7 +51,11 @@ def _split_escaped_fields(
     return fields
 
 
-def split_escaped(line: str, expected_fields: int | None = None, separator: str = ":") -> list[str]:
+def split_escaped(
+    line: str,
+    expected_fields: int | None = None,
+    separator: str = ":",
+) -> list[str]:
     """Split an escaped delimited line and validate its field count."""
     fields = _split_escaped_fields(line, separator, None)
     if expected_fields is not None and len(fields) != expected_fields:
@@ -68,9 +72,7 @@ def split_escaped_key_value(line: str, separator: str = ":") -> tuple[str, str]:
     if len(fields) != _KEY_VALUE_FIELD_COUNT:
         raise WifiError(
             ErrorCategory.PARSE_FAILURE,
-            technical_details=(
-                f"expected {_KEY_VALUE_FIELD_COUNT} fields, got {len(fields)}"
-            ),
+            technical_details=f"expected {_KEY_VALUE_FIELD_COUNT} fields, got {len(fields)}",
         )
     return fields[0], fields[1]
 
