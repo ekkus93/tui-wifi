@@ -25,13 +25,16 @@ jobs:
           python-version: "3.13"
           cache: pip
       - run: python -m pip install --quiet -e '.[dev]'
-      - name: Apply systematic source fixes
-        run: |
-          python scripts/systematic_lint_fix.py
-          python -m compileall -q src tests
-          ruff check --fix --unsafe-fixes . || true
-          black .
-          python -m compileall -q src tests
+      - name: Add missing documentation
+        run: python scripts/systematic_lint_fix.py
+      - name: Compile documented source
+        run: python -m compileall -q src tests
+      - name: Apply available Ruff transformations
+        run: ruff check --fix --unsafe-fixes . || true
+      - name: Apply Black formatting
+        run: black .
+      - name: Compile transformed source
+        run: python -m compileall -q src tests
       - name: Commit validated fixes
         shell: bash
         run: |
