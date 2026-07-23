@@ -49,6 +49,7 @@ tui_wifi = ["ui/*.tcss"]
 [tool.pytest.ini_options]
 addopts = "-ra --strict-markers --strict-config --cov=tui_wifi --cov-report=term-missing --cov-fail-under=70"
 testpaths = ["tests"]
+filterwarnings = ["error"]
 markers = [
   "tui: tests requiring Textual",
   "real_network: opt-in tests that may inspect a real NetworkManager instance",
@@ -78,7 +79,6 @@ src = ["src", "tests"]
 
 [tool.ruff.lint]
 select = ["E", "F", "I", "UP", "B", "ASYNC", "C4", "SIM", "RUF"]
-ignore = ["B008"]
 
 [tool.mypy]
 python_version = "3.11"
@@ -86,19 +86,3 @@ packages = ["tui_wifi"]
 strict = true
 warn_unreachable = true
 show_error_codes = true
-
-[[tool.mypy.overrides]]
-module = ["textual.*"]
-ignore_missing_imports = true
-
-[[tool.mypy.overrides]]
-module = ["tui_wifi.ui.*", "tui_wifi.app"]
-ignore_errors = true
-
-[[tool.mypy.overrides]]
-module = [
-  "tui_wifi.backends.nmcli_core",
-  "tui_wifi.backends.nmcli_profiles",
-  "tui_wifi.backends.nmcli_mutations",
-]
-ignore_errors = true
