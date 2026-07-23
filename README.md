@@ -90,12 +90,19 @@ direct-file fallback.
 
 ```bash
 python -m pip install -e '.[dev]'
-pytest
-ruff format --check .
+black --check .
 ruff check .
 mypy src/tui_wifi
+pytest -m 'not real_network'
 python -m build
 ```
+
+The project treats every enabled lint finding, static-type error, test warning,
+and formatting difference as a defect. Ruff runs its complete rule set. Mypy
+runs in strict mode without module exemptions. Pytest converts warnings to
+errors. Findings must be corrected in code or documentation; they must not be
+hidden with `noqa`, `type: ignore`, warning filters, per-file exemptions, or
+disabled rule families.
 
 Runtime dependencies are bounded in `pyproject.toml`. Contributors may create a
 local lock file with their preferred environment manager; the distributable
