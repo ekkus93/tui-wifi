@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+from typing import ClassVar
 
 from textual.app import ComposeResult
 from textual.containers import Horizontal, Vertical
@@ -102,7 +103,7 @@ class PasswordDialog(ModalScreen[PasswordAnswer | None]):
 
 
 class HiddenNetworkDialog(ModalScreen[HiddenNetworkAnswer | None]):
-    OPTIONS = [
+    OPTIONS: ClassVar[list[tuple[str, str]]] = [
         ("Open", SecurityClass.OPEN.value),
         ("WPA/WPA2/WPA3 Personal", SecurityClass.MIXED_PERSONAL.value),
     ]
