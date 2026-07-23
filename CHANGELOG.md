@@ -12,5 +12,7 @@
 - Hardened subprocess diagnostics so credential-bearing arguments are redacted even if
   a child process echoes them to stdout or stderr.
 - Added Python 3.10 support and CI coverage across Python 3.10 through 3.13.
+- Added compatibility for NetworkManager 1.36 indexed IP properties and literal IPv6
+  values in terse `nmcli` output.
 - Hardware acceptance validation remains pending and is tracked in
   `tests/manual/V01_ACCEPTANCE.md`.
