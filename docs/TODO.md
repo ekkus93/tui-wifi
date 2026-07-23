@@ -5,10 +5,10 @@ updated after the initial Ralph Loop implementation on 2026-07-22.
 
 ## Completed automated implementation
 
-- [x] Python 3.11+ `src/` package with `wifi-tui` entry point and Textual dependency.
+- [x] Python 3.10+ `src/` package with `tui-wifi` entry point and Textual dependency.
 - [x] Repository metadata, MIT license, contributor guide, changelog, and CI/CD workflow.
-- [x] CI matrix for Python 3.11, 3.12, and 3.13; formatting, linting, typing, tests, and
-  clean package-install validation.
+- [x] CI matrix for Python 3.10, 3.11, 3.12, and 3.13; formatting, linting, typing, tests,
+  and clean package-install validation.
 - [x] GitHub Release assets restricted to matching `v<package-version>` tag runs; normal
   branch and pull-request builds do not upload persistent assets.
 - [x] CI/CD status badge and release procedure documented in `README.md`.
@@ -41,8 +41,8 @@ updated after the initial Ralph Loop implementation on 2026-07-22.
 
 ## Validation still required
 
-- [ ] Let GitHub Actions validate Python 3.11, 3.12, and 3.13 with Textual, Ruff, Mypy,
-  pytest coverage, wheel build, and source-distribution build.
+- [ ] Let GitHub Actions validate Python 3.10, 3.11, 3.12, and 3.13 with Textual, Ruff,
+  Mypy, pytest coverage, wheel build, and source-distribution build.
 - [ ] Resolve any CI-only compatibility or static-analysis findings without weakening
   failure visibility or credential protections.
 - [ ] Complete Ubuntu or Debian hardware validation as a normal user.
