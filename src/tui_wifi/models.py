@@ -1,11 +1,11 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from datetime import datetime, timezone
-from enum import Enum
+from datetime import UTC, datetime
+from enum import StrEnum
 
 
-class BackendAvailability(str, Enum):
+class BackendAvailability(StrEnum):
     AVAILABLE = "available"
     MISSING_EXECUTABLE = "missing_executable"
     UNAVAILABLE = "unavailable"
@@ -13,7 +13,7 @@ class BackendAvailability(str, Enum):
     UNKNOWN = "unknown"
 
 
-class NetworkManagerState(str, Enum):
+class NetworkManagerState(StrEnum):
     CONNECTED_GLOBAL = "connected_global"
     CONNECTED_SITE = "connected_site"
     CONNECTED_LOCAL = "connected_local"
@@ -23,14 +23,14 @@ class NetworkManagerState(str, Enum):
     UNKNOWN = "unknown"
 
 
-class WifiRadioState(str, Enum):
+class WifiRadioState(StrEnum):
     ENABLED = "enabled"
     DISABLED = "disabled"
     HARDWARE_BLOCKED = "hardware_blocked"
     UNKNOWN = "unknown"
 
 
-class DeviceState(str, Enum):
+class DeviceState(StrEnum):
     UNKNOWN = "unknown"
     UNMANAGED = "unmanaged"
     UNAVAILABLE = "unavailable"
@@ -46,7 +46,7 @@ class DeviceState(str, Enum):
     FAILED = "failed"
 
 
-class OperationKind(str, Enum):
+class OperationKind(StrEnum):
     NONE = "none"
     REFRESH = "refresh"
     SCAN = "scan"
@@ -57,7 +57,7 @@ class OperationKind(str, Enum):
     AUTOCONNECT = "autoconnect"
 
 
-class OperationPhase(str, Enum):
+class OperationPhase(StrEnum):
     IDLE = "idle"
     RUNNING = "running"
     SUCCEEDED = "succeeded"
@@ -65,7 +65,7 @@ class OperationPhase(str, Enum):
     CANCELLED = "cancelled"
 
 
-class SecurityClass(str, Enum):
+class SecurityClass(StrEnum):
     OPEN = "open"
     WEP = "wep"
     WPA_PERSONAL = "wpa_personal"
@@ -90,7 +90,7 @@ class SecurityClass(str, Enum):
         return self not in {SecurityClass.OPEN, SecurityClass.UNKNOWN}
 
 
-class SignalQuality(str, Enum):
+class SignalQuality(StrEnum):
     EXCELLENT = "excellent"
     GOOD = "good"
     FAIR = "fair"
@@ -206,7 +206,7 @@ class ApplicationSnapshot:
     profiles: tuple[SavedProfile, ...] = ()
     active_connection: ActiveWifiConnection | None = None
     operation: OperationStatus = field(default_factory=OperationStatus)
-    last_refresh: datetime = field(default_factory=lambda: datetime.now(timezone.utc))
+    last_refresh: datetime = field(default_factory=lambda: datetime.now(UTC))
     warning: str | None = None
     error: str | None = None
     stale: bool = False
