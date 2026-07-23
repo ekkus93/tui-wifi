@@ -1,4 +1,4 @@
-"""Verify test grouping behavior."""
+"""Verify access-point grouping behavior."""
 
 from __future__ import annotations
 
@@ -12,8 +12,8 @@ from tui_wifi.models import (
     SecurityClass,
 )
 
-_COMPARISON_VALUE_2 = 2
-_COMPARISON_VALUE_90 = 90
+_EXPECTED_BSSID_COUNT = 2
+_EXPECTED_STRONGEST_SIGNAL = 90
 
 
 def ap(
@@ -24,19 +24,29 @@ def ap(
     *,
     active: bool = False,
 ) -> AccessPoint:
-    """Perform ap."""
-    return AccessPoint(ssid.encode(), ssid, bssid, signal, 2412, 1, security, active, "wlan0")
+    """Build one access point for grouping tests."""
+    return AccessPoint(
+        ssid=ssid.encode(),
+        display_ssid=ssid,
+        bssid=bssid,
+        signal=signal,
+        frequency=2412,
+        channel=1,
+        security=security,
+        active=active,
+        device="wlan0",
+    )
 
 
 def test_grouping_preserves_security_boundaries_and_sorting() -> None:
-    """Verify test grouping preserves security boundaries and sorting."""
+    """Verify grouping keeps security classes separate and sorts deterministically."""
     profile = SavedProfile(
-        "Home profile",
-        "00000000-0000-0000-0000-000000000001",
-        "Home",
-        None,
-        True,
-        SecurityClass.WPA2_PERSONAL,
+        name="Home profile",
+        uuid="00000000-0000-0000-0000-000000000001",
+        ssid="Home",
+        interface_name=None,
+        autoconnect=True,
+        security=SecurityClass.WPA2_PERSONAL,
     )
     active = ActiveWifiConnection(
         "Guest",
@@ -64,7 +74,7 @@ def test_grouping_preserves_security_boundaries_and_sorting() -> None:
         and group.security.supported
         and group.security != SecurityClass.OPEN
     )
-    verify(secured_home.signal == _COMPARISON_VALUE_90)
-    verify(len(secured_home.member_bssids) == _COMPARISON_VALUE_2)
+    verify(secured_home.signal == _EXPECTED_STRONGEST_SIGNAL)
+    verify(len(secured_home.member_bssids) == _EXPECTED_BSSID_COUNT)
     verify(secured_home.saved_profile_uuids == (profile.uuid,))
     verify(groups[-1].supported is False)
