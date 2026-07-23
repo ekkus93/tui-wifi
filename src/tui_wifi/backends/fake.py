@@ -36,7 +36,11 @@ class FakeWifiBackend:
         )
         self.radio = WifiRadioState.ENABLED
         self.devices: tuple[WifiDevice, ...] = (
-            WifiDevice("wlan0", DeviceState.DISCONNECTED, True),
+            WifiDevice(
+                interface="wlan0",
+                state=DeviceState.DISCONNECTED,
+                managed=True,
+            ),
         )
         self.access_points: dict[str, tuple[AccessPoint, ...]] = defaultdict(tuple)
         self.profiles: tuple[SavedProfile, ...] = ()
