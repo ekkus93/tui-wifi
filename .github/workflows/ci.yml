@@ -119,7 +119,7 @@ jobs:
           python -m venv /tmp/tui-wifi-wheel-test
           /tmp/tui-wifi-wheel-test/bin/python -m pip install --quiet dist/*.whl
           /tmp/tui-wifi-wheel-test/bin/python -m pip check
-          /tmp/tui-wifi-wheel-test/bin/wifi-tui --version
+          /tmp/tui-wifi-wheel-test/bin/tui-wifi --version
 
       - name: Confirm source and wheel assets exist
         shell: bash
