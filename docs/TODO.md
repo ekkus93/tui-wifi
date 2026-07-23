@@ -6,9 +6,15 @@ updated after the initial Ralph Loop implementation on 2026-07-22.
 ## Completed automated implementation
 
 - [x] Python 3.11+ `src/` package with `wifi-tui` entry point and Textual dependency.
-- [x] Repository metadata, MIT license, contributor guide, changelog, and CI workflow.
+- [x] Repository metadata, MIT license, contributor guide, changelog, and CI/CD workflow.
+- [x] CI matrix for Python 3.11, 3.12, and 3.13; formatting, linting, typing, tests, and
+  clean package-install validation.
+- [x] GitHub Release assets restricted to matching `v<package-version>` tag runs; normal
+  branch and pull-request builds do not upload persistent assets.
+- [x] CI/CD status badge and release procedure documented in `README.md`.
 - [x] Backend-independent domain models, stable error categories, and friendly messages.
-- [x] Ephemeral secret wrapper and command/diagnostic redaction.
+- [x] Ephemeral secret wrapper and command/diagnostic redaction, including child output
+  that echoes sensitive argument values.
 - [x] Asynchronous subprocess execution using argument arrays, fixed locale, bounded
   timeouts, child cleanup, separate stdout/stderr, and no shell.
 - [x] Backend protocol, typed operation inputs, and deterministic fake backend.

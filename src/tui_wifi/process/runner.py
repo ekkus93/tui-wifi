@@ -14,14 +14,30 @@ class ProcessRequest:
     executable: str
     args: tuple[str, ...] = field(default=(), repr=False)
     timeout: float = 10.0
-    environment: dict[str, str] = field(default_factory=dict)
+    environment: dict[str, str] = field(default_factory=dict, repr=False)
     stdin: str | None = field(default=None, repr=False)
     sensitive_arg_indexes: frozenset[int] = frozenset()
     sensitive_stdin: bool = False
 
+    def __post_init__(self) -> None:
+        invalid_indexes = tuple(
+            index
+            for index in self.sensitive_arg_indexes
+            if index < 0 or index >= len(self.args)
+        )
+        if invalid_indexes:
+            raise ValueError(f"sensitive argument indexes are out of range: {invalid_indexes!r}")
+
     @property
     def redacted_command(self) -> tuple[str, ...]:
         return (self.executable, *redact_arguments(self.args, self.sensitive_arg_indexes))
+
+    @property
+    def sensitive_values(self) -> tuple[str, ...]:
+        argument_values = tuple(self.args[index] for index in self.sensitive_arg_indexes)
+        if self.sensitive_stdin and self.stdin:
+            return (*argument_values, self.stdin)
+        return argument_values
 
 
 @dataclass(frozen=True, slots=True)
@@ -139,12 +155,11 @@ class AsyncProcessRunner:
         except UnicodeDecodeError as exc:
             raise ProcessSpawnError("process returned invalid UTF-8", request) from exc
 
-        secrets = () if request.stdin is None else (request.stdin,)
         result = ProcessResult(
             command=request.redacted_command,
             exit_code=process.returncode or 0,
-            stdout=redact_text(stdout, secrets if request.sensitive_stdin else ()),
-            stderr=redact_text(stderr, secrets if request.sensitive_stdin else ()),
+            stdout=redact_text(stdout, request.sensitive_values),
+            stderr=redact_text(stderr, request.sensitive_values),
             duration=time.monotonic() - started,
         )
         if result.exit_code != 0:

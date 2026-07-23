@@ -45,6 +45,32 @@ def test_process_nonzero_keeps_stdout_and_stderr_separate() -> None:
     asyncio.run(scenario())
 
 
+def test_process_output_redacts_sensitive_argument_values() -> None:
+    async def scenario() -> None:
+        secret = "credential-that-must-not-leak"
+        request = ProcessRequest(
+            sys.executable,
+            (
+                "-c",
+                "import sys; print(sys.argv[1]); print(sys.argv[1], file=sys.stderr); "
+                "raise SystemExit(9)",
+                secret,
+            ),
+            timeout=5,
+            sensitive_arg_indexes=frozenset({2}),
+        )
+        with pytest.raises(ProcessNonZeroExit) as caught:
+            await AsyncProcessRunner().run(request)
+        assert caught.value.result is not None
+        assert secret not in caught.value.result.stdout
+        assert secret not in caught.value.result.stderr
+        assert "<redacted>" in caught.value.result.stdout
+        assert "<redacted>" in caught.value.result.stderr
+        assert secret not in repr(caught.value.result.command)
+
+    asyncio.run(scenario())
+
+
 def test_process_timeout_redacts_sensitive_metadata() -> None:
     async def scenario() -> None:
         request = ProcessRequest(
@@ -59,3 +85,8 @@ def test_process_timeout_redacts_sensitive_metadata() -> None:
         assert "actual-password" not in repr(caught.value.result.command)
 
     asyncio.run(scenario())
+
+
+def test_sensitive_argument_indexes_must_be_valid() -> None:
+    with pytest.raises(ValueError):
+        ProcessRequest("command", ("only",), sensitive_arg_indexes=frozenset({1}))

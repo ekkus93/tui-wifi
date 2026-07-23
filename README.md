@@ -1,5 +1,7 @@
 # tui-wifi
 
+[![CI/CD](https://github.com/ekkus93/tui-wifi/actions/workflows/ci.yml/badge.svg?branch=master)](https://github.com/ekkus93/tui-wifi/actions/workflows/ci.yml)
+
 `tui-wifi` is a desktop-like terminal Wi-Fi manager for Linux systems that use
 NetworkManager. It presents nearby networks, saved profiles, connection status,
 and common Wi-Fi actions without requiring users to learn `nmcli`.
@@ -98,6 +100,24 @@ python -m build
 Runtime dependencies are bounded in `pyproject.toml`. Contributors may create a
 local lock file with their preferred environment manager; the distributable
 package remains defined by `pyproject.toml`.
+
+## CI/CD and release assets
+
+GitHub Actions runs tests on Python 3.11, 3.12, and 3.13, checks formatting,
+linting, and types, and validates an installable wheel and source distribution.
+Ordinary branch and pull-request runs do not upload or retain package assets.
+
+Release assets are created only when a version tag matching the package version is
+pushed. For version `0.1.0`, create and push tag `v0.1.0`:
+
+```bash
+git tag -a v0.1.0 -m "tui-wifi 0.1.0"
+git push origin v0.1.0
+```
+
+The tagged workflow creates a GitHub Release and attaches exactly one wheel and
+one source archive. A mismatched tag, such as `v0.1.1` while `pyproject.toml` still
+contains `0.1.0`, fails without publishing assets.
 
 ## Privacy and credentials
 

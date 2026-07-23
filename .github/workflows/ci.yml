@@ -1,28 +1,140 @@
-name: CI
+name: CI/CD
 
 on:
   push:
+    branches:
+      - "**"
+    tags:
+      - "v*"
   pull_request:
+    branches:
+      - master
+  workflow_dispatch:
 
 permissions:
   contents: read
 
 jobs:
   test:
+    name: Test Python ${{ matrix.python-version }}
+    runs-on: ubuntu-latest
     strategy:
+      fail-fast: false
       matrix:
         python-version: ["3.11", "3.12", "3.13"]
-    runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python-version }}
           cache: pip
-      - run: python -m pip install --upgrade pip
-      - run: python -m pip install -e '.[dev]'
-      - run: pytest -m 'not real_network'
-      - run: ruff format --check .
-      - run: ruff check .
-      - run: mypy src/tui_wifi
-      - run: python -m build
+
+      - name: Install development dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -e '.[dev]'
+
+      - name: Run tests
+        run: pytest -m 'not real_network'
+
+      - name: Check formatting
+        run: ruff format --check .
+
+      - name: Run lint checks
+        run: ruff check .
+
+      - name: Run static type checks
+        run: mypy src/tui_wifi
+
+  package:
+    name: Validate package
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+          cache: pip
+
+      - name: Build wheel and source distribution
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install 'build>=1.2,<2'
+          python -m build
+
+      - name: Install and verify the wheel
+        shell: bash
+        run: |
+          python -m venv /tmp/tui-wifi-wheel-test
+          /tmp/tui-wifi-wheel-test/bin/python -m pip install --upgrade pip
+          /tmp/tui-wifi-wheel-test/bin/python -m pip install dist/*.whl
+          /tmp/tui-wifi-wheel-test/bin/python -m pip check
+          /tmp/tui-wifi-wheel-test/bin/wifi-tui --version
+
+      - name: Confirm source and wheel assets exist
+        shell: bash
+        run: |
+          test "$(find dist -maxdepth 1 -name '*.whl' -type f | wc -l)" -eq 1
+          test "$(find dist -maxdepth 1 -name '*.tar.gz' -type f | wc -l)" -eq 1
+
+  release:
+    name: Publish tagged release assets
+    if: startsWith(github.ref, 'refs/tags/v')
+    needs: package
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    env:
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - name: Check out tagged revision
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+          cache: pip
+
+      - name: Verify tag matches package version
+        shell: bash
+        run: |
+          python - <<'PY'
+          import os
+          import tomllib
+          from pathlib import Path
+
+          with Path("pyproject.toml").open("rb") as handle:
+              version = tomllib.load(handle)["project"]["version"]
+
+          tag = os.environ["GITHUB_REF_NAME"]
+          expected = f"v{version}"
+          if tag != expected:
+              raise SystemExit(
+                  f"release tag {tag!r} does not match package version {version!r}; "
+                  f"expected {expected!r}"
+              )
+          PY
+
+      - name: Build release assets
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install 'build>=1.2,<2'
+          python -m build
+
+      - name: Create GitHub release and attach assets
+        shell: bash
+        run: |
+          gh release create "$GITHUB_REF_NAME" \
+            dist/*.whl \
+            dist/*.tar.gz \
+            --verify-tag \
+            --title "$GITHUB_REF_NAME" \
+            --generate-notes
