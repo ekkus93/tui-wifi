@@ -1,70 +1,18 @@
 === BLACK ===
-All done! ✨ 🍰 ✨
-48 files would be left unchanged.
-status=0
+would reformat /home/runner/work/tui-wifi/tui-wifi/src/tui_wifi/ui/screens/main.py
+
+Oh no! 💥 💔 💥
+1 file would be reformatted, 47 files would be left unchanged.
 
 === RUFF ===
-src/tui_wifi/app.py:19:30: RUF012 Mutable default value for class attribute
-src/tui_wifi/backends/fake.py:39:59: FBT003 Boolean positional value in function call
-src/tui_wifi/backends/nmcli_mutations.py:66:61: FBT003 Boolean positional value in function call
-src/tui_wifi/backends/nmcli_mutations.py:100:61: FBT003 Boolean positional value in function call
-src/tui_wifi/backends/parsing.py:108:5: PLR0911 Too many return statements (9 > 6)
-src/tui_wifi/cli.py:36:9: PLC0415 `import` should be at the top-level of a file
-src/tui_wifi/cli.py:40:9: PLC0415 `import` should be at the top-level of a file
-src/tui_wifi/cli.py:50:12: BLE001 Do not catch blind exception: `Exception`
-src/tui_wifi/errors.py:108:9: PLR0913 Too many arguments in function definition (8 > 5)
-src/tui_wifi/process/runner.py:108:15: PLR0915 Too many statements (51 > 50)
-src/tui_wifi/ui/screens/main.py:90:9: C901 `_on_snapshot` is too complex (11 > 10)
-src/tui_wifi/ui/screens/main.py:204:44: FBT003 Boolean positional value in function call
-src/tui_wifi/ui/screens/main.py:235:52: FBT003 Boolean positional value in function call
-src/tui_wifi/ui/screens/main.py:268:16: BLE001 Do not catch blind exception: `Exception`
-src/tui_wifi/ui/screens/main.py:341:54: FBT003 Boolean positional value in function call
-src/tui_wifi/ui/widgets/network_list.py:44:20: BLE001 Do not catch blind exception: `Exception`
-src/tui_wifi/ui/widgets/network_list.py:56:16: BLE001 Do not catch blind exception: `Exception`
-tests/tui/test_app.py:35:17: FBT003 Boolean positional value in function call
-tests/unit/test_cli.py:28:5: PLC0415 `import` should be at the top-level of a file
-tests/unit/test_cli.py:29:5: PLC0415 `import` should be at the top-level of a file
-tests/unit/test_cli.py:48:5: PLC0415 `import` should be at the top-level of a file
-tests/unit/test_grouping.py:38:9: FBT003 Boolean positional value in function call
-tests/unit/test_logging.py:18:52: COM812 [*] Trailing comma missing
-tests/unit/test_parsing.py:105:5: PLC0415 `import` should be at the top-level of a file
-tests/unit/test_parsing.py:111:5: PLC0415 `import` should be at the top-level of a file
-tests/unit/test_process.py:79:16: F821 Undefined name `secret`
-tests/unit/test_process.py:80:16: F821 Undefined name `secret`
-tests/unit/test_process.py:83:16: F821 Undefined name `secret`
-tests/unit/test_process.py:109:24: PT011 `pytest.raises(ValueError)` is too broad, set the `match` parameter or use a more specific exception
-tests/unit/test_secrets.py:33:5: PLC0415 `import` should be at the top-level of a file
-tests/unit/test_service.py:27:9: FBT003 Boolean positional value in function call
-tests/unit/test_service.py:93:9: PLC0415 `import` should be at the top-level of a file
-tests/unit/test_service.py:95:76: FBT003 Boolean positional value in function call
-tests/unit/test_service.py:109:9: PLC0415 `import` should be at the top-level of a file
-tests/unit/test_service.py:110:9: PLC0415 `import` should be at the top-level of a file
-tests/unit/test_service.py:118:13: FBT003 Boolean positional value in function call
-tests/unit/test_service.py:124:71: FBT003 Boolean positional value in function call
-tests/unit/test_service.py:144:9: PLC0415 `import` should be at the top-level of a file
-tests/unit/test_service.py:148:59: FBT003 Boolean positional value in function call
-tests/unit/test_service.py:149:59: FBT003 Boolean positional value in function call
-Found 40 errors.
-[*] 1 fixable with the `--fix` option.
-status=1
+src/tui_wifi/ui/screens/main.py:101:9: PLR0911 Too many return statements (8 > 6)
+src/tui_wifi/ui/screens/main.py:153:55: COM812 [*] Trailing comma missing
+src/tui_wifi/ui/screens/main.py:157:47: COM812 [*] Trailing comma missing
+Found 3 errors.
+[*] 2 fixable with the `--fix` option.
 
 === MYPY ===
-src/tui_wifi/services/wifi.py:284: error: Too many positional arguments for "set_wifi_radio_state" of "WifiBackend"  [misc]
-src/tui_wifi/services/wifi.py:304: error: Too many positional arguments for "set_profile_autoconnect" of "WifiBackend"  [misc]
-src/tui_wifi/backends/nmcli_mutations.py:66: error: Too many positional arguments for "set_profile_autoconnect" of "NmcliMutationsMixin"  [misc]
-src/tui_wifi/backends/nmcli_mutations.py:100: error: Too many positional arguments for "set_profile_autoconnect" of "NmcliMutationsMixin"  [misc]
-src/tui_wifi/ui/screens/saved.py:100: error: Too many positional arguments for "_set_autoconnect" of "SavedNetworksScreen"  [misc]
-src/tui_wifi/ui/screens/saved.py:130: error: Too many positional arguments for "set_profile_autoconnect" of "WifiService"  [misc]
-src/tui_wifi/ui/screens/main.py:204: error: Too many positional arguments for "_connect" of "MainScreen"  [misc]
-src/tui_wifi/ui/screens/main.py:235: error: Too many positional arguments for "_connect" of "MainScreen"  [misc]
-src/tui_wifi/ui/screens/main.py:241: error: Too many positional arguments for "_connect" of "MainScreen"  [misc]
-src/tui_wifi/ui/screens/main.py:312: error: Too many positional arguments for "connect_hidden" of "WifiService"  [misc]
-src/tui_wifi/ui/screens/main.py:341: error: Too many positional arguments for "_start_toggle" of "MainScreen"  [misc]
-src/tui_wifi/ui/screens/main.py:344: error: Too many positional arguments for "_start_toggle" of "MainScreen"  [misc]
-src/tui_wifi/ui/screens/main.py:348: error: Too many positional arguments for "_toggle" of "MainScreen"  [misc]
-src/tui_wifi/ui/screens/main.py:353: error: Too many positional arguments for "set_wifi_enabled" of "WifiService"  [misc]
-Found 14 errors in 4 files (checked 31 source files)
-status=1
+Success: no issues found in 31 source files
 
 === PYTEST ===
 ============================= test session starts ==============================
@@ -83,203 +31,10 @@ tests/unit/test_grouping.py .                                            [ 17%]
 tests/unit/test_logging.py .                                             [ 19%]
 tests/unit/test_nmcli.py ....                                            [ 28%]
 tests/unit/test_parsing.py ...................                           [ 69%]
-tests/unit/test_process.py ..F..                                         [ 80%]
+tests/unit/test_process.py .....                                         [ 80%]
 tests/unit/test_secrets.py ...                                           [ 86%]
-tests/unit/test_service.py F...F.                                        [100%]
+tests/unit/test_service.py ......                                        [100%]
 
-=================================== FAILURES ===================================
-____________ test_process_output_redacts_sensitive_argument_values _____________
-
-    def test_process_output_redacts_sensitive_argument_values() -> None:
-        """Verify test process output redacts sensitive argument values."""
-    
-        async def scenario() -> None:
-            """Perform scenario."""
-            test_credential = "credential-that-must-not-leak"
-            request = ProcessRequest(
-                sys.executable,
-                (
-                    "-c",
-                    "import sys; print(sys.argv[1]); print(sys.argv[1], file=sys.stderr); "
-                    "raise SystemExit(9)",
-                    test_credential,
-                ),
-                timeout=5,
-                sensitive_arg_indexes=frozenset({2}),
-            )
-            with pytest.raises(ProcessNonZeroExitError) as caught:
-                await AsyncProcessRunner().run(request)
-            verify(caught.value.result is not None)
-            verify(secret not in caught.value.result.stdout)
-            verify(secret not in caught.value.result.stderr)
-            verify("<redacted>" in caught.value.result.stdout)
-            verify("<redacted>" in caught.value.result.stderr)
-            verify(secret not in repr(caught.value.result.command))
-    
->       asyncio.run(scenario())
-
-tests/unit/test_process.py:85: 
-_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
-/opt/hostedtoolcache/Python/3.13.14/x64/lib/python3.13/asyncio/runners.py:196: in run
-    return runner.run(main)
-           ^^^^^^^^^^^^^^^^
-/opt/hostedtoolcache/Python/3.13.14/x64/lib/python3.13/asyncio/runners.py:119: in run
-    return self._loop.run_until_complete(task)
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-/opt/hostedtoolcache/Python/3.13.14/x64/lib/python3.13/asyncio/base_events.py:725: in run_until_complete
-    return future.result()
-           ^^^^^^^^^^^^^^^
-_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
-
-    async def scenario() -> None:
-        """Perform scenario."""
-        test_credential = "credential-that-must-not-leak"
-        request = ProcessRequest(
-            sys.executable,
-            (
-                "-c",
-                "import sys; print(sys.argv[1]); print(sys.argv[1], file=sys.stderr); "
-                "raise SystemExit(9)",
-                test_credential,
-            ),
-            timeout=5,
-            sensitive_arg_indexes=frozenset({2}),
-        )
-        with pytest.raises(ProcessNonZeroExitError) as caught:
-            await AsyncProcessRunner().run(request)
-        verify(caught.value.result is not None)
->       verify(secret not in caught.value.result.stdout)
-               ^^^^^^
-E       NameError: name 'secret' is not defined
-
-tests/unit/test_process.py:79: NameError
-__________________ test_startup_connect_disconnect_and_radio ___________________
-
-    def test_startup_connect_disconnect_and_radio() -> None:
-        """Verify test startup connect disconnect and radio."""
-    
-        async def scenario() -> None:
-            """Perform scenario."""
-            backend = FakeWifiBackend()
-            backend.access_points["wlan0"] = (sample_ap(),)
-            service = WifiService(backend)
-            snapshot = await service.startup()
-            verify(snapshot.selected_device == "wlan0")
-            verify(snapshot.networks[0].display_ssid == "Home")
-            password = SecretValue("test-only-password")
-            connected = await service.connect_network(snapshot.networks[0], password=password)
-            verify(connected.active_connection is not None)
-            verify(password.reveal() == "")
-            disconnected = await service.disconnect()
-            verify(disconnected.active_connection is None)
-            disabled = await service.set_wifi_enabled(False)
-            verify(disabled.status.wifi_radio.value == "disabled")
-    
->       asyncio.run(scenario())
-
-tests/unit/test_service.py:52: 
-_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
-/opt/hostedtoolcache/Python/3.13.14/x64/lib/python3.13/asyncio/runners.py:196: in run
-    return runner.run(main)
-           ^^^^^^^^^^^^^^^^
-/opt/hostedtoolcache/Python/3.13.14/x64/lib/python3.13/asyncio/runners.py:119: in run
-    return self._loop.run_until_complete(task)
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-/opt/hostedtoolcache/Python/3.13.14/x64/lib/python3.13/asyncio/base_events.py:725: in run_until_complete
-    return future.result()
-           ^^^^^^^^^^^^^^^
-_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
-
-    async def scenario() -> None:
-        """Perform scenario."""
-        backend = FakeWifiBackend()
-        backend.access_points["wlan0"] = (sample_ap(),)
-        service = WifiService(backend)
-        snapshot = await service.startup()
-        verify(snapshot.selected_device == "wlan0")
-        verify(snapshot.networks[0].display_ssid == "Home")
-        password = SecretValue("test-only-password")
-        connected = await service.connect_network(snapshot.networks[0], password=password)
-        verify(connected.active_connection is not None)
-        verify(password.reveal() == "")
-        disconnected = await service.disconnect()
-        verify(disconnected.active_connection is None)
->       disabled = await service.set_wifi_enabled(False)
-                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-E       TypeError: WifiService.set_wifi_enabled() takes 1 positional argument but 2 were given
-
-tests/unit/test_service.py:49: TypeError
-__________________ test_fake_backend_saved_profile_workflows ___________________
-
-    def test_fake_backend_saved_profile_workflows() -> None:
-        """Verify test fake backend saved profile workflows."""
-    
-        async def scenario() -> None:
-            """Perform scenario."""
-            from tui_wifi.backends.base import SavedProfileRequest
-            from tui_wifi.models import SavedProfile
-    
-            backend = FakeWifiBackend()
-            profile = SavedProfile(
-                "Home",
-                "00000000-0000-0000-0000-000000000099",
-                "Home",
-                None,
-                True,
-                SecurityClass.WPA2_PERSONAL,
-            )
-            backend.profiles = (profile,)
-            active = await backend.activate_saved_profile(SavedProfileRequest(profile.uuid, "wlan0"))
-            verify(active.uuid == profile.uuid)
-            changed = await backend.set_profile_autoconnect(profile.uuid, False)
-            verify(changed.autoconnect is False)
-            await backend.delete_saved_profile(profile.uuid)
-            verify(backend.profiles == ())
-            await backend.disconnect(
-                __import__("tui_wifi.backends.base", fromlist=["DisconnectRequest"]).DisconnectRequest(
-                    "wlan0",
-                    active.uuid,
-                ),
-            )
-            verify(await backend.get_connection_details() is None)
-    
->       asyncio.run(scenario())
-
-tests/unit/test_service.py:136: 
-_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
-/opt/hostedtoolcache/Python/3.13.14/x64/lib/python3.13/asyncio/runners.py:196: in run
-    return runner.run(main)
-           ^^^^^^^^^^^^^^^^
-/opt/hostedtoolcache/Python/3.13.14/x64/lib/python3.13/asyncio/runners.py:119: in run
-    return self._loop.run_until_complete(task)
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-/opt/hostedtoolcache/Python/3.13.14/x64/lib/python3.13/asyncio/base_events.py:725: in run_until_complete
-    return future.result()
-           ^^^^^^^^^^^^^^^
-_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
-
-    async def scenario() -> None:
-        """Perform scenario."""
-        from tui_wifi.backends.base import SavedProfileRequest
-        from tui_wifi.models import SavedProfile
-    
-        backend = FakeWifiBackend()
-        profile = SavedProfile(
-            "Home",
-            "00000000-0000-0000-0000-000000000099",
-            "Home",
-            None,
-            True,
-            SecurityClass.WPA2_PERSONAL,
-        )
-        backend.profiles = (profile,)
-        active = await backend.activate_saved_profile(SavedProfileRequest(profile.uuid, "wlan0"))
-        verify(active.uuid == profile.uuid)
->       changed = await backend.set_profile_autoconnect(profile.uuid, False)
-                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-E       TypeError: FakeWifiBackend.set_profile_autoconnect() takes 2 positional arguments but 3 were given
-
-tests/unit/test_service.py:124: TypeError
 ================================ tests coverage ================================
 _______________ coverage: platform linux, python 3.13.14-final-0 _______________
 
@@ -287,29 +42,26 @@ Name                                       Stmts   Miss Branch BrPart  Cover   M
 --------------------------------------------------------------------------------------
 src/tui_wifi/__init__.py                       1      0      0      0   100%
 src/tui_wifi/backends/__init__.py              3      0      0      0   100%
-src/tui_wifi/backends/fake.py                 90     27     18      4    64%   52, 68-73, 104, 119, 134-135, 148->exit, 153-154, 158-178, 182-183
+src/tui_wifi/backends/fake.py                 90      7     18      7    87%   56, 75->77, 108, 123, 138-139, 152->exit, 178, 180
 src/tui_wifi/backends/nmcli.py                 3      0      0      0   100%
 src/tui_wifi/backends/nmcli_core.py          110     31     34     11    69%   54, 73-80, 91, 105, 107, 112, 114, 116, 130-131, 147-153, 165, 170-182, 193, 210, 237, 240
 src/tui_wifi/backends/nmcli_mutations.py      70     55     28      0    15%   25-38, 42-67, 71-101, 106-109, 118-134, 138-144, 151-157, 164-182, 186
 src/tui_wifi/backends/nmcli_profiles.py       64     39     24      2    38%   27-88, 99, 104, 108-159, 181-182
-src/tui_wifi/backends/parsing.py             116      5     52      3    95%   58, 67-68, 96, 125
-src/tui_wifi/cli.py                           28      7      4      2    72%   36-38, 48-51, 56
-src/tui_wifi/errors.py                        47      0      8      0   100%
+src/tui_wifi/backends/parsing.py             117      5     52      3    95%   58, 67-68, 96, 126
+src/tui_wifi/cli.py                           26      4      4      2    80%   38, 47-48, 53
+src/tui_wifi/errors.py                        59      0      8      0   100%
 src/tui_wifi/grouping.py                      25      0     12      1    97%   18->17
 src/tui_wifi/logging_config.py                18      2      0      0    89%   27-28
 src/tui_wifi/models.py                       171     11      8      0    89%   112, 127-135, 180
 src/tui_wifi/process/__init__.py               2      0      0      0   100%
 src/tui_wifi/process/fake.py                  36      8     10      5    72%   44-45, 49-54, 59, 61, 67-68
-src/tui_wifi/process/runner.py               103     26      8      2    75%   45, 102, 111-112, 127-135, 150-152, 163-179, 184-186
+src/tui_wifi/process/runner.py               117     21      8      2    82%   47, 104, 133-138, 146-148, 193-202, 214-216, 225-226
 src/tui_wifi/secrets.py                       24      0      4      1    96%   49->48
 src/tui_wifi/services/__init__.py              2      0      0      0   100%
-src/tui_wifi/services/wifi.py                163     37     46     15    72%   63->exit, 77-82, 88, 102, 111->118, 115-116, 150->152, 157-161, 176, 182, 186, 214, 230->232, 243-262, 268, 279-285, 289-295, 299-305, 309, 317, 363, 378
+src/tui_wifi/services/wifi.py                164     34     46     14    74%   63->exit, 77-82, 88, 102, 115-116, 150->152, 157-161, 176, 182, 186, 214, 230->232, 243-262, 268, 289-295, 299-305, 309, 317, 364, 379
 --------------------------------------------------------------------------------------
-TOTAL                                       1076    248    256     46    73%
-Required test coverage of 70% reached. Total coverage: 72.97%
-=========================== short test summary info ============================
-FAILED tests/unit/test_process.py::test_process_output_redacts_sensitive_argument_values - NameError: name 'secret' is not defined
-FAILED tests/unit/test_service.py::test_startup_connect_disconnect_and_radio - TypeError: WifiService.set_wifi_enabled() takes 1 positional argument but 2 were given
-FAILED tests/unit/test_service.py::test_fake_backend_saved_profile_workflows - TypeError: FakeWifiBackend.set_profile_autoconnect() takes 2 positional arguments but 3 were given
-========================= 3 failed, 43 passed in 2.11s =========================
-status=1
+TOTAL                                       1102    217    256     48    76%
+Required test coverage of 70% reached. Total coverage: 76.22%
+============================== 46 passed in 1.96s ==============================
+
+overall_status=1
