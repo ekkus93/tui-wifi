@@ -2,9 +2,9 @@ from __future__ import annotations
 
 import asyncio
 import sys
+from collections.abc import Callable
 from dataclasses import replace
-from datetime import datetime, timezone
-from typing import Callable
+from datetime import UTC, datetime
 
 from tui_wifi.backends.base import (
     DisconnectRequest,
@@ -16,6 +16,7 @@ from tui_wifi.backends.base import (
 from tui_wifi.errors import ErrorCategory, WifiError
 from tui_wifi.grouping import group_networks
 from tui_wifi.models import (
+    AccessPoint,
     ApplicationSnapshot,
     BackendAvailability,
     BackendStatus,
@@ -35,23 +36,17 @@ SnapshotListener = Callable[[ApplicationSnapshot], None]
 
 
 class WifiService:
-    def __init__(
-        self, backend: WifiBackend, preferred_interface: str | None = None
-    ) -> None:
+    def __init__(self, backend: WifiBackend, preferred_interface: str | None = None) -> None:
         self.backend = backend
         self.preferred_interface = preferred_interface
-        self.snapshot = ApplicationSnapshot(
-            BackendStatus(BackendAvailability.UNKNOWN)
-        )
+        self.snapshot = ApplicationSnapshot(BackendStatus(BackendAvailability.UNKNOWN))
         self._listeners: list[SnapshotListener] = []
         self._refresh_generation = 0
         self._operation_counter = 0
         self._mutation_lock = asyncio.Lock()
         self._closed = False
 
-    def subscribe(
-        self, listener: SnapshotListener
-    ) -> Callable[[], None]:
+    def subscribe(self, listener: SnapshotListener) -> Callable[[], None]:
         self._listeners.append(listener)
 
         def unsubscribe() -> None:
@@ -75,9 +70,7 @@ class WifiService:
             return self.snapshot
         return await self.refresh(request_scan=True)
 
-    async def refresh(
-        self, *, request_scan: bool = False
-    ) -> ApplicationSnapshot:
+    async def refresh(self, *, request_scan: bool = False) -> ApplicationSnapshot:
         if self._closed:
             return self.snapshot
         self._refresh_generation += 1
@@ -87,11 +80,7 @@ class WifiService:
             OperationKind.SCAN if request_scan else OperationKind.REFRESH,
             OperationPhase.RUNNING,
             operation_id=generation,
-            message=(
-                "Scanning for networks…"
-                if request_scan
-                else "Refreshing network state…"
-            ),
+            message="Scanning for networks…" if request_scan else "Refreshing network state…",
         )
         self._publish(replace(previous, operation=operation, error=None))
         try:
@@ -104,7 +93,7 @@ class WifiService:
             selected = self._select_device(devices)
             active = await self.backend.get_active_wifi_connection()
             profiles = await self.backend.list_saved_wifi_profiles()
-            access_points = ()
+            access_points: tuple[AccessPoint, ...] = ()
             warning = None
             if selected is not None and radio == WifiRadioState.ENABLED:
                 if request_scan:
@@ -126,7 +115,7 @@ class WifiService:
                     OperationPhase.SUCCEEDED,
                     operation_id=generation,
                 ),
-                last_refresh=datetime.now(timezone.utc),
+                last_refresh=datetime.now(UTC),
                 warning=warning,
                 stale=False,
                 generation=generation,
@@ -157,34 +146,21 @@ class WifiService:
             return WifiError(ErrorCategory.AUTHORIZATION_DENIED)
         return WifiError(ErrorCategory.NETWORK_MANAGER_UNAVAILABLE)
 
-    def _select_device(
-        self, devices: tuple[WifiDevice, ...]
-    ) -> str | None:
+    def _select_device(self, devices: tuple[WifiDevice, ...]) -> str | None:
         managed = tuple(device for device in devices if device.managed)
         if self.preferred_interface:
             selected = next(
-                (
-                    device
-                    for device in managed
-                    if device.interface == self.preferred_interface
-                ),
+                (device for device in managed if device.interface == self.preferred_interface),
                 None,
             )
             if selected is None:
                 raise WifiError(
                     ErrorCategory.NO_ADAPTER,
-                    summary=(
-                        f"Wi-Fi interface "
-                        f"{self.preferred_interface!r} is unavailable."
-                    ),
+                    summary=f"Wi-Fi interface {self.preferred_interface!r} is unavailable.",
                 )
             return selected.interface
         active = next(
-            (
-                device
-                for device in managed
-                if device.state == DeviceState.ACTIVATED
-            ),
+            (device for device in managed if device.state == DeviceState.ACTIVATED),
             None,
         )
         if active:
@@ -220,17 +196,10 @@ class WifiService:
             ):
                 if len(group.saved_profile_uuids) == 1 and password is None:
                     await self.backend.activate_saved_profile(
-                        SavedProfileRequest(
-                            group.saved_profile_uuids[0],
-                            interface,
-                        )
+                        SavedProfileRequest(group.saved_profile_uuids[0], interface)
                     )
                 else:
-                    bssid = (
-                        group.member_bssids[0]
-                        if len(group.member_bssids) == 1
-                        else None
-                    )
+                    bssid = group.member_bssids[0] if len(group.member_bssids) == 1 else None
                     await self.backend.connect_visible_network(
                         VisibleConnectRequest(
                             group.display_ssid,
@@ -283,14 +252,10 @@ class WifiService:
             active.ssid,
             "Disconnecting…",
         ):
-            await self.backend.disconnect(
-                DisconnectRequest(active.device, active.uuid)
-            )
+            await self.backend.disconnect(DisconnectRequest(active.device, active.uuid))
         return await self.refresh()
 
-    async def set_wifi_enabled(
-        self, enabled: bool
-    ) -> ApplicationSnapshot:
+    async def set_wifi_enabled(self, enabled: bool) -> ApplicationSnapshot:
         async with self._mutation(
             OperationKind.RADIO,
             "Wi-Fi",
@@ -308,9 +273,7 @@ class WifiService:
             await self.backend.delete_saved_profile(uuid)
         return await self.refresh()
 
-    async def set_profile_autoconnect(
-        self, uuid: str, enabled: bool
-    ) -> ApplicationSnapshot:
+    async def set_profile_autoconnect(self, uuid: str, enabled: bool) -> ApplicationSnapshot:
         async with self._mutation(
             OperationKind.AUTOCONNECT,
             uuid,
@@ -321,11 +284,7 @@ class WifiService:
 
     def profile_by_uuid(self, uuid: str) -> SavedProfile | None:
         return next(
-            (
-                profile
-                for profile in self.snapshot.profiles
-                if profile.uuid == uuid
-            ),
+            (profile for profile in self.snapshot.profiles if profile.uuid == uuid),
             None,
         )
 
@@ -337,7 +296,7 @@ class WifiService:
     class _MutationContext:
         def __init__(
             self,
-            service: "WifiService",
+            service: WifiService,
             kind: OperationKind,
             target: str | None,
             message: str,

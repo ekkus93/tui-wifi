@@ -18,9 +18,7 @@ def ap(
     *,
     active: bool = False,
 ) -> AccessPoint:
-    return AccessPoint(
-        ssid.encode(), ssid, bssid, signal, 2412, 1, security, active, "wlan0"
-    )
+    return AccessPoint(ssid.encode(), ssid, bssid, signal, 2412, 1, security, active, "wlan0")
 
 
 def test_grouping_preserves_security_boundaries_and_sorting() -> None:
@@ -33,7 +31,10 @@ def test_grouping_preserves_security_boundaries_and_sorting() -> None:
         SecurityClass.WPA2_PERSONAL,
     )
     active = ActiveWifiConnection(
-        "Guest", "00000000-0000-0000-0000-000000000002", "Guest", "wlan0",
+        "Guest",
+        "00000000-0000-0000-0000-000000000002",
+        "Guest",
+        "wlan0",
         DeviceState.ACTIVATED,
     )
     groups = group_networks(
@@ -49,7 +50,10 @@ def test_grouping_preserves_security_boundaries_and_sorting() -> None:
     )
     assert [group.display_ssid for group in groups] == ["Guest", "Home", "Home", "Corp"]
     secured_home = next(
-        group for group in groups if group.display_ssid == "Home" and group.security.supported
+        group
+        for group in groups
+        if group.display_ssid == "Home"
+        and group.security.supported
         and group.security != SecurityClass.OPEN
     )
     assert secured_home.signal == 90

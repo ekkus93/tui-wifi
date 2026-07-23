@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+from typing import ClassVar
 
 from textual.app import ComposeResult
 from textual.containers import Horizontal, Vertical
@@ -91,9 +92,7 @@ class PasswordDialog(ModalScreen[PasswordAnswer | None]):
         if value == "":
             self.query_one("#validation", Static).update("Enter the network password.")
             return
-        answer = PasswordAnswer(
-            SecretValue(value), self.query_one("#autoconnect", Checkbox).value
-        )
+        answer = PasswordAnswer(SecretValue(value), self.query_one("#autoconnect", Checkbox).value)
         self._clear_and_dismiss(answer)
 
     def _clear_and_dismiss(self, answer: PasswordAnswer | None) -> None:
@@ -102,7 +101,7 @@ class PasswordDialog(ModalScreen[PasswordAnswer | None]):
 
 
 class HiddenNetworkDialog(ModalScreen[HiddenNetworkAnswer | None]):
-    OPTIONS = [
+    OPTIONS: ClassVar[list[tuple[str, str]]] = [
         ("Open", SecurityClass.OPEN.value),
         ("WPA/WPA2/WPA3 Personal", SecurityClass.MIXED_PERSONAL.value),
     ]

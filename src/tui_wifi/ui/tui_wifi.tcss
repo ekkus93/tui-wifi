@@ -95,15 +95,13 @@ ModalScreen {
     border: round $primary;
 }
 
-@media (width < 90) {
-    .action-bar {
-        layout: grid;
-        grid-size: 2;
-        height: auto;
-    }
+Screen.-compact .action-bar {
+    layout: grid;
+    grid-size: 2;
+    height: auto;
+}
 
-    .action-bar Button {
-        width: 100%;
-        margin: 0;
-    }
+Screen.-compact .action-bar Button {
+    width: 100%;
+    margin: 0;
 }

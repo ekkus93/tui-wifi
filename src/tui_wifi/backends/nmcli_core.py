@@ -52,13 +52,13 @@ class NmcliCore:
         self,
         args: tuple[str, ...],
         *,
-        timeout: float,
+        timeout_seconds: float,
         sensitive_arg_indexes: frozenset[int] = frozenset(),
     ) -> str:
         request = ProcessRequest(
             executable=self._resolve_nmcli(),
             args=args,
-            timeout=timeout,
+            timeout=timeout_seconds,
             sensitive_arg_indexes=sensitive_arg_indexes,
         )
         try:
@@ -121,10 +121,10 @@ class NmcliCore:
         except WifiError:
             return BackendStatus(BackendAvailability.MISSING_EXECUTABLE)
         try:
-            version = (await self._run(("--version",), timeout=self.STATUS_TIMEOUT)).strip()
+            version = (await self._run(("--version",), timeout_seconds=self.STATUS_TIMEOUT)).strip()
             state_output = await self._run(
                 ("-t", "-e", "yes", "-f", "STATE", "general"),
-                timeout=self.STATUS_TIMEOUT,
+                timeout_seconds=self.STATUS_TIMEOUT,
             )
             nm_state = parse_nm_state(state_output.strip())
             radio = await self.get_wifi_radio_state()
@@ -146,7 +146,7 @@ class NmcliCore:
     async def get_wifi_radio_state(self) -> WifiRadioState:
         output = await self._run(
             ("-t", "-e", "yes", "-f", "WIFI,WIFI-HW", "radio"),
-            timeout=self.STATUS_TIMEOUT,
+            timeout_seconds=self.STATUS_TIMEOUT,
         )
         software_text, hardware_text = split_escaped(output.strip(), 2)
         software_enabled = parse_bool(software_text)
@@ -158,7 +158,7 @@ class NmcliCore:
     async def set_wifi_radio_state(self, enabled: bool) -> WifiRadioState:
         await self._run(
             ("radio", "wifi", "on" if enabled else "off"),
-            timeout=self.MUTATION_TIMEOUT,
+            timeout_seconds=self.MUTATION_TIMEOUT,
         )
         state = await self.get_wifi_radio_state()
         expected = WifiRadioState.ENABLED if enabled else WifiRadioState.DISABLED
@@ -173,7 +173,7 @@ class NmcliCore:
     async def list_wifi_devices(self) -> tuple[WifiDevice, ...]:
         output = await self._run(
             ("-t", "-e", "yes", "-f", "DEVICE,TYPE,STATE,CONNECTION", "device", "status"),
-            timeout=self.QUERY_TIMEOUT,
+            timeout_seconds=self.QUERY_TIMEOUT,
         )
         devices: list[WifiDevice] = []
         for line in output.splitlines():
@@ -196,7 +196,7 @@ class NmcliCore:
     async def request_scan(self, interface: str) -> None:
         await self._run(
             ("device", "wifi", "rescan", "ifname", interface),
-            timeout=self.SCAN_TIMEOUT,
+            timeout_seconds=self.SCAN_TIMEOUT,
         )
 
     async def list_access_points(self, interface: str) -> tuple[AccessPoint, ...]:
@@ -215,15 +215,13 @@ class NmcliCore:
                 "--rescan",
                 "no",
             ),
-            timeout=self.QUERY_TIMEOUT,
+            timeout_seconds=self.QUERY_TIMEOUT,
         )
         access_points: list[AccessPoint] = []
         for line in output.splitlines():
             if not line:
                 continue
-            active, ssid, bssid, signal_text, frequency_text, security_text = split_escaped(
-                line, 6
-            )
+            active, ssid, bssid, signal_text, frequency_text, security_text = split_escaped(line, 6)
             if not ssid:
                 continue
             frequency = parse_optional_int(frequency_text)
@@ -241,4 +239,3 @@ class NmcliCore:
                 )
             )
         return tuple(access_points)
-

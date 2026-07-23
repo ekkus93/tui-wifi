@@ -36,15 +36,18 @@ def test_status_uses_explicit_machine_readable_commands() -> None:
 
 def test_command_error_classification_is_conservative() -> None:
     backend = NmcliWifiBackend(FakeProcessRunner(), "/usr/bin/nmcli")
-    assert backend._classify_command_error(
-        "Secrets were required", 4, "connect"
-    ).category.value == "missing_secrets"
-    assert backend._classify_command_error(
-        "authentication failed", 4, "connect"
-    ).category.value == "authentication_rejected"
-    assert backend._classify_command_error(
-        "unrecognized failure", 10, "connect"
-    ).category.value == "command_failure"
+    assert (
+        backend._classify_command_error("Secrets were required", 4, "connect").category.value
+        == "missing_secrets"
+    )
+    assert (
+        backend._classify_command_error("authentication failed", 4, "connect").category.value
+        == "authentication_rejected"
+    )
+    assert (
+        backend._classify_command_error("unrecognized failure", 10, "connect").category.value
+        == "command_failure"
+    )
 
 
 def test_profile_security() -> None:

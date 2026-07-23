@@ -1,16 +1,24 @@
 from __future__ import annotations
 
+from typing import ClassVar
+
 from textual.app import ComposeResult
+from textual.binding import BindingType
 from textual.containers import Horizontal
 from textual.screen import Screen
 from textual.widgets import Button, DataTable, Footer, Header, Static
 
+from tui_wifi.backends.base import SavedProfileRequest
+from tui_wifi.errors import WifiError
 from tui_wifi.services.wifi import WifiService
 from tui_wifi.ui.dialogs.common import ConfirmDialog, MessageDialog
 
 
 class SavedNetworksScreen(Screen[None]):
-    BINDINGS = [("escape", "app.pop_screen", "Back"), ("q", "app.pop_screen", "Back")]
+    BINDINGS: ClassVar[list[BindingType]] = [
+        ("escape", "app.pop_screen", "Back"),
+        ("q", "app.pop_screen", "Back"),
+    ]
 
     def __init__(self, service: WifiService) -> None:
         super().__init__()
@@ -52,18 +60,19 @@ class SavedNetworksScreen(Screen[None]):
             return None
         try:
             return str(table.coordinate_to_cell_key(table.cursor_coordinate).row_key.value)
-        except Exception:
+        except (KeyError, IndexError):
             return None
 
     def on_button_pressed(self, event: Button.Pressed) -> None:
         if event.button.id == "back":
             self.app.pop_screen()
             return
-        uuid = self._selected_uuid()
-        profile = self.service.profile_by_uuid(uuid) if uuid else None
+        selected_uuid = self._selected_uuid()
+        profile = self.service.profile_by_uuid(selected_uuid) if selected_uuid else None
         if profile is None:
             self.app.push_screen(MessageDialog("Saved networks", "Select a saved network."))
             return
+        profile_uuid = profile.uuid
         if event.button.id == "forget":
             self.app.push_screen(
                 ConfirmDialog(
@@ -71,10 +80,13 @@ class SavedNetworksScreen(Screen[None]):
                     f"Forget saved profile {profile.name!r}?",
                     "Forget",
                 ),
-                lambda confirmed: self._start_delete(uuid) if confirmed else None,
+                lambda confirmed: self._start_delete(profile_uuid) if confirmed else None,
             )
         elif event.button.id == "autoconnect":
-            self.run_worker(self._set_autoconnect(uuid, not profile.autoconnect), group="saved")
+            self.run_worker(
+                self._set_autoconnect(profile_uuid, not profile.autoconnect),
+                group="saved",
+            )
         elif event.button.id == "connect":
             selected = self.service.snapshot.selected_device
             if selected is None:
@@ -85,7 +97,7 @@ class SavedNetworksScreen(Screen[None]):
                     )
                 )
                 return
-            self.run_worker(self._activate(uuid, selected), group="saved")
+            self.run_worker(self._activate(profile_uuid, selected), group="saved")
 
     def _start_delete(self, uuid: str) -> None:
         self.run_worker(self._delete(uuid), group="saved")
@@ -94,22 +106,20 @@ class SavedNetworksScreen(Screen[None]):
         try:
             await self.service.delete_profile(uuid)
             self._reload()
-        except Exception as exc:
-            self.app.push_screen(MessageDialog("Could not forget network", str(exc)))
+        except WifiError as exc:
+            self.app.push_screen(MessageDialog("Could not forget network", exc.summary))
 
     async def _set_autoconnect(self, uuid: str, enabled: bool) -> None:
         try:
             await self.service.set_profile_autoconnect(uuid, enabled)
             self._reload()
-        except Exception as exc:
-            self.app.push_screen(MessageDialog("Could not update network", str(exc)))
+        except WifiError as exc:
+            self.app.push_screen(MessageDialog("Could not update network", exc.summary))
 
     async def _activate(self, uuid: str, interface: str) -> None:
-        from tui_wifi.backends.base import SavedProfileRequest
-
         try:
             await self.service.backend.activate_saved_profile(SavedProfileRequest(uuid, interface))
             await self.service.refresh()
             self.app.pop_screen()
-        except Exception as exc:
-            self.app.push_screen(MessageDialog("Could not connect", str(exc)))
+        except WifiError as exc:
+            self.app.push_screen(MessageDialog("Could not connect", exc.summary))

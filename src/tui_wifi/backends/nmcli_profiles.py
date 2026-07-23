@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from collections import defaultdict
 
+from tui_wifi.backends.nmcli_core import NmcliCore
 from tui_wifi.backends.parsing import parse_bool, split_escaped, validate_uuid
 from tui_wifi.errors import ErrorCategory, WifiError
 from tui_wifi.models import (
@@ -13,7 +14,7 @@ from tui_wifi.models import (
 )
 
 
-class NmcliProfilesMixin:
+class NmcliProfilesMixin(NmcliCore):
     async def list_saved_wifi_profiles(self) -> tuple[SavedProfile, ...]:
         output = await self._run(
             (
@@ -25,7 +26,7 @@ class NmcliProfilesMixin:
                 "connection",
                 "show",
             ),
-            timeout=self.QUERY_TIMEOUT,
+            timeout_seconds=self.QUERY_TIMEOUT,
         )
         rows = tuple(line for line in output.splitlines() if line)
         if len(rows) > self.PROFILE_DETAIL_LIMIT:
@@ -39,8 +40,6 @@ class NmcliProfilesMixin:
             )
         profiles: list[SavedProfile] = []
         for line in rows:
-            if not line:
-                continue
             name, uuid, connection_type, device, autoconnect = split_escaped(line, 5)
             if connection_type not in {"wifi", "802-11-wireless"}:
                 continue
@@ -58,15 +57,13 @@ class NmcliProfilesMixin:
                     "uuid",
                     valid_uuid,
                 ),
-                timeout=self.QUERY_TIMEOUT,
+                timeout_seconds=self.QUERY_TIMEOUT,
             )
             detail_lines = detail.splitlines()
             ssid = detail_lines[0] if detail_lines and detail_lines[0] else None
             key_mgmt = detail_lines[1] if len(detail_lines) > 1 else ""
             interface_name = detail_lines[2] if len(detail_lines) > 2 else ""
-            detail_autoconnect = (
-                detail_lines[3] if len(detail_lines) > 3 else autoconnect
-            )
+            detail_autoconnect = detail_lines[3] if len(detail_lines) > 3 else autoconnect
             profiles.append(
                 SavedProfile(
                     name=name,
@@ -116,7 +113,7 @@ class NmcliProfilesMixin:
                 "show",
                 active_device.interface,
             ),
-            timeout=self.QUERY_TIMEOUT,
+            timeout_seconds=self.QUERY_TIMEOUT,
         )
         values: dict[str, list[str]] = defaultdict(list)
         for line in detail_output.splitlines():
@@ -125,9 +122,7 @@ class NmcliProfilesMixin:
             key, value = split_escaped(line, 2)
             values[key].append(value)
         profile_name = (
-            self._first(values, "GENERAL.CONNECTION")
-            or active_device.active_connection
-            or ""
+            self._first(values, "GENERAL.CONNECTION") or active_device.active_connection or ""
         )
         uuid = self._first(values, "GENERAL.CON-UUID") or ""
         if not uuid:
@@ -147,7 +142,7 @@ class NmcliProfilesMixin:
                 "uuid",
                 uuid,
             ),
-            timeout=self.QUERY_TIMEOUT,
+            timeout_seconds=self.QUERY_TIMEOUT,
         )
         return ActiveWifiConnection(
             profile_name=profile_name,
@@ -172,4 +167,3 @@ class NmcliProfilesMixin:
     def _first(values: dict[str, list[str]], key: str) -> str | None:
         entries = values.get(key, [])
         return entries[0] if entries and entries[0] else None
-

@@ -1,8 +1,8 @@
 from __future__ import annotations
 
 import re
+from collections.abc import Iterable
 from dataclasses import dataclass
-from typing import Iterable
 
 _REDACTED = "<redacted>"
 
@@ -26,8 +26,7 @@ class SecretValue:
 
 def redact_arguments(args: Iterable[str], sensitive_indexes: frozenset[int]) -> tuple[str, ...]:
     return tuple(
-        _REDACTED if index in sensitive_indexes else value
-        for index, value in enumerate(args)
+        _REDACTED if index in sensitive_indexes else value for index, value in enumerate(args)
     )
 
 

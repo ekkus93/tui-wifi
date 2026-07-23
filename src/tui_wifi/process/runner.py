@@ -21,9 +21,7 @@ class ProcessRequest:
 
     def __post_init__(self) -> None:
         invalid_indexes = tuple(
-            index
-            for index in self.sensitive_arg_indexes
-            if index < 0 or index >= len(self.args)
+            index for index in self.sensitive_arg_indexes if index < 0 or index >= len(self.args)
         )
         if invalid_indexes:
             raise ValueError(f"sensitive argument indexes are out of range: {invalid_indexes!r}")
