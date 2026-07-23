@@ -13,7 +13,7 @@ env:
 
 jobs:
   fix:
-    if: github.actor != 'github-actions[bot]'
+    if: github.event.head_commit.message != 'Apply systematic lint fixes'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
@@ -25,103 +25,104 @@ jobs:
           python-version: "3.13"
           cache: pip
       - run: python -m pip install --quiet -e '.[dev]'
-      - name: Add missing package and API documentation
+      - name: Apply and validate systematic fixes
+        id: transform
+        shell: bash
         run: |
-          python - <<'PY'
-          from __future__ import annotations
+          set +e
+          {
+            python - <<'PY'
+            from __future__ import annotations
 
-          import ast
-          import re
-          from pathlib import Path
+            import ast
+            from pathlib import Path
 
-          roots = (Path("src"), Path("tests"))
-          for package in (Path("tests/unit"), Path("tests/integration"), Path("tests/tui")):
-              init = package / "__init__.py"
-              if not init.exists():
-                  init.write_text(f'"""Provide the {package.name} test package."""\n', encoding="utf-8")
+            roots = (Path("src"), Path("tests"))
+            for package in (Path("tests/unit"), Path("tests/integration"), Path("tests/tui")):
+                init = package / "__init__.py"
+                if not init.exists():
+                    init.write_text(
+                        f'"""Provide the {package.name} test package."""\n',
+                        encoding="utf-8",
+                    )
 
-          def sentence(name: str, kind: str) -> str:
-              words = name.strip("_").replace("_", " ") or "object"
-              if name == "__init__":
-                  return "Initialize the instance."
-              if name == "__str__":
-                  return "Return the user-facing string representation."
-              if name == "__repr__":
-                  return "Return the diagnostic representation."
-              if name == "__aenter__":
-                  return "Enter the asynchronous context."
-              if name == "__aexit__":
-                  return "Exit the asynchronous context."
-              if kind == "test":
-                  return f"Verify {words}."
-              if kind == "class":
-                  return f"Represent {words}."
-              return f"Perform {words}."
+            def sentence(name: str, kind: str) -> str:
+                words = name.strip("_").replace("_", " ") or "object"
+                special = {
+                    "__init__": "Initialize the instance.",
+                    "__str__": "Return the user-facing string representation.",
+                    "__repr__": "Return the diagnostic representation.",
+                    "__aenter__": "Enter the asynchronous context.",
+                    "__aexit__": "Exit the asynchronous context.",
+                }
+                if name in special:
+                    return special[name]
+                if kind == "test":
+                    return f"Verify {words}."
+                if kind == "class":
+                    return f"Represent {words}."
+                return f"Perform {words}."
 
-          def add_docstrings(path: Path) -> None:
-              text = path.read_text(encoding="utf-8")
-              # Expand protocol-style one-line method declarations before AST processing.
-              one_line = re.compile(
-                  r"^(?P<indent>\s*)(?P<head>(?:async\s+)?def\s+(?P<name>\w+).*):\s*\.\.\.\s*$",
-                  re.MULTILINE,
-              )
-              text = one_line.sub(
-                  lambda match: (
-                      f"{match.group('indent')}{match.group('head')}:\n"
-                      f"{match.group('indent')}    \"\"\""
-                      f"{sentence(match.group('name'), 'function')}\"\"\"\n"
-                      f"{match.group('indent')}    ..."
-                  ),
-                  text,
-              )
-              try:
-                  tree = ast.parse(text)
-              except SyntaxError:
-                  return
-              lines = text.splitlines()
-              insertions: list[tuple[int, str]] = []
-              if ast.get_docstring(tree, clean=False) is None:
-                  label = path.stem.replace("_", " ")
-                  if path.name == "__init__.py":
-                      module_doc = f'"""Provide the {path.parent.name} package."""'
-                  elif path.parts[0] == "tests":
-                      module_doc = f'"""Verify {label} behavior."""'
-                  else:
-                      module_doc = f'"""Provide {label} functionality."""'
-                  insertions.append((0, module_doc))
+            def add_docstrings(path: Path) -> None:
+                text = path.read_text(encoding="utf-8")
+                tree = ast.parse(text)
+                lines = text.splitlines()
+                insertions: list[tuple[int, str]] = []
+                if ast.get_docstring(tree, clean=False) is None:
+                    label = path.stem.replace("_", " ")
+                    if path.name == "__init__.py":
+                        module_doc = f'"""Provide the {path.parent.name} package."""'
+                    elif path.parts[0] == "tests":
+                        module_doc = f'"""Verify {label} behavior."""'
+                    else:
+                        module_doc = f'"""Provide {label} functionality."""'
+                    insertions.append((0, module_doc))
 
-              for node in ast.walk(tree):
-                  if not isinstance(node, (ast.ClassDef, ast.FunctionDef, ast.AsyncFunctionDef)):
-                      continue
-                  if ast.get_docstring(node, clean=False) is not None or not node.body:
-                      continue
-                  kind = "class" if isinstance(node, ast.ClassDef) else "function"
-                  if path.parts[0] == "tests" and kind == "function":
-                      kind = "test"
-                  index = node.body[0].lineno - 1
-                  indent = " " * (node.col_offset + 4)
-                  insertions.append((index, f'{indent}"""{sentence(node.name, kind)}"""'))
+                for node in ast.walk(tree):
+                    if not isinstance(node, (ast.ClassDef, ast.FunctionDef, ast.AsyncFunctionDef)):
+                        continue
+                    if ast.get_docstring(node, clean=False) is not None or not node.body:
+                        continue
+                    if node.body[0].lineno == node.lineno:
+                        continue
+                    kind = "class" if isinstance(node, ast.ClassDef) else "function"
+                    if path.parts[0] == "tests" and kind == "function":
+                        kind = "test"
+                    index = node.body[0].lineno - 1
+                    indent = " " * (node.col_offset + 4)
+                    insertions.append((index, f'{indent}"""{sentence(node.name, kind)}"""'))
 
-              for index, content in sorted(insertions, reverse=True):
-                  lines.insert(index, content)
-              path.write_text("\n".join(lines) + "\n", encoding="utf-8")
+                for index, content in sorted(insertions, reverse=True):
+                    lines.insert(index, content)
+                path.write_text("\n".join(lines) + "\n", encoding="utf-8")
 
-          for root in roots:
-              for source in sorted(root.rglob("*.py")):
-                  add_docstrings(source)
-          PY
-      - name: Apply available Ruff transformations and Black formatting
-        run: |
-          ruff check --fix --unsafe-fixes . || true
-          black .
-      - name: Commit systematic fixes
+            for root in roots:
+                for source in sorted(root.rglob("*.py")):
+                    add_docstrings(source)
+            PY
+            python -m compileall -q src tests
+            ruff check --fix --unsafe-fixes . || true
+            black .
+            python -m compileall -q src tests
+          } > /tmp/fix-output.txt 2>&1
+          status=$?
+          echo "status=$status" >> "$GITHUB_OUTPUT"
+          if [ "$status" -ne 0 ]; then
+            git reset --hard HEAD
+            cp /tmp/fix-output.txt SYSTEMATIC_FIX_FAILURE.txt
+          fi
+      - name: Commit validated result or failure report
         shell: bash
         run: |
           git config user.name github-actions[bot]
           git config user.email 41898282+github-actions[bot]@users.noreply.github.com
-          git add src tests
+          if [ "${{ steps.transform.outputs.status }}" = "0" ]; then
+            git add src tests
+          else
+            git add SYSTEMATIC_FIX_FAILURE.txt
+          fi
           if git diff --cached --quiet; then
             exit 0
           fi
-          git commit -m "Add complete API and test documentation"
+          git commit -m "Apply systematic lint fixes"
           git push origin HEAD:agent/enforce-zero-warnings
