@@ -1,9 +1,9 @@
 name: Temporary systematic lint fixes
 
 on:
-  push:
+  pull_request:
     branches:
-      - agent/enforce-zero-warnings
+      - master
 
 permissions:
   contents: write
@@ -13,7 +13,7 @@ env:
 
 jobs:
   fix:
-    if: github.event.head_commit.message != 'Apply systematic lint fixes'
+    if: github.actor != 'github-actions[bot]'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
