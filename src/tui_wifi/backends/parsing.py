@@ -9,6 +9,7 @@ import uuid as uuid_module
 from tui_wifi.errors import ErrorCategory, WifiError
 from tui_wifi.models import DeviceState, NetworkManagerState, SecurityClass
 
+_KEY_VALUE_FIELD_COUNT = 2
 _MAX_SIGNAL_PERCENT = 100
 _WIFI_24_GHZ_FIRST_MHZ = 2412
 _WIFI_24_GHZ_LAST_MHZ = 2472
@@ -64,10 +65,12 @@ def split_escaped(line: str, expected_fields: int | None = None, separator: str 
 def split_escaped_key_value(line: str, separator: str = ":") -> tuple[str, str]:
     """Split one escaped property record while preserving delimiters in its value."""
     fields = _split_escaped_fields(line, separator, 1)
-    if len(fields) != 2:
+    if len(fields) != _KEY_VALUE_FIELD_COUNT:
         raise WifiError(
             ErrorCategory.PARSE_FAILURE,
-            technical_details=f"expected 2 fields, got {len(fields)}",
+            technical_details=(
+                f"expected {_KEY_VALUE_FIELD_COUNT} fields, got {len(fields)}"
+            ),
         )
     return fields[0], fields[1]
 
