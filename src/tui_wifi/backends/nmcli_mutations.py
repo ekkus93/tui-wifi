@@ -1,4 +1,4 @@
-"""Provide nmcli mutations functionality."""
+"""Provide NetworkManager mutation operations through ``nmcli``."""
 
 from __future__ import annotations
 
@@ -18,10 +18,10 @@ if TYPE_CHECKING:
 
 
 class NmcliMutationsMixin(NmcliProfilesMixin):
-    """Represent NmcliMutationsMixin."""
+    """Implement connection mutations and verify their resulting state."""
 
     async def activate_saved_profile(self, request: SavedProfileRequest) -> ActiveWifiConnection:
-        """Perform activate saved profile."""
+        """Activate a saved profile on the requested interface."""
         await self._run(
             (
                 "--wait",
@@ -38,7 +38,7 @@ class NmcliMutationsMixin(NmcliProfilesMixin):
         return await self._verify_active(request.interface, request.uuid)
 
     async def connect_visible_network(self, request: VisibleConnectRequest) -> ActiveWifiConnection:
-        """Perform connect visible network."""
+        """Connect to a visible personal or open Wi-Fi network."""
         self._validate_connect_security(request.security, has_password=request.password is not None)
         args = [
             "--wait",
@@ -63,11 +63,11 @@ class NmcliMutationsMixin(NmcliProfilesMixin):
         )
         active = await self._verify_active(request.interface, None, request.ssid)
         if not request.autoconnect:
-            await self.set_profile_autoconnect(active.uuid, False)
+            await self.set_profile_autoconnect(active.uuid, enabled=False)
         return active
 
     async def connect_hidden_network(self, request: HiddenConnectRequest) -> ActiveWifiConnection:
-        """Perform connect hidden network."""
+        """Connect to a hidden personal or open Wi-Fi network."""
         if not request.ssid:
             raise WifiError(
                 ErrorCategory.NETWORK_UNAVAILABLE,
@@ -97,12 +97,12 @@ class NmcliMutationsMixin(NmcliProfilesMixin):
         )
         active = await self._verify_active(request.interface, None, request.ssid)
         if not request.autoconnect:
-            await self.set_profile_autoconnect(active.uuid, False)
+            await self.set_profile_autoconnect(active.uuid, enabled=False)
         return active
 
     @staticmethod
     def _validate_connect_security(security: SecurityClass, *, has_password: bool) -> None:
-        """Perform validate connect security."""
+        """Reject unsupported security and missing required credentials."""
         if not security.supported:
             raise WifiError(ErrorCategory.UNSUPPORTED_SECURITY)
         if security.requires_password and not has_password:
@@ -114,7 +114,7 @@ class NmcliMutationsMixin(NmcliProfilesMixin):
         uuid: str | None,
         ssid: str | None = None,
     ) -> ActiveWifiConnection:
-        """Perform verify active."""
+        """Verify the expected active connection after a mutation."""
         active = await self.get_active_wifi_connection()
         if active is None or active.device != interface:
             raise WifiError(
@@ -134,7 +134,7 @@ class NmcliMutationsMixin(NmcliProfilesMixin):
         return active
 
     async def disconnect(self, request: DisconnectRequest) -> None:
-        """Perform disconnect."""
+        """Disconnect one Wi-Fi interface and verify it is inactive."""
         await self._run(
             ("--wait", "15", "device", "disconnect", request.interface),
             timeout_seconds=self.MUTATION_TIMEOUT,
@@ -147,7 +147,7 @@ class NmcliMutationsMixin(NmcliProfilesMixin):
             )
 
     async def delete_saved_profile(self, uuid: str) -> None:
-        """Perform delete saved profile."""
+        """Delete a saved profile and verify its removal."""
         await self._run(
             ("connection", "delete", "uuid", uuid),
             timeout_seconds=self.MUTATION_TIMEOUT,
@@ -160,7 +160,7 @@ class NmcliMutationsMixin(NmcliProfilesMixin):
             )
 
     async def set_profile_autoconnect(self, uuid: str, *, enabled: bool) -> SavedProfile:
-        """Perform set profile autoconnect."""
+        """Set auto-connect on a profile and verify the stored value."""
         await self._run(
             (
                 "connection",
@@ -182,5 +182,5 @@ class NmcliMutationsMixin(NmcliProfilesMixin):
         return profile
 
     async def get_connection_details(self) -> ActiveWifiConnection | None:
-        """Perform get connection details."""
+        """Return details for the active Wi-Fi connection."""
         return await self.get_active_wifi_connection()
