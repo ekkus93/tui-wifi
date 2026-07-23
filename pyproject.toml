@@ -36,7 +36,7 @@ dev = [
 ]
 
 [project.scripts]
-wifi-tui = "tui_wifi.cli:main"
+tui-wifi = "tui_wifi.cli:main"
 
 [project.urls]
 Repository = "https://github.com/ekkus93/tui-wifi"
