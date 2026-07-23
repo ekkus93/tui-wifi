@@ -1,0 +1,58 @@
+name: Temporary strict gate audit
+
+on:
+  push:
+    branches:
+      - master
+
+permissions:
+  contents: write
+
+env:
+  PIP_DISABLE_PIP_VERSION_CHECK: "1"
+  PYTHONWARNINGS: error
+
+jobs:
+  audit:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: master
+          show-progress: false
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.13"
+          cache: pip
+      - run: python -m pip install --quiet -e '.[dev]'
+      - name: Capture all strict gates
+        shell: bash
+        run: |
+          set +e
+          status=0
+          {
+            echo '=== BLACK ==='
+            black --check . || status=1
+            echo
+            echo '=== RUFF ==='
+            ruff check . --output-format concise || status=1
+            echo
+            echo '=== MYPY ==='
+            mypy src/tui_wifi || status=1
+            echo
+            echo '=== PYTEST ==='
+            pytest -m 'not real_network' || status=1
+            echo
+            echo "overall_status=$status"
+          } > STRICT_GATE_RESULTS.txt 2>&1
+          exit 0
+      - name: Remove audit workflow and commit results
+        shell: bash
+        run: |
+          rm .github/workflows/strict-gate-audit.yml
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add -A
+          git commit -m "Record final strict gate audit"
+          git push origin HEAD:master
