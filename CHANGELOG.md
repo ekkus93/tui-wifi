@@ -16,5 +16,6 @@
   values in terse `nmcli` output.
 - Added compatibility for NetworkManager 1.36 access-point frequencies that include an
   explicit `MHz` unit.
+- Renamed the installed command to `tui-wifi` to match the project name.
 - Hardware acceptance validation remains pending and is tracked in
   `tests/manual/V01_ACCEPTANCE.md`.
