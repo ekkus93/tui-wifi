@@ -1,4 +1,4 @@
-"""Provide parsing functionality."""
+"""Parse strict, escaped ``nmcli`` output into domain values."""
 
 from __future__ import annotations
 
@@ -8,18 +8,18 @@ import uuid as uuid_module
 from tui_wifi.errors import ErrorCategory, WifiError
 from tui_wifi.models import DeviceState, NetworkManagerState, SecurityClass
 
-_COMPARISON_VALUE_100 = 100
-_COMPARISON_VALUE_2412 = 2412
-_COMPARISON_VALUE_2472 = 2472
-_COMPARISON_VALUE_2484 = 2484
-_COMPARISON_VALUE_5000 = 5000
-_COMPARISON_VALUE_5895 = 5895
-_COMPARISON_VALUE_5955 = 5955
-_COMPARISON_VALUE_7115 = 7115
+_MAX_SIGNAL_PERCENT = 100
+_WIFI_24_GHZ_FIRST_MHZ = 2412
+_WIFI_24_GHZ_LAST_MHZ = 2472
+_WIFI_CHANNEL_14_MHZ = 2484
+_WIFI_5_GHZ_FIRST_MHZ = 5000
+_WIFI_5_GHZ_LAST_MHZ = 5895
+_WIFI_6_GHZ_FIRST_MHZ = 5955
+_WIFI_6_GHZ_LAST_MHZ = 7115
 
 
 def split_escaped(line: str, expected_fields: int | None = None, separator: str = ":") -> list[str]:
-    """Perform split escaped."""
+    """Split an escaped delimited line and validate its field count."""
     fields: list[str] = []
     current: list[str] = []
     escaped = False
@@ -49,7 +49,7 @@ def split_escaped(line: str, expected_fields: int | None = None, separator: str 
 
 
 def parse_bool(value: str) -> bool:
-    """Perform parse bool."""
+    """Parse one strict NetworkManager boolean value."""
     normalized = value.strip().lower()
     if normalized in {"yes", "true", "on", "enabled", "1"}:
         return True
@@ -59,7 +59,7 @@ def parse_bool(value: str) -> bool:
 
 
 def parse_signal(value: str) -> int | None:
-    """Perform parse signal."""
+    """Parse an optional signal percentage in the inclusive range 0 through 100."""
     if not value.strip():
         return None
     try:
@@ -69,7 +69,7 @@ def parse_signal(value: str) -> int | None:
             ErrorCategory.PARSE_FAILURE,
             technical_details=f"invalid signal value: {value!r}",
         ) from exc
-    if not 0 <= signal <= _COMPARISON_VALUE_100:
+    if not 0 <= signal <= _MAX_SIGNAL_PERCENT:
         raise WifiError(
             ErrorCategory.PARSE_FAILURE,
             technical_details=f"signal outside 0..100: {signal}",
@@ -78,7 +78,7 @@ def parse_signal(value: str) -> int | None:
 
 
 def parse_optional_int(value: str) -> int | None:
-    """Perform parse optional int."""
+    """Parse an optional decimal integer."""
     if not value.strip():
         return None
     try:
@@ -91,47 +91,50 @@ def parse_optional_int(value: str) -> int | None:
 
 
 def frequency_to_channel(frequency: int | None) -> int | None:
-    """Perform frequency to channel."""
+    """Convert a supported Wi-Fi frequency in MHz to its channel number."""
     if frequency is None:
         return None
-    if frequency == _COMPARISON_VALUE_2484:
+    if frequency == _WIFI_CHANNEL_14_MHZ:
         return 14
-    if _COMPARISON_VALUE_2412 <= frequency <= _COMPARISON_VALUE_2472:
+    if _WIFI_24_GHZ_FIRST_MHZ <= frequency <= _WIFI_24_GHZ_LAST_MHZ:
         return (frequency - 2407) // 5
-    if _COMPARISON_VALUE_5000 <= frequency <= _COMPARISON_VALUE_5895:
+    if _WIFI_5_GHZ_FIRST_MHZ <= frequency <= _WIFI_5_GHZ_LAST_MHZ:
         return (frequency - 5000) // 5
-    if _COMPARISON_VALUE_5955 <= frequency <= _COMPARISON_VALUE_7115:
+    if _WIFI_6_GHZ_FIRST_MHZ <= frequency <= _WIFI_6_GHZ_LAST_MHZ:
         return (frequency - 5950) // 5
     return None
 
 
 def parse_security(value: str) -> SecurityClass:
-    """Perform parse security."""
+    """Classify NetworkManager security text without downgrading unknown modes."""
     normalized = " ".join(value.upper().replace("_", "-").split())
     if normalized in {"", "--", "NONE", "OPEN"}:
-        return SecurityClass.OPEN
-    if "WEP" in normalized:
-        return SecurityClass.WEP
-    if any(marker in normalized for marker in ("802.1X", "EAP", "ENTERPRISE")):
-        return SecurityClass.ENTERPRISE
-    has_wpa1 = "WPA1" in normalized or normalized == "WPA"
-    has_wpa2 = "WPA2" in normalized or "RSN" in normalized
-    has_wpa3 = "WPA3" in normalized or "SAE" in normalized
-    if has_wpa3 and (has_wpa2 or has_wpa1):
-        return SecurityClass.MIXED_PERSONAL
-    if has_wpa3:
-        return SecurityClass.WPA3_PERSONAL
-    if has_wpa2 and has_wpa1:
-        return SecurityClass.MIXED_PERSONAL
-    if has_wpa2:
-        return SecurityClass.WPA2_PERSONAL
-    if has_wpa1:
-        return SecurityClass.WPA_PERSONAL
-    return SecurityClass.UNKNOWN
+        security = SecurityClass.OPEN
+    elif "WEP" in normalized:
+        security = SecurityClass.WEP
+    elif any(marker in normalized for marker in ("802.1X", "EAP", "ENTERPRISE")):
+        security = SecurityClass.ENTERPRISE
+    else:
+        has_wpa1 = "WPA1" in normalized or normalized == "WPA"
+        has_wpa2 = "WPA2" in normalized or "RSN" in normalized
+        has_wpa3 = "WPA3" in normalized or "SAE" in normalized
+        if has_wpa3 and (has_wpa2 or has_wpa1):
+            security = SecurityClass.MIXED_PERSONAL
+        elif has_wpa3:
+            security = SecurityClass.WPA3_PERSONAL
+        elif has_wpa2 and has_wpa1:
+            security = SecurityClass.MIXED_PERSONAL
+        elif has_wpa2:
+            security = SecurityClass.WPA2_PERSONAL
+        elif has_wpa1:
+            security = SecurityClass.WPA_PERSONAL
+        else:
+            security = SecurityClass.UNKNOWN
+    return security
 
 
 def parse_device_state(value: str) -> DeviceState:
-    """Perform parse device state."""
+    """Map NetworkManager device-state text to a stable application state."""
     normalized = value.strip().lower().replace(" ", "-")
     mapping = {
         "unmanaged": DeviceState.UNMANAGED,
@@ -156,7 +159,7 @@ def parse_device_state(value: str) -> DeviceState:
 
 
 def parse_nm_state(value: str) -> NetworkManagerState:
-    """Perform parse nm state."""
+    """Map NetworkManager global-state text to a stable application state."""
     normalized = value.strip().lower().replace(" ", "-")
     mapping = {
         "connected-(global)": NetworkManagerState.CONNECTED_GLOBAL,
@@ -170,7 +173,7 @@ def parse_nm_state(value: str) -> NetworkManagerState:
 
 
 def validate_uuid(value: str) -> str:
-    """Perform validate uuid."""
+    """Validate and normalize a connection UUID."""
     try:
         return str(uuid_module.UUID(value))
     except ValueError as exc:
@@ -181,7 +184,7 @@ def validate_uuid(value: str) -> str:
 
 
 def parse_ip_values(values: list[str]) -> tuple[str, ...]:
-    """Perform parse ip values."""
+    """Validate and return non-empty interface-address strings."""
     parsed: list[str] = []
     for value in values:
         stripped = value.strip()
