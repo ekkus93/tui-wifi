@@ -1,0 +1,114 @@
+name: One-shot tui-wifi command rename
+
+on:
+  push:
+    branches:
+      - master
+
+permissions:
+  contents: write
+
+env:
+  PYTHONWARNINGS: error
+  PIP_DISABLE_PIP_VERSION_CHECK: "1"
+
+jobs:
+  rename:
+    if: github.event.head_commit.message == 'Run tui-wifi command rename'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v6
+        with:
+          show-progress: false
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.13"
+          cache: pip
+
+      - name: Install development dependencies
+        run: python -m pip install --quiet -e '.[dev]'
+
+      - name: Rename executable everywhere
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import subprocess
+
+          old = "wifi-tui"
+          new = "tui-wifi"
+          result = subprocess.run(
+              ["git", "grep", "-Il", old],
+              check=False,
+              capture_output=True,
+              text=True,
+          )
+          if result.returncode not in {0, 1}:
+              raise SystemExit(result.stderr)
+          paths = [Path(line) for line in result.stdout.splitlines()]
+          if not paths:
+              raise SystemExit(f"no tracked files contained {old!r}")
+          for path in paths:
+              content = path.read_text(encoding="utf-8")
+              path.write_text(content.replace(old, new), encoding="utf-8")
+
+          changelog_path = Path("CHANGELOG.md")
+          changelog = changelog_path.read_text(encoding="utf-8")
+          anchor = (
+              "- Added compatibility for NetworkManager 1.36 frequency values that include "
+              "the `MHz` unit.\n"
+          )
+          addition = anchor + "- Renamed the installed command to `tui-wifi` to match the project name.\n"
+          if anchor not in changelog:
+              raise SystemExit("changelog frequency compatibility anchor was not found")
+          changelog_path.write_text(changelog.replace(anchor, addition, 1), encoding="utf-8")
+          PY
+
+      - name: Verify old command name is absent
+        run: |
+          if git grep -n -- 'wifi-tui'; then
+            echo 'Old command name remains in tracked files.' >&2
+            exit 1
+          fi
+
+      - name: Apply canonical formatting
+        run: black .
+
+      - name: Run all Ruff checks
+        run: ruff check .
+
+      - name: Run strict Mypy
+        run: mypy src/tui_wifi
+
+      - name: Run tests
+        run: pytest -m 'not real_network'
+
+      - name: Enforce critical coverage
+        run: python scripts/check_critical_coverage.py coverage.json
+
+      - name: Build package
+        run: python -m build
+
+      - name: Verify wheel installs only tui-wifi
+        shell: bash
+        run: |
+          python -m venv /tmp/tui-wifi-command-test
+          /tmp/tui-wifi-command-test/bin/python -m pip install --quiet dist/*.whl
+          /tmp/tui-wifi-command-test/bin/python -m pip check
+          /tmp/tui-wifi-command-test/bin/tui-wifi --version
+          test ! -e /tmp/tui-wifi-command-test/bin/wifi-tui
+
+      - name: Remove one-shot files
+        run: |
+          rm .github/workflows/rename-command.yml
+          rm .rename-command-trigger
+
+      - name: Commit validated rename
+        run: |
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add -A
+          git commit -m 'Rename command to tui-wifi'
+          git push origin HEAD:master
