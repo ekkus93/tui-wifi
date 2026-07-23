@@ -6,7 +6,12 @@ from __future__ import annotations
 from collections import defaultdict
 
 from tui_wifi.backends.nmcli_core import NmcliCore
-from tui_wifi.backends.parsing import parse_bool, split_escaped, validate_uuid
+from tui_wifi.backends.parsing import (
+    parse_bool,
+    split_escaped,
+    split_escaped_key_value,
+    validate_uuid,
+)
 from tui_wifi.errors import ErrorCategory, WifiError
 from tui_wifi.models import (
     ActiveWifiConnection,
@@ -18,6 +23,27 @@ from tui_wifi.models import (
 
 _COMPARISON_VALUE_2 = 2
 _COMPARISON_VALUE_3 = 3
+_INDEXED_IP_PROPERTIES = frozenset(
+    {
+        "IP4.ADDRESS",
+        "IP4.DNS",
+        "IP6.ADDRESS",
+        "IP6.DNS",
+    },
+)
+
+
+def _normalize_detail_key(key: str) -> str:
+    """Normalize indexed IP property names emitted by older NetworkManager releases."""
+    base, bracket, index = key.rpartition("[")
+    if (
+        bracket
+        and base in _INDEXED_IP_PROPERTIES
+        and index.endswith("]")
+        and index[:-1].isdigit()
+    ):
+        return base
+    return key
 
 
 class NmcliProfilesMixin(NmcliCore):
@@ -136,8 +162,8 @@ class NmcliProfilesMixin(NmcliCore):
         for line in detail_output.splitlines():
             if not line:
                 continue
-            key, value = split_escaped(line, 2)
-            values[key].append(value)
+            key, value = split_escaped_key_value(line)
+            values[_normalize_detail_key(key)].append(value)
         profile_name = (
             self._first(values, "GENERAL.CONNECTION") or active_device.active_connection or ""
         )

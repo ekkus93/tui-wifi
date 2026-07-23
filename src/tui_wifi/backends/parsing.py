@@ -19,20 +19,26 @@ _WIFI_6_GHZ_FIRST_MHZ = 5955
 _WIFI_6_GHZ_LAST_MHZ = 7115
 
 
-def split_escaped(line: str, expected_fields: int | None = None, separator: str = ":") -> list[str]:
-    """Split an escaped delimited line and validate its field count."""
+def _split_escaped_fields(
+    line: str,
+    separator: str,
+    max_splits: int | None,
+) -> list[str]:
+    """Split escaped fields, optionally preserving separators after a split limit."""
     fields: list[str] = []
     current: list[str] = []
     escaped = False
+    split_count = 0
     for char in line.rstrip("\n"):
         if escaped:
             current.append(char)
             escaped = False
         elif char == "\\":
             escaped = True
-        elif char == separator:
+        elif char == separator and (max_splits is None or split_count < max_splits):
             fields.append("".join(current))
             current = []
+            split_count += 1
         else:
             current.append(char)
     if escaped:
@@ -41,12 +47,29 @@ def split_escaped(line: str, expected_fields: int | None = None, separator: str 
             technical_details="dangling escape at end of nmcli output line",
         )
     fields.append("".join(current))
+    return fields
+
+
+def split_escaped(line: str, expected_fields: int | None = None, separator: str = ":") -> list[str]:
+    """Split an escaped delimited line and validate its field count."""
+    fields = _split_escaped_fields(line, separator, None)
     if expected_fields is not None and len(fields) != expected_fields:
         raise WifiError(
             ErrorCategory.PARSE_FAILURE,
             technical_details=f"expected {expected_fields} fields, got {len(fields)}",
         )
     return fields
+
+
+def split_escaped_key_value(line: str, separator: str = ":") -> tuple[str, str]:
+    """Split one escaped property record while preserving delimiters in its value."""
+    fields = _split_escaped_fields(line, separator, 1)
+    if len(fields) != 2:
+        raise WifiError(
+            ErrorCategory.PARSE_FAILURE,
+            technical_details=f"expected 2 fields, got {len(fields)}",
+        )
+    return fields[0], fields[1]
 
 
 def parse_bool(value: str) -> bool:
@@ -163,6 +186,7 @@ def parse_nm_state(value: str) -> NetworkManagerState:
     """Map NetworkManager global-state text to a stable application state."""
     normalized = value.strip().lower().replace(" ", "-")
     mapping = {
+        "connected": NetworkManagerState.CONNECTED_GLOBAL,
         "connected-(global)": NetworkManagerState.CONNECTED_GLOBAL,
         "connected-(site-only)": NetworkManagerState.CONNECTED_SITE,
         "connected-(local-only)": NetworkManagerState.CONNECTED_LOCAL,
