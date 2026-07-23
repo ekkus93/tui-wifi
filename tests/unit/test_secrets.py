@@ -1,13 +1,14 @@
-"""Verify test secrets behavior."""
+"""Verify secret storage and redaction."""
 
 from __future__ import annotations
 
 from tests.assertions import verify
+from tui_wifi.process import ProcessRequest
 from tui_wifi.secrets import SecretValue, redact_arguments, redact_text
 
 
 def test_secret_never_formats_as_plaintext() -> None:
-    """Verify test secret never formats as plaintext."""
+    """Verify secret objects never render their plaintext value."""
     secret = SecretValue("correct horse battery staple")
     verify("correct" not in str(secret))
     verify("correct" not in repr(secret))
@@ -17,7 +18,7 @@ def test_secret_never_formats_as_plaintext() -> None:
 
 
 def test_argument_and_text_redaction() -> None:
-    """Verify test argument and text redaction."""
+    """Verify argument and free-text redaction removes protected values."""
     args = ("connect", "Example", "password", "very-secret")
     verify(redact_arguments(args, frozenset({3}))[-1] == "<redacted>")
     text = redact_text(
@@ -29,9 +30,7 @@ def test_argument_and_text_redaction() -> None:
 
 
 def test_process_request_repr_hides_raw_arguments_and_stdin() -> None:
-    """Verify test process request repr hides raw arguments and stdin."""
-    from tui_wifi.process import ProcessRequest
-
+    """Verify process request representations hide arguments and standard input."""
     request = ProcessRequest(
         "nmcli",
         ("device", "wifi", "connect", "Home", "password", "top-secret"),
