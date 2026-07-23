@@ -1,4 +1,4 @@
-"""Verify test service behavior."""
+"""Verify Wi-Fi service behavior."""
 
 from __future__ import annotations
 
@@ -7,33 +7,41 @@ import asyncio
 import pytest
 
 from tests.assertions import verify
+from tui_wifi.backends.base import DisconnectRequest, SavedProfileRequest
 from tui_wifi.backends.fake import FakeWifiBackend
 from tui_wifi.errors import ErrorCategory, WifiError
-from tui_wifi.models import AccessPoint, SecurityClass
+from tui_wifi.models import (
+    AccessPoint,
+    DeviceState,
+    NetworkGroup,
+    SavedProfile,
+    SecurityClass,
+    WifiDevice,
+)
 from tui_wifi.secrets import SecretValue
 from tui_wifi.services.wifi import WifiService
 
 
 def sample_ap() -> AccessPoint:
-    """Perform sample ap."""
+    """Return a representative secured access point."""
     return AccessPoint(
-        b"Home",
-        "Home",
-        "00:11:22:33:44:55",
-        88,
-        2412,
-        1,
-        SecurityClass.WPA2_PERSONAL,
-        False,
-        "wlan0",
+        ssid=b"Home",
+        display_ssid="Home",
+        bssid="00:11:22:33:44:55",
+        signal=88,
+        frequency=2412,
+        channel=1,
+        security=SecurityClass.WPA2_PERSONAL,
+        active=False,
+        device="wlan0",
     )
 
 
 def test_startup_connect_disconnect_and_radio() -> None:
-    """Verify test startup connect disconnect and radio."""
+    """Verify the primary startup, connection, and radio workflow."""
 
     async def scenario() -> None:
-        """Perform scenario."""
+        """Run the asynchronous service workflow."""
         backend = FakeWifiBackend()
         backend.access_points["wlan0"] = (sample_ap(),)
         service = WifiService(backend)
@@ -46,17 +54,17 @@ def test_startup_connect_disconnect_and_radio() -> None:
         verify(password.reveal() == "")
         disconnected = await service.disconnect()
         verify(disconnected.active_connection is None)
-        disabled = await service.set_wifi_enabled(False)
+        disabled = await service.set_wifi_enabled(enabled=False)
         verify(disabled.status.wifi_radio.value == "disabled")
 
     asyncio.run(scenario())
 
 
 def test_refresh_failure_preserves_last_valid_state() -> None:
-    """Verify test refresh failure preserves last valid state."""
+    """Verify failed refreshes preserve the last coherent state."""
 
     async def scenario() -> None:
-        """Perform scenario."""
+        """Run a refresh that fails after a valid startup."""
         backend = FakeWifiBackend()
         backend.access_points["wlan0"] = (sample_ap(),)
         service = WifiService(backend)
@@ -71,10 +79,10 @@ def test_refresh_failure_preserves_last_valid_state() -> None:
 
 
 def test_explicit_missing_interface_is_visible() -> None:
-    """Verify test explicit missing interface is visible."""
+    """Verify a requested missing interface produces a visible error."""
 
     async def scenario() -> None:
-        """Perform scenario."""
+        """Start a service with an unavailable preferred interface."""
         service = WifiService(FakeWifiBackend(), preferred_interface="missing0")
         snapshot = await service.startup()
         verify(snapshot.error == "Wi-Fi interface 'missing0' is unavailable.")
@@ -83,16 +91,21 @@ def test_explicit_missing_interface_is_visible() -> None:
 
 
 def test_unsupported_connection_is_rejected_before_backend() -> None:
-    """Verify test unsupported connection is rejected before backend."""
+    """Verify unsupported security never reaches the backend."""
 
     async def scenario() -> None:
-        """Perform scenario."""
+        """Attempt an unsupported enterprise connection."""
         backend = FakeWifiBackend()
         service = WifiService(backend)
         await service.startup()
-        from tui_wifi.models import NetworkGroup
-
-        group = NetworkGroup("corp", "Corp", SecurityClass.ENTERPRISE, 80, False, supported=False)
+        group = NetworkGroup(
+            identity="corp",
+            display_ssid="Corp",
+            security=SecurityClass.ENTERPRISE,
+            signal=80,
+            connected=False,
+            supported=False,
+        )
         with pytest.raises(WifiError) as caught:
             await service.connect_network(group)
         verify(caught.value.category == ErrorCategory.UNSUPPORTED_SECURITY)
@@ -102,51 +115,43 @@ def test_unsupported_connection_is_rejected_before_backend() -> None:
 
 
 def test_fake_backend_saved_profile_workflows() -> None:
-    """Verify test fake backend saved profile workflows."""
+    """Verify saved-profile activation, update, deletion, and disconnect."""
 
     async def scenario() -> None:
-        """Perform scenario."""
-        from tui_wifi.backends.base import SavedProfileRequest
-        from tui_wifi.models import SavedProfile
-
+        """Run saved-profile operations against the fake backend."""
         backend = FakeWifiBackend()
         profile = SavedProfile(
-            "Home",
-            "00000000-0000-0000-0000-000000000099",
-            "Home",
-            None,
-            True,
-            SecurityClass.WPA2_PERSONAL,
+            name="Home",
+            uuid="00000000-0000-0000-0000-000000000099",
+            ssid="Home",
+            interface_name=None,
+            autoconnect=True,
+            security=SecurityClass.WPA2_PERSONAL,
         )
         backend.profiles = (profile,)
-        active = await backend.activate_saved_profile(SavedProfileRequest(profile.uuid, "wlan0"))
+        active = await backend.activate_saved_profile(
+            SavedProfileRequest(profile.uuid, "wlan0"),
+        )
         verify(active.uuid == profile.uuid)
-        changed = await backend.set_profile_autoconnect(profile.uuid, False)
+        changed = await backend.set_profile_autoconnect(profile.uuid, enabled=False)
         verify(changed.autoconnect is False)
         await backend.delete_saved_profile(profile.uuid)
         verify(backend.profiles == ())
-        await backend.disconnect(
-            __import__("tui_wifi.backends.base", fromlist=["DisconnectRequest"]).DisconnectRequest(
-                "wlan0",
-                active.uuid,
-            ),
-        )
+        await backend.disconnect(DisconnectRequest("wlan0", active.uuid))
         verify(await backend.get_connection_details() is None)
 
     asyncio.run(scenario())
 
 
 def test_multiple_idle_adapters_require_explicit_selection() -> None:
-    """Verify test multiple idle adapters require explicit selection."""
+    """Verify multiple idle adapters require an explicit interface choice."""
 
     async def scenario() -> None:
-        """Perform scenario."""
-        from tui_wifi.models import DeviceState, WifiDevice
-
+        """Start with two managed disconnected adapters."""
         backend = FakeWifiBackend()
         backend.devices = (
-            WifiDevice("wlan0", DeviceState.DISCONNECTED, True),
-            WifiDevice("wlan1", DeviceState.DISCONNECTED, True),
+            WifiDevice(interface="wlan0", state=DeviceState.DISCONNECTED, managed=True),
+            WifiDevice(interface="wlan1", state=DeviceState.DISCONNECTED, managed=True),
         )
         snapshot = await WifiService(backend).startup()
         verify(snapshot.error is not None)
