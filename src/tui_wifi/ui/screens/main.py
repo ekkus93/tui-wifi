@@ -101,20 +101,22 @@ class MainScreen(Screen[None]):
     def _message_for(snapshot: ApplicationSnapshot, radio: WifiRadioState) -> str:
         """Choose the most important current status message."""
         if snapshot.operation.phase == OperationPhase.RUNNING:
-            return snapshot.operation.message or "Working…"
-        if snapshot.error:
-            return snapshot.error
-        if snapshot.warning:
-            return snapshot.warning
-        if snapshot.selected_device is None:
-            return "No usable Wi-Fi adapter was found."
-        if radio == WifiRadioState.DISABLED:
-            return "Wi-Fi is disabled. Press W to enable it."
-        if radio == WifiRadioState.HARDWARE_BLOCKED:
-            return "Wi-Fi is blocked by a hardware or software switch."
-        if not snapshot.networks:
-            return "No nearby networks were found. Press R to scan again."
-        return f"{len(snapshot.networks)} network(s) found on {snapshot.selected_device}."
+            message = snapshot.operation.message or "Working…"
+        elif snapshot.error:
+            message = snapshot.error
+        elif snapshot.warning:
+            message = snapshot.warning
+        elif snapshot.selected_device is None:
+            message = "No usable Wi-Fi adapter was found."
+        elif radio == WifiRadioState.DISABLED:
+            message = "Wi-Fi is disabled. Press W to enable it."
+        elif radio == WifiRadioState.HARDWARE_BLOCKED:
+            message = "Wi-Fi is blocked by a hardware or software switch."
+        elif not snapshot.networks:
+            message = "No nearby networks were found. Press R to scan again."
+        else:
+            message = f"{len(snapshot.networks)} network(s) found on {snapshot.selected_device}."
+        return message
 
     @staticmethod
     def _connection_summary(snapshot: ApplicationSnapshot) -> str:
@@ -150,11 +152,11 @@ class MainScreen(Screen[None]):
         radio = snapshot.status.wifi_radio
         stale = " (stale)" if snapshot.stale else ""
         self.query_one("#radio-status", Static).update(
-            f"Wi-Fi: {self._radio_text(radio)}{stale}"
+            f"Wi-Fi: {self._radio_text(radio)}{stale}",
         )
         self.query_one("#message", Static).update(self._message_for(snapshot, radio))
         self.query_one("#connection-summary", Static).update(
-            self._connection_summary(snapshot)
+            self._connection_summary(snapshot),
         )
         self._update_action_widgets(snapshot, radio)
 
