@@ -1,0 +1,507 @@
+=== BLACK ===
+would reformat /home/runner/work/tui-wifi/tui-wifi/tests/factories.py
+would reformat /home/runner/work/tui-wifi/tui-wifi/tests/unit/test_critical_coverage.py
+
+Oh no! 💥 💔 💥
+2 files would be reformatted, 61 files would be left unchanged.
+status=1
+
+=== RUFF ===
+scripts/__init__.py:1:1: CPY001 Missing copyright notice at top of file
+scripts/check_critical_coverage.py:1:1: CPY001 Missing copyright notice at top of file
+src/tui_wifi/__init__.py:1:1: CPY001 Missing copyright notice at top of file
+src/tui_wifi/__main__.py:1:1: CPY001 Missing copyright notice at top of file
+src/tui_wifi/app.py:1:1: CPY001 Missing copyright notice at top of file
+src/tui_wifi/backends/__init__.py:1:1: CPY001 Missing copyright notice at top of file
+src/tui_wifi/backends/base.py:1:1: CPY001 Missing copyright notice at top of file
+src/tui_wifi/backends/fake.py:1:1: CPY001 Missing copyright notice at top of file
+src/tui_wifi/backends/nmcli.py:1:1: CPY001 Missing copyright notice at top of file
+src/tui_wifi/backends/nmcli_core.py:1:1: CPY001 Missing copyright notice at top of file
+src/tui_wifi/backends/nmcli_mutations.py:1:1: CPY001 Missing copyright notice at top of file
+src/tui_wifi/backends/nmcli_profiles.py:1:1: CPY001 Missing copyright notice at top of file
+src/tui_wifi/backends/nmcli_profiles.py:61:21: ISC004 Unparenthesized implicit string concatenation in collection
+src/tui_wifi/backends/nmcli_profiles.py:121:17: ISC004 Unparenthesized implicit string concatenation in collection
+src/tui_wifi/backends/parsing.py:1:1: CPY001 Missing copyright notice at top of file
+src/tui_wifi/cli.py:1:1: CPY001 Missing copyright notice at top of file
+src/tui_wifi/errors.py:1:1: CPY001 Missing copyright notice at top of file
+src/tui_wifi/grouping.py:1:1: CPY001 Missing copyright notice at top of file
+src/tui_wifi/logging_config.py:1:1: CPY001 Missing copyright notice at top of file
+src/tui_wifi/models.py:1:1: CPY001 Missing copyright notice at top of file
+src/tui_wifi/process/__init__.py:1:1: CPY001 Missing copyright notice at top of file
+src/tui_wifi/process/fake.py:1:1: CPY001 Missing copyright notice at top of file
+src/tui_wifi/process/runner.py:1:1: CPY001 Missing copyright notice at top of file
+src/tui_wifi/secrets.py:1:1: CPY001 Missing copyright notice at top of file
+src/tui_wifi/services/__init__.py:1:1: CPY001 Missing copyright notice at top of file
+src/tui_wifi/services/wifi.py:1:1: CPY001 Missing copyright notice at top of file
+src/tui_wifi/ui/__init__.py:1:1: CPY001 Missing copyright notice at top of file
+src/tui_wifi/ui/dialogs/__init__.py:1:1: CPY001 Missing copyright notice at top of file
+src/tui_wifi/ui/dialogs/common.py:1:1: CPY001 Missing copyright notice at top of file
+src/tui_wifi/ui/screens/__init__.py:1:1: CPY001 Missing copyright notice at top of file
+src/tui_wifi/ui/screens/details.py:1:1: CPY001 Missing copyright notice at top of file
+src/tui_wifi/ui/screens/main.py:1:1: CPY001 Missing copyright notice at top of file
+src/tui_wifi/ui/screens/saved.py:1:1: CPY001 Missing copyright notice at top of file
+src/tui_wifi/ui/widgets/__init__.py:1:1: CPY001 Missing copyright notice at top of file
+src/tui_wifi/ui/widgets/network_list.py:1:1: CPY001 Missing copyright notice at top of file
+tests/__init__.py:1:1: CPY001 Missing copyright notice at top of file
+tests/assertions.py:1:1: CPY001 Missing copyright notice at top of file
+tests/conftest.py:1:1: CPY001 Missing copyright notice at top of file
+tests/factories.py:1:1: CPY001 Missing copyright notice at top of file
+tests/integration/__init__.py:1:1: CPY001 Missing copyright notice at top of file
+tests/integration/test_fake_nmcli_executable.py:1:1: CPY001 Missing copyright notice at top of file
+tests/nmcli_fixtures.py:1:1: CPY001 Missing copyright notice at top of file
+tests/nmcli_fixtures.py:42:9: ISC004 Unparenthesized implicit string concatenation in collection
+tests/nmcli_fixtures.py:85:9: ISC004 Unparenthesized implicit string concatenation in collection
+tests/tui/__init__.py:1:1: CPY001 Missing copyright notice at top of file
+tests/tui/helpers.py:1:1: CPY001 Missing copyright notice at top of file
+tests/tui/test_app.py:1:1: CPY001 Missing copyright notice at top of file
+tests/tui/test_dialogs.py:1:1: CPY001 Missing copyright notice at top of file
+tests/tui/test_dialogs.py:42:76: COM812 [*] Trailing comma missing
+tests/tui/test_dialogs.py:83:101: COM812 [*] Trailing comma missing
+tests/tui/test_dialogs.py:89:76: COM812 [*] Trailing comma missing
+tests/tui/test_dialogs.py:152:91: COM812 [*] Trailing comma missing
+tests/tui/test_dialogs.py:157:98: COM812 [*] Trailing comma missing
+tests/tui/test_main_screen.py:1:1: CPY001 Missing copyright notice at top of file
+tests/tui/test_main_screen.py:428:39: PLR2004 Magic value used in comparison, consider replacing `2` with a constant variable
+tests/tui/test_main_screen.py:442:38: F821 Undefined name `_`
+tests/tui/test_saved_screen.py:1:1: CPY001 Missing copyright notice at top of file
+tests/tui/test_saved_screen.py:132:78: COM812 [*] Trailing comma missing
+tests/tui/test_saved_screen.py:177:78: COM812 [*] Trailing comma missing
+tests/unit/__init__.py:1:1: CPY001 Missing copyright notice at top of file
+tests/unit/test_cli.py:1:1: CPY001 Missing copyright notice at top of file
+tests/unit/test_critical_coverage.py:1:1: CPY001 Missing copyright notice at top of file
+tests/unit/test_critical_coverage.py:3:1: I001 [*] Import block is un-sorted or un-formatted
+tests/unit/test_errors.py:1:1: CPY001 Missing copyright notice at top of file
+tests/unit/test_grouping.py:1:1: CPY001 Missing copyright notice at top of file
+tests/unit/test_logging.py:1:1: CPY001 Missing copyright notice at top of file
+tests/unit/test_nmcli.py:1:1: CPY001 Missing copyright notice at top of file
+tests/unit/test_nmcli.py:127:70: FBT001 Boolean-typed positional argument in function definition
+tests/unit/test_nmcli_mutations.py:1:1: CPY001 Missing copyright notice at top of file
+tests/unit/test_nmcli_mutations_verification.py:1:1: CPY001 Missing copyright notice at top of file
+tests/unit/test_nmcli_mutations_verification.py:26:29: TC001 Move application import `tui_wifi.models.ActiveWifiConnection` into a type-checking block
+tests/unit/test_nmcli_mutations_verification.py:286:53: FBT001 Boolean-typed positional argument in function definition
+tests/unit/test_nmcli_mutations_verification.py:315:69: FBT001 Boolean-typed positional argument in function definition
+tests/unit/test_nmcli_profiles.py:1:1: CPY001 Missing copyright notice at top of file
+tests/unit/test_nmcli_profiles.py:29:5: PLR0913 Too many arguments in function definition (7 > 5)
+tests/unit/test_nmcli_profiles.py:104:5: PLR0913 Too many arguments in function definition (6 > 5)
+tests/unit/test_nmcli_profiles.py:104:5: PLR0917 Too many positional arguments (6 > 5)
+tests/unit/test_nmcli_profiles.py:108:5: FBT001 Boolean-typed positional argument in function definition
+tests/unit/test_nmcli_profiles.py:152:5: FBT001 Boolean-typed positional argument in function definition
+tests/unit/test_nmcli_profiles.py:443:40: PLR2004 Magic value used in comparison, consider replacing `2` with a constant variable
+tests/unit/test_nmcli_radio.py:1:1: CPY001 Missing copyright notice at top of file
+tests/unit/test_nmcli_radio.py:128:58: FBT001 Boolean-typed positional argument in function definition
+tests/unit/test_nmcli_scan.py:1:1: CPY001 Missing copyright notice at top of file
+tests/unit/test_nmcli_scan.py:155:38: PLR2004 Magic value used in comparison, consider replacing `11` with a constant variable
+tests/unit/test_nmcli_scan.py:158:44: PLR2004 Magic value used in comparison, consider replacing `14` with a constant variable
+tests/unit/test_nmcli_scan.py:159:44: PLR2004 Magic value used in comparison, consider replacing `36` with a constant variable
+tests/unit/test_parsing.py:1:1: CPY001 Missing copyright notice at top of file
+tests/unit/test_process.py:1:1: CPY001 Missing copyright notice at top of file
+tests/unit/test_process.py:8:29: TC003 Move standard library import `collections.abc.Coroutine` into a type-checking block
+tests/unit/test_process.py:151:23: EM101 Exception must not use a string literal, assign to variable first
+tests/unit/test_process.py:170:21: ISC004 Unparenthesized implicit string concatenation in collection
+tests/unit/test_process.py:247:27: S105 Possible hardcoded password assigned to: "argument_secret"
+tests/unit/test_process.py:248:24: S105 Possible hardcoded password assigned to: "stdin_secret"
+tests/unit/test_process.py:254:21: ISC004 Unparenthesized implicit string concatenation in collection
+tests/unit/test_process.py:334:38: PLR2004 Magic value used in comparison, consider replacing `2` with a constant variable
+tests/unit/test_secrets.py:1:1: CPY001 Missing copyright notice at top of file
+tests/unit/test_service.py:1:1: CPY001 Missing copyright notice at top of file
+tests/unit/test_service_concurrency.py:1:1: CPY001 Missing copyright notice at top of file
+tests/unit/test_service_concurrency.py:11:36: TC001 Move application import `tui_wifi.backends.base.HiddenConnectRequest` into a type-checking block
+tests/unit/test_service_concurrency.py:11:58: TC001 Move application import `tui_wifi.backends.base.VisibleConnectRequest` into a type-checking block
+tests/unit/test_service_concurrency.py:116:47: PLR2004 Magic value used in comparison, consider replacing `2` with a constant variable
+tests/unit/test_service_concurrency.py:192:44: PLR2004 Magic value used in comparison, consider replacing `2` with a constant variable
+tests/unit/test_service_concurrency.py:220:44: PLR2004 Magic value used in comparison, consider replacing `2` with a constant variable
+tests/unit/test_service_concurrency.py:241:44: PLR2004 Magic value used in comparison, consider replacing `2` with a constant variable
+Found 104 errors.
+[*] 8 fixable with the `--fix` option (11 hidden fixes can be enabled with the `--unsafe-fixes` option).
+status=1
+
+=== MYPY ===
+Success: no issues found in 31 source files
+status=0
+
+=== PYTEST ===
+============================= test session starts ==============================
+platform linux -- Python 3.13.14, pytest-9.1.1, pluggy-1.6.0
+rootdir: /home/runner/work/tui-wifi/tui-wifi
+configfile: pyproject.toml
+testpaths: tests
+plugins: cov-6.3.0
+collected 185 items
+
+tests/integration/test_fake_nmcli_executable.py .                        [  0%]
+tests/tui/test_app.py .                                                  [  1%]
+tests/tui/test_dialogs.py .FF                                            [  2%]
+tests/tui/test_main_screen.py ........F..                                [  8%]
+tests/tui/test_saved_screen.py ...F                                      [ 10%]
+tests/unit/test_cli.py ...                                               [ 12%]
+tests/unit/test_critical_coverage.py .....                               [ 15%]
+tests/unit/test_errors.py ..                                             [ 16%]
+tests/unit/test_grouping.py .                                            [ 16%]
+tests/unit/test_logging.py .                                             [ 17%]
+tests/unit/test_nmcli.py ..................                              [ 27%]
+tests/unit/test_nmcli_mutations.py ...............                       [ 35%]
+tests/unit/test_nmcli_mutations_verification.py .................        [ 44%]
+tests/unit/test_nmcli_profiles.py ................................       [ 61%]
+tests/unit/test_nmcli_radio.py ............                              [ 68%]
+tests/unit/test_nmcli_scan.py .......                                    [ 71%]
+tests/unit/test_parsing.py ...................                           [ 82%]
+tests/unit/test_process.py .................                             [ 91%]
+tests/unit/test_secrets.py ...                                           [ 92%]
+tests/unit/test_service.py ......                                        [ 96%]
+tests/unit/test_service_concurrency.py .......                           [100%]
+
+=================================== FAILURES ===================================
+____________ test_hidden_dialog_open_personal_validation_and_cancel ____________
+tests/tui/test_dialogs.py:127: in test_hidden_dialog_open_personal_validation_and_cancel
+    asyncio.run(scenario())
+/opt/hostedtoolcache/Python/3.13.14/x64/lib/python3.13/asyncio/runners.py:196: in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+/opt/hostedtoolcache/Python/3.13.14/x64/lib/python3.13/asyncio/runners.py:119: in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/opt/hostedtoolcache/Python/3.13.14/x64/lib/python3.13/asyncio/base_events.py:725: in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+tests/tui/test_dialogs.py:87: in scenario
+    verify(
+tests/assertions.py:14: in verify
+    raise VerificationError(message)
+E   tests.assertions.VerificationError: None
+__________________ test_confirm_and_message_dialog_callbacks ___________________
+tests/tui/test_dialogs.py:163: in test_confirm_and_message_dialog_callbacks
+    asyncio.run(scenario())
+/opt/hostedtoolcache/Python/3.13.14/x64/lib/python3.13/asyncio/runners.py:196: in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+/opt/hostedtoolcache/Python/3.13.14/x64/lib/python3.13/asyncio/runners.py:119: in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/opt/hostedtoolcache/Python/3.13.14/x64/lib/python3.13/asyncio/base_events.py:725: in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+tests/tui/test_dialogs.py:155: in scenario
+    verify("Friendly text" in static_text(app.screen.query_one(Static)))
+tests/assertions.py:14: in verify
+    raise VerificationError(message)
+E   tests.assertions.VerificationError: None
+____ test_wifi_disable_confirmation_enable_directly_and_failure_visibility _____
+tests/tui/test_main_screen.py:406: in test_wifi_disable_confirmation_enable_directly_and_failure_visibility
+    asyncio.run(scenario())
+/opt/hostedtoolcache/Python/3.13.14/x64/lib/python3.13/asyncio/runners.py:196: in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+/opt/hostedtoolcache/Python/3.13.14/x64/lib/python3.13/asyncio/runners.py:119: in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/opt/hostedtoolcache/Python/3.13.14/x64/lib/python3.13/asyncio/base_events.py:725: in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+tests/tui/test_main_screen.py:380: in scenario
+    await pilot.click("#wifi")
+/opt/hostedtoolcache/Python/3.13.14/x64/lib/python3.13/site-packages/textual/pilot.py:249: in click
+    raise error from None
+/opt/hostedtoolcache/Python/3.13.14/x64/lib/python3.13/site-packages/textual/pilot.py:238: in click
+    return await self._post_mouse_events(
+/opt/hostedtoolcache/Python/3.13.14/x64/lib/python3.13/site-packages/textual/pilot.py:442: in _post_mouse_events
+    raise OutOfBounds(
+E   textual.pilot.OutOfBounds: Target offset is outside of currently-visible screen region.
+____ test_saved_empty_selection_no_adapter_and_backend_failure_are_visible _____
+tests/tui/test_saved_screen.py:180: in test_saved_empty_selection_no_adapter_and_backend_failure_are_visible
+    asyncio.run(scenario())
+/opt/hostedtoolcache/Python/3.13.14/x64/lib/python3.13/asyncio/runners.py:196: in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+/opt/hostedtoolcache/Python/3.13.14/x64/lib/python3.13/asyncio/runners.py:119: in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/opt/hostedtoolcache/Python/3.13.14/x64/lib/python3.13/asyncio/base_events.py:725: in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+tests/tui/test_saved_screen.py:156: in scenario
+    verify(isinstance(app.screen, MessageDialog))
+tests/assertions.py:14: in verify
+    raise VerificationError(message)
+E   tests.assertions.VerificationError: None
+================================ tests coverage ================================
+_______________ coverage: platform linux, python 3.13.14-final-0 _______________
+
+Name                                       Stmts   Miss Branch BrPart  Cover   Missing
+--------------------------------------------------------------------------------------
+src/tui_wifi/__init__.py                       1      0      0      0   100%
+src/tui_wifi/backends/__init__.py              3      0      0      0   100%
+src/tui_wifi/backends/fake.py                 90      7     18      7    87%   56, 75->77, 108, 123, 138-139, 152->exit, 178, 180
+src/tui_wifi/backends/nmcli.py                 3      0      0      0   100%
+src/tui_wifi/backends/nmcli_core.py          110      2     34      2    97%   193, 237
+src/tui_wifi/backends/nmcli_mutations.py      70      1     28      0    99%   186
+src/tui_wifi/backends/nmcli_profiles.py       65      1     24      1    98%   133
+src/tui_wifi/backends/parsing.py             117      4     52      2    96%   67-68, 96, 126
+src/tui_wifi/cli.py                           26      4      4      2    80%   38, 47-48, 53
+src/tui_wifi/errors.py                        59      0      8      0   100%
+src/tui_wifi/grouping.py                      25      0     12      1    97%   18->17
+src/tui_wifi/logging_config.py                18      2      0      0    89%   27-28
+src/tui_wifi/models.py                       171     10      8      0    90%   127-135, 180
+src/tui_wifi/process/__init__.py               2      0      0      0   100%
+src/tui_wifi/process/fake.py                  38      7     10      4    77%   45-46, 50-55, 61, 69-70
+src/tui_wifi/process/runner.py               117      1      8      0    99%   104
+src/tui_wifi/secrets.py                       24      0      4      1    96%   49->48
+src/tui_wifi/services/__init__.py              2      0      0      0   100%
+src/tui_wifi/services/wifi.py                164     18     46     10    85%   63->exit, 77-82, 102, 115-116, 157-161, 176, 182, 186, 214, 262, 268, 317
+--------------------------------------------------------------------------------------
+TOTAL                                       1105     57    256     30    93%
+Coverage JSON written to file coverage.json
+Required test coverage of 90% reached. Total coverage: 92.73%
+=========================== short test summary info ============================
+FAILED tests/tui/test_dialogs.py::test_hidden_dialog_open_personal_validation_and_cancel - tests.assertions.VerificationError: None
+FAILED tests/tui/test_dialogs.py::test_confirm_and_message_dialog_callbacks - tests.assertions.VerificationError: None
+FAILED tests/tui/test_main_screen.py::test_wifi_disable_confirmation_enable_directly_and_failure_visibility - textual.pilot.OutOfBounds: Target offset is outside of currently-visible screen region.
+FAILED tests/tui/test_saved_screen.py::test_saved_empty_selection_no_adapter_and_backend_failure_are_visible - tests.assertions.VerificationError: None
+======================== 4 failed, 181 passed in 32.45s ========================
+status=1
+
+=== CRITICAL COVERAGE ===
+critical coverage gates failed:
+- src/tui_wifi/services/wifi.py: branch coverage 69.57% is below 85.00%
+status=1
+
+=== BUILD ===
+* Creating isolated environment: venv+pip...
+* Installing packages in isolated environment:
+  - setuptools>=77,<83
+  - wheel>=0.45,<1
+* Getting build dependencies for sdist...
+running egg_info
+writing src/tui_wifi.egg-info/PKG-INFO
+writing dependency_links to src/tui_wifi.egg-info/dependency_links.txt
+writing entry points to src/tui_wifi.egg-info/entry_points.txt
+writing requirements to src/tui_wifi.egg-info/requires.txt
+writing top-level names to src/tui_wifi.egg-info/top_level.txt
+reading manifest file 'src/tui_wifi.egg-info/SOURCES.txt'
+adding license file 'LICENSE'
+writing manifest file 'src/tui_wifi.egg-info/SOURCES.txt'
+* Building sdist...
+running sdist
+running egg_info
+writing src/tui_wifi.egg-info/PKG-INFO
+writing dependency_links to src/tui_wifi.egg-info/dependency_links.txt
+writing entry points to src/tui_wifi.egg-info/entry_points.txt
+writing requirements to src/tui_wifi.egg-info/requires.txt
+writing top-level names to src/tui_wifi.egg-info/top_level.txt
+reading manifest file 'src/tui_wifi.egg-info/SOURCES.txt'
+adding license file 'LICENSE'
+writing manifest file 'src/tui_wifi.egg-info/SOURCES.txt'
+running check
+creating tui_wifi-0.1.0
+creating tui_wifi-0.1.0/src/tui_wifi
+creating tui_wifi-0.1.0/src/tui_wifi.egg-info
+creating tui_wifi-0.1.0/src/tui_wifi/backends
+creating tui_wifi-0.1.0/src/tui_wifi/process
+creating tui_wifi-0.1.0/src/tui_wifi/services
+creating tui_wifi-0.1.0/src/tui_wifi/ui
+creating tui_wifi-0.1.0/src/tui_wifi/ui/dialogs
+creating tui_wifi-0.1.0/src/tui_wifi/ui/screens
+creating tui_wifi-0.1.0/src/tui_wifi/ui/widgets
+copying files to tui_wifi-0.1.0...
+copying LICENSE -> tui_wifi-0.1.0
+copying README.md -> tui_wifi-0.1.0
+copying pyproject.toml -> tui_wifi-0.1.0
+copying src/tui_wifi/__init__.py -> tui_wifi-0.1.0/src/tui_wifi
+copying src/tui_wifi/__main__.py -> tui_wifi-0.1.0/src/tui_wifi
+copying src/tui_wifi/app.py -> tui_wifi-0.1.0/src/tui_wifi
+copying src/tui_wifi/cli.py -> tui_wifi-0.1.0/src/tui_wifi
+copying src/tui_wifi/errors.py -> tui_wifi-0.1.0/src/tui_wifi
+copying src/tui_wifi/grouping.py -> tui_wifi-0.1.0/src/tui_wifi
+copying src/tui_wifi/logging_config.py -> tui_wifi-0.1.0/src/tui_wifi
+copying src/tui_wifi/models.py -> tui_wifi-0.1.0/src/tui_wifi
+copying src/tui_wifi/secrets.py -> tui_wifi-0.1.0/src/tui_wifi
+copying src/tui_wifi.egg-info/PKG-INFO -> tui_wifi-0.1.0/src/tui_wifi.egg-info
+copying src/tui_wifi.egg-info/SOURCES.txt -> tui_wifi-0.1.0/src/tui_wifi.egg-info
+copying src/tui_wifi.egg-info/dependency_links.txt -> tui_wifi-0.1.0/src/tui_wifi.egg-info
+copying src/tui_wifi.egg-info/entry_points.txt -> tui_wifi-0.1.0/src/tui_wifi.egg-info
+copying src/tui_wifi.egg-info/requires.txt -> tui_wifi-0.1.0/src/tui_wifi.egg-info
+copying src/tui_wifi.egg-info/top_level.txt -> tui_wifi-0.1.0/src/tui_wifi.egg-info
+copying src/tui_wifi/backends/__init__.py -> tui_wifi-0.1.0/src/tui_wifi/backends
+copying src/tui_wifi/backends/base.py -> tui_wifi-0.1.0/src/tui_wifi/backends
+copying src/tui_wifi/backends/fake.py -> tui_wifi-0.1.0/src/tui_wifi/backends
+copying src/tui_wifi/backends/nmcli.py -> tui_wifi-0.1.0/src/tui_wifi/backends
+copying src/tui_wifi/backends/nmcli_core.py -> tui_wifi-0.1.0/src/tui_wifi/backends
+copying src/tui_wifi/backends/nmcli_mutations.py -> tui_wifi-0.1.0/src/tui_wifi/backends
+copying src/tui_wifi/backends/nmcli_profiles.py -> tui_wifi-0.1.0/src/tui_wifi/backends
+copying src/tui_wifi/backends/parsing.py -> tui_wifi-0.1.0/src/tui_wifi/backends
+copying src/tui_wifi/process/__init__.py -> tui_wifi-0.1.0/src/tui_wifi/process
+copying src/tui_wifi/process/fake.py -> tui_wifi-0.1.0/src/tui_wifi/process
+copying src/tui_wifi/process/runner.py -> tui_wifi-0.1.0/src/tui_wifi/process
+copying src/tui_wifi/services/__init__.py -> tui_wifi-0.1.0/src/tui_wifi/services
+copying src/tui_wifi/services/wifi.py -> tui_wifi-0.1.0/src/tui_wifi/services
+copying src/tui_wifi/ui/__init__.py -> tui_wifi-0.1.0/src/tui_wifi/ui
+copying src/tui_wifi/ui/tui_wifi.tcss -> tui_wifi-0.1.0/src/tui_wifi/ui
+copying src/tui_wifi/ui/dialogs/__init__.py -> tui_wifi-0.1.0/src/tui_wifi/ui/dialogs
+copying src/tui_wifi/ui/dialogs/common.py -> tui_wifi-0.1.0/src/tui_wifi/ui/dialogs
+copying src/tui_wifi/ui/screens/__init__.py -> tui_wifi-0.1.0/src/tui_wifi/ui/screens
+copying src/tui_wifi/ui/screens/details.py -> tui_wifi-0.1.0/src/tui_wifi/ui/screens
+copying src/tui_wifi/ui/screens/main.py -> tui_wifi-0.1.0/src/tui_wifi/ui/screens
+copying src/tui_wifi/ui/screens/saved.py -> tui_wifi-0.1.0/src/tui_wifi/ui/screens
+copying src/tui_wifi/ui/widgets/__init__.py -> tui_wifi-0.1.0/src/tui_wifi/ui/widgets
+copying src/tui_wifi/ui/widgets/network_list.py -> tui_wifi-0.1.0/src/tui_wifi/ui/widgets
+copying src/tui_wifi.egg-info/SOURCES.txt -> tui_wifi-0.1.0/src/tui_wifi.egg-info
+Writing tui_wifi-0.1.0/setup.cfg
+Creating tar archive
+removing 'tui_wifi-0.1.0' (and everything under it)
+* Building wheel from sdist
+* Creating isolated environment: venv+pip...
+* Installing packages in isolated environment:
+  - setuptools>=77,<83
+  - wheel>=0.45,<1
+* Getting build dependencies for wheel...
+running egg_info
+writing src/tui_wifi.egg-info/PKG-INFO
+writing dependency_links to src/tui_wifi.egg-info/dependency_links.txt
+writing entry points to src/tui_wifi.egg-info/entry_points.txt
+writing requirements to src/tui_wifi.egg-info/requires.txt
+writing top-level names to src/tui_wifi.egg-info/top_level.txt
+reading manifest file 'src/tui_wifi.egg-info/SOURCES.txt'
+adding license file 'LICENSE'
+writing manifest file 'src/tui_wifi.egg-info/SOURCES.txt'
+* Building wheel...
+running bdist_wheel
+running build
+running build_py
+creating build/lib/tui_wifi
+copying src/tui_wifi/errors.py -> build/lib/tui_wifi
+copying src/tui_wifi/secrets.py -> build/lib/tui_wifi
+copying src/tui_wifi/logging_config.py -> build/lib/tui_wifi
+copying src/tui_wifi/app.py -> build/lib/tui_wifi
+copying src/tui_wifi/__main__.py -> build/lib/tui_wifi
+copying src/tui_wifi/cli.py -> build/lib/tui_wifi
+copying src/tui_wifi/models.py -> build/lib/tui_wifi
+copying src/tui_wifi/grouping.py -> build/lib/tui_wifi
+copying src/tui_wifi/__init__.py -> build/lib/tui_wifi
+creating build/lib/tui_wifi/services
+copying src/tui_wifi/services/wifi.py -> build/lib/tui_wifi/services
+copying src/tui_wifi/services/__init__.py -> build/lib/tui_wifi/services
+creating build/lib/tui_wifi/backends
+copying src/tui_wifi/backends/base.py -> build/lib/tui_wifi/backends
+copying src/tui_wifi/backends/nmcli_profiles.py -> build/lib/tui_wifi/backends
+copying src/tui_wifi/backends/fake.py -> build/lib/tui_wifi/backends
+copying src/tui_wifi/backends/parsing.py -> build/lib/tui_wifi/backends
+copying src/tui_wifi/backends/nmcli_mutations.py -> build/lib/tui_wifi/backends
+copying src/tui_wifi/backends/nmcli.py -> build/lib/tui_wifi/backends
+copying src/tui_wifi/backends/nmcli_core.py -> build/lib/tui_wifi/backends
+copying src/tui_wifi/backends/__init__.py -> build/lib/tui_wifi/backends
+creating build/lib/tui_wifi/process
+copying src/tui_wifi/process/runner.py -> build/lib/tui_wifi/process
+copying src/tui_wifi/process/fake.py -> build/lib/tui_wifi/process
+copying src/tui_wifi/process/__init__.py -> build/lib/tui_wifi/process
+creating build/lib/tui_wifi/ui
+copying src/tui_wifi/ui/__init__.py -> build/lib/tui_wifi/ui
+creating build/lib/tui_wifi/ui/dialogs
+copying src/tui_wifi/ui/dialogs/common.py -> build/lib/tui_wifi/ui/dialogs
+copying src/tui_wifi/ui/dialogs/__init__.py -> build/lib/tui_wifi/ui/dialogs
+creating build/lib/tui_wifi/ui/widgets
+copying src/tui_wifi/ui/widgets/network_list.py -> build/lib/tui_wifi/ui/widgets
+copying src/tui_wifi/ui/widgets/__init__.py -> build/lib/tui_wifi/ui/widgets
+creating build/lib/tui_wifi/ui/screens
+copying src/tui_wifi/ui/screens/main.py -> build/lib/tui_wifi/ui/screens
+copying src/tui_wifi/ui/screens/saved.py -> build/lib/tui_wifi/ui/screens
+copying src/tui_wifi/ui/screens/details.py -> build/lib/tui_wifi/ui/screens
+copying src/tui_wifi/ui/screens/__init__.py -> build/lib/tui_wifi/ui/screens
+running egg_info
+writing src/tui_wifi.egg-info/PKG-INFO
+writing dependency_links to src/tui_wifi.egg-info/dependency_links.txt
+writing entry points to src/tui_wifi.egg-info/entry_points.txt
+writing requirements to src/tui_wifi.egg-info/requires.txt
+writing top-level names to src/tui_wifi.egg-info/top_level.txt
+reading manifest file 'src/tui_wifi.egg-info/SOURCES.txt'
+adding license file 'LICENSE'
+writing manifest file 'src/tui_wifi.egg-info/SOURCES.txt'
+copying src/tui_wifi/ui/tui_wifi.tcss -> build/lib/tui_wifi/ui
+installing to build/bdist.linux-x86_64/wheel
+running install
+running install_lib
+creating build/bdist.linux-x86_64/wheel
+creating build/bdist.linux-x86_64/wheel/tui_wifi
+creating build/bdist.linux-x86_64/wheel/tui_wifi/services
+copying build/lib/tui_wifi/services/wifi.py -> build/bdist.linux-x86_64/wheel/./tui_wifi/services
+copying build/lib/tui_wifi/services/__init__.py -> build/bdist.linux-x86_64/wheel/./tui_wifi/services
+creating build/bdist.linux-x86_64/wheel/tui_wifi/backends
+copying build/lib/tui_wifi/backends/base.py -> build/bdist.linux-x86_64/wheel/./tui_wifi/backends
+copying build/lib/tui_wifi/backends/nmcli_profiles.py -> build/bdist.linux-x86_64/wheel/./tui_wifi/backends
+copying build/lib/tui_wifi/backends/fake.py -> build/bdist.linux-x86_64/wheel/./tui_wifi/backends
+copying build/lib/tui_wifi/backends/parsing.py -> build/bdist.linux-x86_64/wheel/./tui_wifi/backends
+copying build/lib/tui_wifi/backends/nmcli_mutations.py -> build/bdist.linux-x86_64/wheel/./tui_wifi/backends
+copying build/lib/tui_wifi/backends/nmcli.py -> build/bdist.linux-x86_64/wheel/./tui_wifi/backends
+copying build/lib/tui_wifi/backends/nmcli_core.py -> build/bdist.linux-x86_64/wheel/./tui_wifi/backends
+copying build/lib/tui_wifi/backends/__init__.py -> build/bdist.linux-x86_64/wheel/./tui_wifi/backends
+creating build/bdist.linux-x86_64/wheel/tui_wifi/process
+copying build/lib/tui_wifi/process/runner.py -> build/bdist.linux-x86_64/wheel/./tui_wifi/process
+copying build/lib/tui_wifi/process/fake.py -> build/bdist.linux-x86_64/wheel/./tui_wifi/process
+copying build/lib/tui_wifi/process/__init__.py -> build/bdist.linux-x86_64/wheel/./tui_wifi/process
+copying build/lib/tui_wifi/errors.py -> build/bdist.linux-x86_64/wheel/./tui_wifi
+copying build/lib/tui_wifi/secrets.py -> build/bdist.linux-x86_64/wheel/./tui_wifi
+copying build/lib/tui_wifi/logging_config.py -> build/bdist.linux-x86_64/wheel/./tui_wifi
+copying build/lib/tui_wifi/app.py -> build/bdist.linux-x86_64/wheel/./tui_wifi
+copying build/lib/tui_wifi/__main__.py -> build/bdist.linux-x86_64/wheel/./tui_wifi
+creating build/bdist.linux-x86_64/wheel/tui_wifi/ui
+creating build/bdist.linux-x86_64/wheel/tui_wifi/ui/dialogs
+copying build/lib/tui_wifi/ui/dialogs/common.py -> build/bdist.linux-x86_64/wheel/./tui_wifi/ui/dialogs
+copying build/lib/tui_wifi/ui/dialogs/__init__.py -> build/bdist.linux-x86_64/wheel/./tui_wifi/ui/dialogs
+creating build/bdist.linux-x86_64/wheel/tui_wifi/ui/widgets
+copying build/lib/tui_wifi/ui/widgets/network_list.py -> build/bdist.linux-x86_64/wheel/./tui_wifi/ui/widgets
+copying build/lib/tui_wifi/ui/widgets/__init__.py -> build/bdist.linux-x86_64/wheel/./tui_wifi/ui/widgets
+copying build/lib/tui_wifi/ui/tui_wifi.tcss -> build/bdist.linux-x86_64/wheel/./tui_wifi/ui
+creating build/bdist.linux-x86_64/wheel/tui_wifi/ui/screens
+copying build/lib/tui_wifi/ui/screens/main.py -> build/bdist.linux-x86_64/wheel/./tui_wifi/ui/screens
+copying build/lib/tui_wifi/ui/screens/saved.py -> build/bdist.linux-x86_64/wheel/./tui_wifi/ui/screens
+copying build/lib/tui_wifi/ui/screens/details.py -> build/bdist.linux-x86_64/wheel/./tui_wifi/ui/screens
+copying build/lib/tui_wifi/ui/screens/__init__.py -> build/bdist.linux-x86_64/wheel/./tui_wifi/ui/screens
+copying build/lib/tui_wifi/ui/__init__.py -> build/bdist.linux-x86_64/wheel/./tui_wifi/ui
+copying build/lib/tui_wifi/cli.py -> build/bdist.linux-x86_64/wheel/./tui_wifi
+copying build/lib/tui_wifi/models.py -> build/bdist.linux-x86_64/wheel/./tui_wifi
+copying build/lib/tui_wifi/grouping.py -> build/bdist.linux-x86_64/wheel/./tui_wifi
+copying build/lib/tui_wifi/__init__.py -> build/bdist.linux-x86_64/wheel/./tui_wifi
+running install_egg_info
+Copying src/tui_wifi.egg-info to build/bdist.linux-x86_64/wheel/./tui_wifi-0.1.0-py3.13.egg-info
+running install_scripts
+creating build/bdist.linux-x86_64/wheel/tui_wifi-0.1.0.dist-info/WHEEL
+creating '/home/runner/work/tui-wifi/tui-wifi/dist/.tmp-65fb7pw9/tui_wifi-0.1.0-py3-none-any.whl' and adding 'build/bdist.linux-x86_64/wheel' to it
+adding 'tui_wifi/__init__.py'
+adding 'tui_wifi/__main__.py'
+adding 'tui_wifi/app.py'
+adding 'tui_wifi/cli.py'
+adding 'tui_wifi/errors.py'
+adding 'tui_wifi/grouping.py'
+adding 'tui_wifi/logging_config.py'
+adding 'tui_wifi/models.py'
+adding 'tui_wifi/secrets.py'
+adding 'tui_wifi/backends/__init__.py'
+adding 'tui_wifi/backends/base.py'
+adding 'tui_wifi/backends/fake.py'
+adding 'tui_wifi/backends/nmcli.py'
+adding 'tui_wifi/backends/nmcli_core.py'
+adding 'tui_wifi/backends/nmcli_mutations.py'
+adding 'tui_wifi/backends/nmcli_profiles.py'
+adding 'tui_wifi/backends/parsing.py'
+adding 'tui_wifi/process/__init__.py'
+adding 'tui_wifi/process/fake.py'
+adding 'tui_wifi/process/runner.py'
+adding 'tui_wifi/services/__init__.py'
+adding 'tui_wifi/services/wifi.py'
+adding 'tui_wifi/ui/__init__.py'
+adding 'tui_wifi/ui/tui_wifi.tcss'
+adding 'tui_wifi/ui/dialogs/__init__.py'
+adding 'tui_wifi/ui/dialogs/common.py'
+adding 'tui_wifi/ui/screens/__init__.py'
+adding 'tui_wifi/ui/screens/details.py'
+adding 'tui_wifi/ui/screens/main.py'
+adding 'tui_wifi/ui/screens/saved.py'
+adding 'tui_wifi/ui/widgets/__init__.py'
+adding 'tui_wifi/ui/widgets/network_list.py'
+adding 'tui_wifi-0.1.0.dist-info/licenses/LICENSE'
+adding 'tui_wifi-0.1.0.dist-info/METADATA'
+adding 'tui_wifi-0.1.0.dist-info/WHEEL'
+adding 'tui_wifi-0.1.0.dist-info/entry_points.txt'
+adding 'tui_wifi-0.1.0.dist-info/top_level.txt'
+adding 'tui_wifi-0.1.0.dist-info/RECORD'
+removing build/bdist.linux-x86_64/wheel
+Successfully built tui_wifi-0.1.0.tar.gz and tui_wifi-0.1.0-py3-none-any.whl
+status=0
