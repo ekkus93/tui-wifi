@@ -1,80 +1,4 @@
-.F............................................                           [100%]
-=================================== FAILURES ===================================
-____________ test_main_screen_loads_fake_network_without_real_wifi _____________
-tests/tui/test_app.py:36: in scenario
-    assert app.screen.query_one(NetworkTable).row_count == 1
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-/opt/hostedtoolcache/Python/3.11.15/x64/lib/python3.11/site-packages/textual/dom.py:1533: in query_one
-    raise NoMatches(f"No nodes match {query_selector!r} on {base_node!r}")
-E   textual.css.query.NoMatches: No nodes match 'NetworkTable' on Screen(id='_default')
-
-During handling of the above exception, another exception occurred:
-tests/tui/test_app.py:38: in test_main_screen_loads_fake_network_without_real_wifi
-    asyncio.run(scenario())
-/opt/hostedtoolcache/Python/3.11.15/x64/lib/python3.11/asyncio/runners.py:190: in run
-    return runner.run(main)
-           ^^^^^^^^^^^^^^^^
-/opt/hostedtoolcache/Python/3.11.15/x64/lib/python3.11/asyncio/runners.py:118: in run
-    return self._loop.run_until_complete(task)
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-/opt/hostedtoolcache/Python/3.11.15/x64/lib/python3.11/asyncio/base_events.py:654: in run_until_complete
-    return future.result()
-           ^^^^^^^^^^^^^^^
-tests/tui/test_app.py:33: in scenario
-    async with app.run_test(size=(100, 30)) as pilot:
-/opt/hostedtoolcache/Python/3.11.15/x64/lib/python3.11/contextlib.py:231: in __aexit__
-    await self.gen.athrow(typ, value, traceback)
-/opt/hostedtoolcache/Python/3.11.15/x64/lib/python3.11/site-packages/textual/app.py:2218: in run_test
-    raise self._exception
-/opt/hostedtoolcache/Python/3.11.15/x64/lib/python3.11/site-packages/textual/app.py:3493: in _process_messages
-    await run_process_messages()
-/opt/hostedtoolcache/Python/3.11.15/x64/lib/python3.11/site-packages/textual/app.py:3432: in run_process_messages
-    await self._dispatch_message(events.Compose())
-/opt/hostedtoolcache/Python/3.11.15/x64/lib/python3.11/site-packages/textual/message_pump.py:727: in _dispatch_message
-    await self.on_event(message)
-/opt/hostedtoolcache/Python/3.11.15/x64/lib/python3.11/site-packages/textual/app.py:4064: in on_event
-    await self._init_mode(self._current_mode)
-          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-/opt/hostedtoolcache/Python/3.11.15/x64/lib/python3.11/site-packages/textual/app.py:2621: in _init_mode
-    self._register(self, screen)
-/opt/hostedtoolcache/Python/3.11.15/x64/lib/python3.11/site-packages/textual/app.py:3671: in _register
-    apply_stylesheet(widget, cache=cache)
-/opt/hostedtoolcache/Python/3.11.15/x64/lib/python3.11/site-packages/textual/css/stylesheet.py:496: in apply
-    rules_map = self.rules_map
-                ^^^^^^^^^^^^^^
-/opt/hostedtoolcache/Python/3.11.15/x64/lib/python3.11/site-packages/textual/css/stylesheet.py:187: in rules_map
-    for rule in self.rules:
-                ^^^^^^^^^^
-/opt/hostedtoolcache/Python/3.11.15/x64/lib/python3.11/site-packages/textual/css/stylesheet.py:173: in rules
-    self.parse()
-/opt/hostedtoolcache/Python/3.11.15/x64/lib/python3.11/site-packages/textual/css/stylesheet.py:390: in parse
-    css_rules = self._parse_rules(
-/opt/hostedtoolcache/Python/3.11.15/x64/lib/python3.11/site-packages/textual/css/stylesheet.py:269: in _parse_rules
-    rules = list(
-/opt/hostedtoolcache/Python/3.11.15/x64/lib/python3.11/site-packages/textual/css/parse.py:478: in parse
-    token = next(tokens, None)
-            ^^^^^^^^^^^^^^^^^^
-/opt/hostedtoolcache/Python/3.11.15/x64/lib/python3.11/site-packages/textual/css/parse.py:389: in substitute_references
-    token = next(iter_tokens, None)
-            ^^^^^^^^^^^^^^^^^^^^^^^
-/opt/hostedtoolcache/Python/3.11.15/x64/lib/python3.11/site-packages/textual/css/tokenize.py:257: in __call__
-    token = get_token(expect)
-            ^^^^^^^^^^^^^^^^^
-/opt/hostedtoolcache/Python/3.11.15/x64/lib/python3.11/site-packages/textual/css/tokenizer.py:298: in get_token
-    raise TokenError(
-E   textual.css.tokenizer.TokenError: Expected selector or end of file (found '@media (width < 90) {\n').; Did you forget a semicolon at the end of a line?
------------------------------ Captured stderr call -----------------------------
- Error in stylesheet:
- /home/runner/work/tui-wifi/tui-wifi/src/tui_wifi/ui/tui_wifi.tcss:98:1
-╭──────────────────────────────────────────────────────────────────────────────╮
-│    96 }                                                                      │
-│    97                                                                        │
-│ ❱  98 @media (width < 90) {                                                  │
-│    99 │   .action-bar {                                                      │
-│   100 │   │   layout: grid;                                                  │
-╰──────────────────────────────────────────────────────────────────────────────╯
- • Expected selector or end of file (found '@media (width < 90) {\n').          
- • Did you forget a semicolon at the end of a line?                             
+..............................................                           [100%]
 ================================ tests coverage ================================
 _______________ coverage: platform linux, python 3.11.15-final-0 _______________
 
@@ -98,12 +22,10 @@ src/tui_wifi/process/fake.py                  33      5     10      5    77%   3
 src/tui_wifi/process/runner.py                99     20     10      3    79%   37, 82->exit, 88, 103-108, 121-123, 133-148, 153-154
 src/tui_wifi/secrets.py                       25      0      4      1    97%   36->35
 src/tui_wifi/services/__init__.py              2      0      0      0   100%
-src/tui_wifi/services/wifi.py                163     40     46     14    70%   50-56, 61, 65-70, 75, 89, 102-103, 137->139, 143-147, 161, 167, 171, 198, 214->216, 225-244, 249, 268-274, 277-283, 286, 293, 334, 349
+src/tui_wifi/services/wifi.py                163     34     46     14    74%   53->exit, 65-70, 75, 89, 102-103, 137->139, 143-147, 161, 167, 171, 198, 214->216, 225-244, 249, 268-274, 277-283, 286, 293, 334, 349
 --------------------------------------------------------------------------------------
-TOTAL                                       1060    223    258     49    75%
-Required test coverage of 70% reached. Total coverage: 74.81%
-=========================== short test summary info ============================
-FAILED tests/tui/test_app.py::test_main_screen_loads_fake_network_without_real_wifi - textual.css.tokenizer.TokenError: Expected selector or end of file (found '@media (width < 90) {\n').; Did you forget a semicolon at the end of a line?
-1 failed, 45 passed in 2.16s
+TOTAL                                       1060    217    258     49    75%
+Required test coverage of 70% reached. Total coverage: 75.42%
+46 passed in 2.20s
 
-exit_status=1
+exit_status=0
