@@ -11,7 +11,13 @@ from tests.factories import access_point, network_group
 from tui_wifi.backends.base import HiddenConnectRequest, VisibleConnectRequest
 from tui_wifi.backends.fake import FakeWifiBackend
 from tui_wifi.errors import ErrorCategory, WifiError
-from tui_wifi.models import AccessPoint, ActiveWifiConnection, OperationKind, OperationPhase, SecurityClass
+from tui_wifi.models import (
+    AccessPoint,
+    ActiveWifiConnection,
+    OperationKind,
+    OperationPhase,
+    SecurityClass,
+)
 from tui_wifi.secrets import SecretValue
 from tui_wifi.services.wifi import WifiService
 

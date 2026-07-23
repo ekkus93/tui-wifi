@@ -7,10 +7,10 @@ import asyncio
 import pytest
 
 from tests.assertions import verify
-from tests.nmcli_fixtures import NMCLI_PATH, device_status_command, process_result
+from tests.nmcli_fixtures import NMCLI_PATH, process_result
 from tui_wifi.backends.nmcli import NmcliWifiBackend
 from tui_wifi.errors import ErrorCategory, WifiError
-from tui_wifi.models import BackendAvailability, DeviceState, SecurityClass, WifiRadioState
+from tui_wifi.models import BackendAvailability, WifiRadioState
 from tui_wifi.process import (
     ProcessMissingExecutableError,
     ProcessNonZeroExitError,

@@ -19,7 +19,7 @@ from tests.nmcli_fixtures import (
 )
 from tui_wifi.backends.nmcli import NmcliWifiBackend
 from tui_wifi.errors import ErrorCategory, WifiError
-from tui_wifi.models import DeviceState, SecurityClass
+from tui_wifi.models import SecurityClass
 from tui_wifi.process.fake import FakeProcessRunner
 
 OTHER_UUID = "00000000-0000-0000-0000-000000000002"

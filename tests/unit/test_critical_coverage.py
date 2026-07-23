@@ -6,8 +6,8 @@ import json
 from pathlib import Path
 
 import pytest
-
 from scripts.check_critical_coverage import GATES, branch_percentage, evaluate, load_report, main
+
 from tests.assertions import verify
 
 
@@ -15,8 +15,7 @@ def report_with_percentage(percentage: float) -> dict[str, object]:
     """Build a complete synthetic report with one percentage for every gate."""
     return {
         "files": {
-            gate.path: {"summary": {"percent_branches_covered": percentage}}
-            for gate in GATES
+            gate.path: {"summary": {"percent_branches_covered": percentage}} for gate in GATES
         },
     }
 

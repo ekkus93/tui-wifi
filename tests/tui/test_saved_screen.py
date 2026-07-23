@@ -62,8 +62,7 @@ def test_saved_connect_forget_and_autoconnect_workflows() -> None:
             await pilot.click("#autoconnect")
             await settle(pilot)
             verify(
-                ("set_profile_autoconnect", (DEFAULT_UUID, False))
-                in backend.calls
+                ("set_profile_autoconnect", (DEFAULT_UUID, False)) in backend.calls,
             )
 
             backend.profiles = (profile,)
@@ -103,7 +102,9 @@ def test_saved_connect_uses_selected_uuid_and_interface() -> None:
             backend.calls.clear()
             await pilot.click("#connect")
             await settle(pilot)
-            payloads = [payload for name, payload in backend.calls if name == "activate_saved_profile"]
+            payloads = [
+                payload for name, payload in backend.calls if name == "activate_saved_profile"
+            ]
             verify(len(payloads) == 1)
             verify(payloads[0].uuid == DEFAULT_UUID)
             verify(payloads[0].interface == "wlan0")
@@ -126,7 +127,10 @@ def test_saved_empty_selection_no_adapter_and_backend_failure_are_visible() -> N
             await pilot.click("#connect")
             await settle(pilot)
             verify(isinstance(app.screen, MessageDialog))
-            verify("Select a saved network" in " ".join(static_text(w) for w in app.screen.query(Static)))
+            verify(
+                "Select a saved network"
+                in " ".join(static_text(w) for w in app.screen.query(Static))
+            )
             await pilot.click("#close")
             await settle(pilot)
 
@@ -168,6 +172,9 @@ def test_saved_empty_selection_no_adapter_and_backend_failure_are_visible() -> N
             await pilot.click("#autoconnect")
             await settle(pilot)
             verify(isinstance(app.screen, MessageDialog))
-            verify("Could not update network" in " ".join(static_text(w) for w in app.screen.query(Static)))
+            verify(
+                "Could not update network"
+                in " ".join(static_text(w) for w in app.screen.query(Static))
+            )
 
     asyncio.run(scenario())

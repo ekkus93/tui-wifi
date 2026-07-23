@@ -7,7 +7,7 @@ import asyncio
 import pytest
 
 from tests.assertions import verify
-from tests.factories import DEFAULT_BSSID, DEFAULT_UUID, active_connection, saved_profile
+from tests.factories import DEFAULT_BSSID, DEFAULT_UUID
 from tests.nmcli_fixtures import (
     NMCLI_PATH,
     active_detail_command,
@@ -18,9 +18,7 @@ from tests.nmcli_fixtures import (
     ssid_query_command,
 )
 from tui_wifi.backends.base import (
-    DisconnectRequest,
     HiddenConnectRequest,
-    SavedProfileRequest,
     VisibleConnectRequest,
 )
 from tui_wifi.backends.nmcli import NmcliWifiBackend
@@ -384,7 +382,9 @@ def test_connect_hidden_open_network_uses_hidden_yes() -> None:
     asyncio.run(scenario())
 
 
-def test_connect_hidden_personal_network_marks_password_sensitive_and_disables_autoconnect() -> None:
+def test_connect_hidden_personal_network_marks_password_sensitive_and_disables_autoconnect() -> (
+    None
+):
     """Verify hidden passwords and post-connect autoconnect updates are safe."""
 
     async def scenario() -> None:
@@ -470,5 +470,3 @@ def test_connect_hidden_network_rejects_invalid_request_before_process(
         verify(runner.requests == [])
 
     asyncio.run(scenario())
-
-

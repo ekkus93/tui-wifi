@@ -192,9 +192,7 @@ def test_sensitive_stdin_is_redacted_from_success_and_failure_output() -> None:
 
     async def scenario() -> None:
         credential = "stdin-credential-value"
-        script = (
-            "import sys; data=sys.stdin.read(); print(data); print(data, file=sys.stderr)"
-        )
+        script = "import sys; data=sys.stdin.read(); print(data); print(data, file=sys.stderr)"
         success = await AsyncProcessRunner().run(
             ProcessRequest(
                 sys.executable,

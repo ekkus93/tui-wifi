@@ -7,7 +7,7 @@ import asyncio
 import pytest
 
 from tests.assertions import verify
-from tests.factories import DEFAULT_BSSID, DEFAULT_UUID, active_connection, saved_profile
+from tests.factories import DEFAULT_UUID, active_connection, saved_profile
 from tests.nmcli_fixtures import (
     NMCLI_PATH,
     active_detail_command,
@@ -19,15 +19,12 @@ from tests.nmcli_fixtures import (
 )
 from tui_wifi.backends.base import (
     DisconnectRequest,
-    HiddenConnectRequest,
     SavedProfileRequest,
-    VisibleConnectRequest,
 )
 from tui_wifi.backends.nmcli import NmcliWifiBackend
 from tui_wifi.errors import ErrorCategory, WifiError
-from tui_wifi.models import ActiveWifiConnection, SecurityClass
+from tui_wifi.models import ActiveWifiConnection
 from tui_wifi.process.fake import FakeProcessRunner
-from tui_wifi.secrets import SecretValue
 
 OTHER_UUID = "00000000-0000-0000-0000-000000000002"
 

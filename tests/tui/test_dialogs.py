@@ -37,7 +37,10 @@ def test_password_dialog_validation_visibility_and_submission() -> None:
 
             await pilot.click("#connect")
             await pilot.pause()
-            verify("Enter the network password" in static_text(app.screen.query_one("#validation", Static)))
+            verify(
+                "Enter the network password"
+                in static_text(app.screen.query_one("#validation", Static))
+            )
             verify(answers == [])
 
             password.value = "synthetic-password"
@@ -76,10 +79,15 @@ def test_hidden_dialog_open_personal_validation_and_cancel() -> None:
             await settle(pilot)
 
             await pilot.click("#connect")
-            verify("Enter the network name" in static_text(app.screen.query_one("#validation", Static)))
+            verify(
+                "Enter the network name" in static_text(app.screen.query_one("#validation", Static))
+            )
             app.screen.query_one("#ssid", Input).value = "Hidden Personal"
             await pilot.click("#connect")
-            verify("Enter the network password" in static_text(app.screen.query_one("#validation", Static)))
+            verify(
+                "Enter the network password"
+                in static_text(app.screen.query_one("#validation", Static))
+            )
 
             app.screen.query_one("#password", Input).value = "hidden-secret"
             app.screen.query_one("#autoconnect", Checkbox).value = False
@@ -140,10 +148,14 @@ def test_confirm_and_message_dialog_callbacks() -> None:
             await settle(pilot)
             verify(confirmations == [False, True])
 
-            app.push_screen(MessageDialog("Failure", "Friendly text", "safe details"), messages.append)
+            app.push_screen(
+                MessageDialog("Failure", "Friendly text", "safe details"), messages.append
+            )
             await settle(pilot)
             verify("Friendly text" in static_text(app.screen.query_one(Static)))
-            verify(any("safe details" in static_text(widget) for widget in app.screen.query(Static)))
+            verify(
+                any("safe details" in static_text(widget) for widget in app.screen.query(Static))
+            )
             await pilot.click("#close")
             await settle(pilot)
             verify(messages == [None])

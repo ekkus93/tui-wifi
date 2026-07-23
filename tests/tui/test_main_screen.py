@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import asyncio
+
 import pytest
 from textual.widgets import Button, Static
 
@@ -220,7 +221,7 @@ def test_secured_open_unsupported_and_multiple_saved_connection_routing() -> Non
             verify(isinstance(app.screen, MessageDialog))
             verify(
                 "More than one saved profile"
-                in " ".join(static_text(widget) for widget in app.screen.query(Static))
+                in " ".join(static_text(widget) for widget in app.screen.query(Static)),
             )
 
     asyncio.run(scenario())
@@ -248,7 +249,7 @@ def test_open_confirm_password_submit_and_authentication_failure() -> None:
             await settle(pilot)
             verify(
                 len([name for name, _payload in backend.calls if name == "connect_visible_network"])
-                == 1
+                == 1,
             )
 
             backend.calls.clear()
@@ -267,11 +268,11 @@ def test_open_confirm_password_submit_and_authentication_failure() -> None:
             verify(isinstance(app.screen, MessageDialog))
             verify(
                 "password was rejected"
-                in " ".join(static_text(widget) for widget in app.screen.query(Static)).lower()
+                in " ".join(static_text(widget) for widget in app.screen.query(Static)).lower(),
             )
             verify(
                 len([name for name, _payload in backend.calls if name == "connect_visible_network"])
-                == 1
+                == 1,
             )
 
     asyncio.run(scenario())
