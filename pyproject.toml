@@ -1,0 +1,104 @@
+[build-system]
+requires = ["setuptools>=77,<83", "wheel>=0.45,<1"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "tui-wifi"
+version = "0.1.0"
+description = "A desktop-like terminal Wi-Fi manager for NetworkManager"
+readme = "README.md"
+requires-python = ">=3.11"
+license = "MIT"
+license-files = ["LICENSE"]
+authors = [{ name = "Phillip Chin" }]
+keywords = ["wifi", "networkmanager", "nmcli", "tui", "textual"]
+classifiers = [
+  "Development Status :: 3 - Alpha",
+  "Environment :: Console",
+  "Operating System :: POSIX :: Linux",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
+  "Topic :: System :: Networking",
+]
+dependencies = ["textual>=8.2,<9"]
+
+[project.optional-dependencies]
+dev = [
+  "build>=1.2,<2",
+  "mypy>=1.11,<2",
+  "pytest>=8.2,<10",
+  "pytest-cov>=5,<7",
+  "ruff>=0.6,<1",
+]
+
+[project.scripts]
+wifi-tui = "tui_wifi.cli:main"
+
+[project.urls]
+Repository = "https://github.com/ekkus93/tui-wifi"
+Issues = "https://github.com/ekkus93/tui-wifi/issues"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+tui_wifi = ["ui/*.tcss"]
+
+[tool.pytest.ini_options]
+addopts = "-ra --strict-markers --strict-config --cov=tui_wifi --cov-report=term-missing --cov-fail-under=70"
+testpaths = ["tests"]
+markers = [
+  "tui: tests requiring Textual",
+  "real_network: opt-in tests that may inspect a real NetworkManager instance",
+]
+
+[tool.coverage.run]
+branch = true
+source = ["tui_wifi"]
+omit = [
+  "src/tui_wifi/ui/*",
+  "src/tui_wifi/app.py",
+  "src/tui_wifi/__main__.py",
+  "src/tui_wifi/backends/base.py",
+]
+
+[tool.coverage.report]
+exclude_lines = [
+  "pragma: no cover",
+  "if TYPE_CHECKING:",
+  "raise NotImplementedError",
+]
+
+[tool.ruff]
+target-version = "py311"
+line-length = 100
+src = ["src", "tests"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "ASYNC", "C4", "SIM", "RUF"]
+ignore = ["B008"]
+
+[tool.mypy]
+python_version = "3.11"
+packages = ["tui_wifi"]
+strict = true
+warn_unreachable = true
+show_error_codes = true
+
+[[tool.mypy.overrides]]
+module = ["textual.*"]
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = ["tui_wifi.ui.*", "tui_wifi.app"]
+ignore_errors = true
+
+[[tool.mypy.overrides]]
+module = [
+  "tui_wifi.backends.nmcli_core",
+  "tui_wifi.backends.nmcli_profiles",
+  "tui_wifi.backends.nmcli_mutations",
+]
+ignore_errors = true

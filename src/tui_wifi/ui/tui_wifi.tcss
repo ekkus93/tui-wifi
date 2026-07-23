@@ -1,0 +1,109 @@
+Screen {
+    background: $surface;
+}
+
+ModalScreen {
+    align: center middle;
+}
+
+#main-body {
+    padding: 1 2;
+}
+
+#status-row {
+    height: 3;
+    align-vertical: middle;
+}
+
+#title {
+    width: 1fr;
+    text-style: bold;
+}
+
+#radio-status {
+    width: auto;
+}
+
+#message {
+    min-height: 2;
+    margin-bottom: 1;
+}
+
+#networks {
+    height: 1fr;
+    min-height: 8;
+}
+
+#connection-summary {
+    height: 3;
+    padding: 1;
+    border-top: solid $primary;
+}
+
+.action-bar {
+    height: auto;
+    min-height: 3;
+    align-horizontal: center;
+}
+
+.action-bar Button {
+    margin: 0 1;
+}
+
+.dialog {
+    width: 70;
+    max-width: 90%;
+    height: auto;
+    max-height: 90%;
+    padding: 1 2;
+    border: round $primary;
+    background: $panel;
+    align: center middle;
+}
+
+.dialog-title, .screen-title {
+    text-style: bold;
+    margin-bottom: 1;
+}
+
+.dialog-buttons {
+    height: auto;
+    margin-top: 1;
+    align-horizontal: right;
+}
+
+.dialog-buttons Button {
+    margin-left: 1;
+}
+
+.validation {
+    color: $error;
+    min-height: 1;
+}
+
+.technical-details {
+    margin-top: 1;
+    padding: 1;
+    border: solid $secondary;
+    max-height: 12;
+    overflow-y: auto;
+}
+
+.details, .empty-state {
+    margin: 2;
+    padding: 1 2;
+    border: round $primary;
+}
+
+@media (width < 90) {
+    .action-bar {
+        layout: grid;
+        grid-size: 2;
+        height: auto;
+    }
+
+    .action-bar Button {
+        width: 100%;
+        margin: 0;
+    }
+}
