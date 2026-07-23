@@ -89,6 +89,9 @@ jobs:
       - name: Run tests with warnings as errors
         run: pytest -m 'not real_network'
 
+      - name: Enforce critical module branch coverage
+        run: python scripts/check_critical_coverage.py coverage.json
+
   package:
     name: Validate package
     needs: [lint, type-check, test]

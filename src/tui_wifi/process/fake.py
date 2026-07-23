@@ -26,6 +26,7 @@ class FakeProcessRunner(ProcessRunner):
         """Initialize the instance."""
         self.expected: deque[ExpectedProcess] = deque()
         self.invocations: list[tuple[str, ...]] = []
+        self.requests: list[ProcessRequest] = []
 
     def queue(
         self,
@@ -54,6 +55,7 @@ class FakeProcessRunner(ProcessRunner):
             raise AssertionError(
                 msg,
             )
+        self.requests.append(request)
         self.invocations.append(request.redacted_command)
         if expected.delay:
             await asyncio.sleep(expected.delay)

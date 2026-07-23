@@ -48,7 +48,7 @@ where = ["src"]
 tui_wifi = ["ui/*.tcss"]
 
 [tool.pytest.ini_options]
-addopts = "-ra --strict-markers --strict-config --cov=tui_wifi --cov-report=term-missing --cov-fail-under=70"
+addopts = "-ra --strict-markers --strict-config --cov=tui_wifi --cov-report=term-missing --cov-report=json:coverage.json --cov-fail-under=90"
 testpaths = ["tests"]
 filterwarnings = ["error"]
 markers = [
@@ -59,6 +59,9 @@ markers = [
 [tool.coverage.run]
 branch = true
 source = ["tui_wifi"]
+# Textual screens and app wiring are verified with behavioral pilot tests. Counting their
+# framework-driven lifecycle lines is noisy, so they remain outside the numeric coverage gate.
+# The backend protocol is declarative and has no executable implementation to measure.
 omit = [
   "src/tui_wifi/ui/*",
   "src/tui_wifi/app.py",
@@ -80,7 +83,7 @@ target-version = ["py311"]
 [tool.ruff]
 target-version = "py311"
 line-length = 100
-src = ["src", "tests"]
+src = ["src", "tests", "scripts"]
 
 [tool.ruff.lint]
 select = ["ALL"]

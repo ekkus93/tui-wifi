@@ -142,6 +142,7 @@ class NmcliProfilesMixin(NmcliCore):
                 ErrorCategory.PARSE_FAILURE,
                 technical_details="active Wi-Fi device did not expose GENERAL.CON-UUID",
             )
+        valid_uuid = validate_uuid(uuid)
         ssid_output = await self._run(
             (
                 "-t",
@@ -152,13 +153,13 @@ class NmcliProfilesMixin(NmcliCore):
                 "connection",
                 "show",
                 "uuid",
-                uuid,
+                valid_uuid,
             ),
             timeout_seconds=self.QUERY_TIMEOUT,
         )
         return ActiveWifiConnection(
             profile_name=profile_name,
-            uuid=validate_uuid(uuid),
+            uuid=valid_uuid,
             ssid=ssid_output.strip() or None,
             device=active_device.interface,
             state=active_device.state,

@@ -94,6 +94,7 @@ black --check .
 ruff check .
 mypy src/tui_wifi
 pytest -m 'not real_network'
+python scripts/check_critical_coverage.py coverage.json
 python -m build
 ```
 
@@ -104,6 +105,12 @@ errors. Findings must be corrected in code or documentation; they must not be
 hidden with `noqa`, `type: ignore`, warning filters, per-file exemptions, or
 disabled rule families.
 
+The test suite uses deterministic process and Wi-Fi backends. Ordinary tests
+never invoke the host's real `nmcli` mutation commands or change the machine's
+network state. CI enforces a 90% global coverage floor plus explicit branch-
+coverage floors for the mutation, profile, core backend, service, and process
+runner modules.
+
 Runtime dependencies are bounded in `pyproject.toml`. Contributors may create a
 local lock file with their preferred environment manager; the distributable
 package remains defined by `pyproject.toml`.
@@ -111,8 +118,9 @@ package remains defined by `pyproject.toml`.
 ## CI/CD and release assets
 
 GitHub Actions runs tests on Python 3.11, 3.12, and 3.13, checks formatting,
-linting, and types, and validates an installable wheel and source distribution.
-Ordinary branch and pull-request runs do not upload or retain package assets.
+linting, types, global and critical-module coverage, and validates an installable
+wheel and source distribution. Ordinary branch and pull-request runs do not
+upload or retain package or coverage assets.
 
 Release assets are created only when a version tag matching the package version is
 pushed. For version `0.1.0`, create and push tag `v0.1.0`:

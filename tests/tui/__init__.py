@@ -1,1 +1,1 @@
-"""Provide the tui test package."""
+"""Provide Textual behavior tests."""
