@@ -26,11 +26,11 @@ jobs:
           python-version: "3.11"
           cache: pip
       - run: python -m pip install --quiet -e '.[dev]'
-      - name: Capture collection failure
+      - name: Capture full test failure
         shell: bash
         run: |
           set +e
-          pytest -m 'not real_network' --collect-only -q > STRICT_DIAGNOSTICS.txt 2>&1
+          pytest -m 'not real_network' -q --tb=short > STRICT_DIAGNOSTICS.txt 2>&1
           status=$?
           printf '\nexit_status=%s\n' "$status" >> STRICT_DIAGNOSTICS.txt
           git config user.name github-actions[bot]
