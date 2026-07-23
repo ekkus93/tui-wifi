@@ -3,7 +3,7 @@
 ## `nmcli` is missing
 
 Install NetworkManager's command-line package for your distribution. Confirm `nmcli
---version` works, then restart `wifi-tui`.
+--version` works, then restart `tui-wifi`.
 
 ## NetworkManager is unavailable
 
@@ -49,6 +49,6 @@ unsupported in version 0.1.
 
 ## Redacted debug logs
 
-Run `wifi-tui --debug`. Logs are placed under `$XDG_STATE_HOME/tui-wifi/debug.log` or
+Run `tui-wifi --debug`. Logs are placed under `$XDG_STATE_HOME/tui-wifi/debug.log` or
 `~/.local/state/tui-wifi/debug.log`. Passwords should be redacted, but review private
 network names and addresses before sharing.
