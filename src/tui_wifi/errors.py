@@ -1,12 +1,13 @@
-"""Provide errors functionality."""
+"""Define structured, user-presentable Wi-Fi failures."""
 
 from __future__ import annotations
 
 from enum import StrEnum
+from typing import TypedDict, Unpack
 
 
 class ErrorCategory(StrEnum):
-    """Represent ErrorCategory."""
+    """Identify stable failure categories exposed by the application."""
 
     MISSING_NMCLI = "missing_nmcli"
     NETWORK_MANAGER_UNAVAILABLE = "network_manager_unavailable"
@@ -102,39 +103,48 @@ _DEFAULTS: dict[ErrorCategory, tuple[str, str | None, bool]] = {
 }
 
 
+class WifiErrorOptions(TypedDict, total=False):
+    """Describe optional structured fields accepted by :class:`WifiError`."""
+
+    summary: str | None
+    guidance: str | None
+    technical_details: str | None
+    exit_code: int | None
+    backend_reason: str | None
+    retriable: bool | None
+    operation: str | None
+
+
 class WifiError(Exception):
-    """Structured, user-presentable failure with redacted diagnostics."""
+    """Carry a user-facing summary and redacted technical diagnostics."""
 
     def __init__(
         self,
         category: ErrorCategory,
-        *,
-        summary: str | None = None,
-        guidance: str | None = None,
-        technical_details: str | None = None,
-        exit_code: int | None = None,
-        backend_reason: str | None = None,
-        retriable: bool | None = None,
-        operation: str | None = None,
+        **options: Unpack[WifiErrorOptions],
     ) -> None:
-        """Initialize the instance."""
+        """Initialize a structured Wi-Fi error."""
         default_summary, default_guidance, default_retriable = _DEFAULTS[category]
+        summary = options.get("summary")
+        guidance = options.get("guidance")
+        retriable = options.get("retriable")
+
         self.category = category
         self.summary = summary or default_summary
         self.guidance = guidance if guidance is not None else default_guidance
-        self.technical_details = technical_details
-        self.exit_code = exit_code
-        self.backend_reason = backend_reason
+        self.technical_details = options.get("technical_details")
+        self.exit_code = options.get("exit_code")
+        self.backend_reason = options.get("backend_reason")
         self.retriable = default_retriable if retriable is None else retriable
-        self.operation = operation
+        self.operation = options.get("operation")
         super().__init__(self.summary)
 
     def __str__(self) -> str:
-        """Return the user-facing string representation."""
+        """Return the user-facing error summary."""
         return self.summary
 
     def diagnostic_text(self) -> str:
-        """Perform diagnostic text."""
+        """Return redacted diagnostic fields for troubleshooting."""
         fields = [f"category={self.category.value}"]
         if self.operation:
             fields.append(f"operation={self.operation}")
