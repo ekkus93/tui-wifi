@@ -1,4 +1,4 @@
-"""Provide wifi functionality."""
+"""Coordinate coherent Wi-Fi state and backend mutations."""
 
 from __future__ import annotations
 
@@ -41,10 +41,10 @@ SnapshotListener = Callable[[ApplicationSnapshot], None]
 
 
 class WifiService:
-    """Represent WifiService."""
+    """Maintain coherent application state around one Wi-Fi backend."""
 
     def __init__(self, backend: WifiBackend, preferred_interface: str | None = None) -> None:
-        """Initialize the instance."""
+        """Initialize the service with a backend and optional preferred interface."""
         self.backend = backend
         self.preferred_interface = preferred_interface
         self.snapshot = ApplicationSnapshot(BackendStatus(BackendAvailability.UNKNOWN))
@@ -55,24 +55,24 @@ class WifiService:
         self._closed = False
 
     def subscribe(self, listener: SnapshotListener) -> Callable[[], None]:
-        """Perform subscribe."""
+        """Subscribe to coherent snapshot updates and return an unsubscribe callback."""
         self._listeners.append(listener)
 
         def unsubscribe() -> None:
-            """Perform unsubscribe."""
+            """Remove the listener when it is still registered."""
             if listener in self._listeners:
                 self._listeners.remove(listener)
 
         return unsubscribe
 
     def publish(self, snapshot: ApplicationSnapshot) -> None:
-        """Perform publish."""
+        """Publish one coherent snapshot to all current listeners."""
         self.snapshot = snapshot
         for listener in tuple(self._listeners):
             listener(snapshot)
 
     async def startup(self) -> ApplicationSnapshot:
-        """Perform startup."""
+        """Validate the platform and load the initial Wi-Fi state."""
         if not sys.platform.startswith("linux"):
             error = WifiError(
                 ErrorCategory.INTERNAL_FAILURE,
@@ -83,7 +83,7 @@ class WifiService:
         return await self.refresh(request_scan=True)
 
     async def refresh(self, *, request_scan: bool = False) -> ApplicationSnapshot:
-        """Perform refresh."""
+        """Load one coherent backend snapshot, optionally requesting a scan first."""
         if self._closed:
             return self.snapshot
         self._refresh_generation += 1
@@ -153,7 +153,7 @@ class WifiService:
 
     @staticmethod
     def _status_error(status: BackendStatus) -> WifiError:
-        """Perform status error."""
+        """Translate backend availability into a structured error."""
         if status.availability == BackendAvailability.MISSING_EXECUTABLE:
             return WifiError(ErrorCategory.MISSING_NMCLI)
         if status.availability == BackendAvailability.UNAUTHORIZED:
@@ -161,7 +161,7 @@ class WifiService:
         return WifiError(ErrorCategory.NETWORK_MANAGER_UNAVAILABLE)
 
     def _select_device(self, devices: tuple[WifiDevice, ...]) -> str | None:
-        """Perform select device."""
+        """Select one managed adapter without silently choosing among ambiguous devices."""
         managed = tuple(device for device in devices if device.managed)
         if self.preferred_interface:
             selected = next(
@@ -200,7 +200,7 @@ class WifiService:
         password: SecretValue | None = None,
         autoconnect: bool = True,
     ) -> ApplicationSnapshot:
-        """Perform connect network."""
+        """Connect to a visible network and clear any supplied password afterward."""
         if not group.supported:
             raise WifiError(ErrorCategory.UNSUPPORTED_SECURITY)
         interface = self._require_interface()
@@ -239,7 +239,7 @@ class WifiService:
         *,
         autoconnect: bool,
     ) -> ApplicationSnapshot:
-        """Perform connect hidden."""
+        """Connect to a hidden network and clear any supplied password afterward."""
         interface = self._require_interface()
         try:
             async with self._mutation(
@@ -262,7 +262,7 @@ class WifiService:
         return await self.refresh()
 
     async def disconnect(self) -> ApplicationSnapshot:
-        """Perform disconnect."""
+        """Disconnect the active Wi-Fi connection when one exists."""
         active = self.snapshot.active_connection
         if active is None:
             return self.snapshot
@@ -275,17 +275,17 @@ class WifiService:
         return await self.refresh()
 
     async def set_wifi_enabled(self, *, enabled: bool) -> ApplicationSnapshot:
-        """Perform set wifi enabled."""
+        """Enable or disable the Wi-Fi radio and refresh the resulting state."""
         async with self._mutation(
             OperationKind.RADIO,
             "Wi-Fi",
             "Enabling Wi-Fi…" if enabled else "Disabling Wi-Fi…",
         ):
-            await self.backend.set_wifi_radio_state(enabled)
+            await self.backend.set_wifi_radio_state(enabled=enabled)
         return await self.refresh(request_scan=enabled)
 
     async def delete_profile(self, uuid: str) -> ApplicationSnapshot:
-        """Perform delete profile."""
+        """Delete one saved profile and refresh state."""
         async with self._mutation(
             OperationKind.DELETE_PROFILE,
             uuid,
@@ -295,30 +295,30 @@ class WifiService:
         return await self.refresh()
 
     async def set_profile_autoconnect(self, uuid: str, *, enabled: bool) -> ApplicationSnapshot:
-        """Perform set profile autoconnect."""
+        """Update auto-connect for one saved profile and refresh state."""
         async with self._mutation(
             OperationKind.AUTOCONNECT,
             uuid,
             "Updating saved network…",
         ):
-            await self.backend.set_profile_autoconnect(uuid, enabled)
+            await self.backend.set_profile_autoconnect(uuid, enabled=enabled)
         return await self.refresh()
 
     def profile_by_uuid(self, uuid: str) -> SavedProfile | None:
-        """Perform profile by uuid."""
+        """Return one saved profile by UUID."""
         return next(
             (profile for profile in self.snapshot.profiles if profile.uuid == uuid),
             None,
         )
 
     def _require_interface(self) -> str:
-        """Perform require interface."""
+        """Return the selected interface or raise a visible adapter error."""
         if not self.snapshot.selected_device:
             raise WifiError(ErrorCategory.NO_ADAPTER)
         return self.snapshot.selected_device
 
     class _MutationContext:
-        """Represent MutationContext."""
+        """Publish mutation lifecycle state while serializing backend writes."""
 
         def __init__(
             self,
@@ -327,14 +327,14 @@ class WifiService:
             target: str | None,
             message: str,
         ) -> None:
-            """Initialize the instance."""
+            """Initialize one mutation lifecycle context."""
             self.service = service
             self.kind = kind
             self.target = target
             self.message = message
 
         async def __aenter__(self) -> None:
-            """Enter the asynchronous context."""
+            """Acquire the mutation lock and publish the running state."""
             await self.service.mutation_lock.acquire()
             self.service.operation_counter += 1
             self.service.publish(
@@ -357,7 +357,8 @@ class WifiService:
             exc: object,
             traceback: object,
         ) -> bool:
-            """Exit the asynchronous context."""
+            """Publish expected failure state and always release the mutation lock."""
+            del exc_type, traceback
             try:
                 if isinstance(exc, WifiError):
                     self.service.publish(
@@ -397,9 +398,9 @@ class WifiService:
         target: str | None,
         message: str,
     ) -> _MutationContext:
-        """Perform mutation."""
+        """Create a serialized mutation lifecycle context."""
         return self._MutationContext(self, kind, target, message)
 
     async def close(self) -> None:
-        """Perform close."""
+        """Prevent future refresh work after application shutdown."""
         self._closed = True
