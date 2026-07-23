@@ -14,5 +14,7 @@
 - Added Python 3.10 support and CI coverage across Python 3.10 through 3.13.
 - Added compatibility for NetworkManager 1.36 indexed IP properties and literal IPv6
   values in terse `nmcli` output.
+- Added compatibility for NetworkManager 1.36 access-point frequencies that include an
+  explicit `MHz` unit.
 - Hardware acceptance validation remains pending and is tracked in
   `tests/manual/V01_ACCEPTANCE.md`.
