@@ -26,6 +26,7 @@ dependencies = ["textual>=8.2,<9"]
 
 [project.optional-dependencies]
 dev = [
+  "black>=25,<27",
   "build>=1.2,<2",
   "mypy>=1.11,<2",
   "pytest>=8.2,<10",
@@ -71,6 +72,10 @@ exclude_lines = [
   "if TYPE_CHECKING:",
   "raise NotImplementedError",
 ]
+
+[tool.black]
+line-length = 100
+target-version = ["py311"]
 
 [tool.ruff]
 target-version = "py311"
