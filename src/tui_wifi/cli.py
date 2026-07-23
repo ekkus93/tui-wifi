@@ -1,3 +1,4 @@
+# Copyright (c) 2026 Phillip Chin
 """Provide the command-line entry point for tui-wifi."""
 
 from __future__ import annotations

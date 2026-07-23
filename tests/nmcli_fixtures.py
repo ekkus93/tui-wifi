@@ -1,3 +1,4 @@
+# Copyright (c) 2026 Phillip Chin
 """Provide reusable nmcli command and result fixtures."""
 
 from __future__ import annotations

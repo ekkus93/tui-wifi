@@ -1,3 +1,4 @@
+# Copyright (c) 2026 Phillip Chin
 """Verify structured critical-module coverage enforcement."""
 
 from __future__ import annotations
@@ -6,8 +7,8 @@ import json
 from typing import TYPE_CHECKING
 
 import pytest
-
 from scripts.check_critical_coverage import GATES, branch_percentage, evaluate, load_report, main
+
 from tests.assertions import verify
 
 if TYPE_CHECKING:
@@ -20,8 +21,7 @@ def report_with_percentage(percentage: float) -> dict[str, object]:
     """Build a complete synthetic report with one percentage for every gate."""
     return {
         "files": {
-            gate.path: {"summary": {"percent_branches_covered": percentage}}
-            for gate in GATES
+            gate.path: {"summary": {"percent_branches_covered": percentage}} for gate in GATES
         },
     }
 

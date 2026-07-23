@@ -1,3 +1,4 @@
+# Copyright (c) 2026 Phillip Chin
 """Verify secret storage and redaction."""
 
 from __future__ import annotations

@@ -1,3 +1,4 @@
+# Copyright (c) 2026 Phillip Chin
 """Provide NetworkManager mutation operations through ``nmcli``."""
 
 from __future__ import annotations

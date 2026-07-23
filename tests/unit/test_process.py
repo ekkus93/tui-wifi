@@ -1,3 +1,4 @@
+# Copyright (c) 2026 Phillip Chin
 """Verify subprocess lifecycle, decoding, and secret-safe diagnostics."""
 
 from __future__ import annotations

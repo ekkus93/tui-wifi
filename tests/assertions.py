@@ -1,3 +1,4 @@
+# Copyright (c) 2026 Phillip Chin
 """Provide explicit test verification helpers."""
 
 from __future__ import annotations

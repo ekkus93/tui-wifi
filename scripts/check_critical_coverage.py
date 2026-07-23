@@ -1,3 +1,4 @@
+# Copyright (c) 2026 Phillip Chin
 """Enforce structured branch-coverage floors for safety-critical modules."""
 
 from __future__ import annotations

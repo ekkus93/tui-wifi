@@ -1,3 +1,4 @@
+# Copyright (c) 2026 Phillip Chin
 """Provide typed factories for deterministic tests."""
 
 from __future__ import annotations
@@ -148,9 +149,11 @@ def active_connection(**options: Unpack[ActiveConnectionOptions]) -> ActiveWifiC
         device=options.get("device", "wlan0"),
         state=options.get("state", DeviceState.ACTIVATED),
         bssid=options.get("bssid", DEFAULT_BSSID),
-        ipv4=ipv4
-        if ipv4 is not None
-        else IPConfiguration(("192.0.2.10/24",), "192.0.2.1", ("192.0.2.53",)),
+        ipv4=(
+            ipv4
+            if ipv4 is not None
+            else IPConfiguration(("192.0.2.10/24",), "192.0.2.1", ("192.0.2.53",))
+        ),
         ipv6=ipv6 if ipv6 is not None else IPConfiguration(),
     )
 

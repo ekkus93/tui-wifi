@@ -1,3 +1,4 @@
+# Copyright (c) 2026 Phillip Chin
 """Verify nmcli device parsing and scan behavior."""
 
 from __future__ import annotations

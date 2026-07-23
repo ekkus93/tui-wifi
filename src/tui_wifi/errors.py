@@ -1,3 +1,4 @@
+# Copyright (c) 2026 Phillip Chin
 """Define structured, user-presentable Wi-Fi failures."""
 
 from __future__ import annotations

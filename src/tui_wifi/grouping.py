@@ -1,3 +1,4 @@
+# Copyright (c) 2026 Phillip Chin
 """Provide grouping functionality."""
 
 from __future__ import annotations

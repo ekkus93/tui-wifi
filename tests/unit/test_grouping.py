@@ -1,3 +1,4 @@
+# Copyright (c) 2026 Phillip Chin
 """Verify access-point grouping behavior."""
 
 from __future__ import annotations

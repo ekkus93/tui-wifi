@@ -1,3 +1,4 @@
+# Copyright (c) 2026 Phillip Chin
 """Provide the main Wi-Fi management screen."""
 
 from __future__ import annotations

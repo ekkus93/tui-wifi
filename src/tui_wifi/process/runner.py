@@ -1,3 +1,4 @@
+# Copyright (c) 2026 Phillip Chin
 """Run subprocesses with strict timeouts and credential-safe diagnostics."""
 
 from __future__ import annotations

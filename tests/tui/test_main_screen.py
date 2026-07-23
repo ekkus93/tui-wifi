@@ -1,3 +1,4 @@
+# Copyright (c) 2026 Phillip Chin
 """Verify main-screen states, workflows, shortcuts, and responsive behavior."""
 
 from __future__ import annotations

@@ -1,3 +1,4 @@
+# Copyright (c) 2026 Phillip Chin
 """Provide the nearby-network table widget."""
 
 from __future__ import annotations

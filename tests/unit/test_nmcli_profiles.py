@@ -1,3 +1,4 @@
+# Copyright (c) 2026 Phillip Chin
 """Verify saved-profile and active-connection parsing."""
 
 from __future__ import annotations

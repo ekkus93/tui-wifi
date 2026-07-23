@@ -1,3 +1,4 @@
+# Copyright (c) 2026 Phillip Chin
 """Coordinate coherent Wi-Fi state and backend mutations."""
 
 from __future__ import annotations

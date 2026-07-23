@@ -1,3 +1,4 @@
+# Copyright (c) 2026 Phillip Chin
 """Parse strict, escaped ``nmcli`` output into domain values."""
 
 from __future__ import annotations

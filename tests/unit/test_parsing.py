@@ -1,3 +1,4 @@
+# Copyright (c) 2026 Phillip Chin
 """Verify strict NetworkManager output parsing."""
 
 from __future__ import annotations

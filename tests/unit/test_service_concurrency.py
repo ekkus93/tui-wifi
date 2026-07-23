@@ -1,3 +1,4 @@
+# Copyright (c) 2026 Phillip Chin
 """Verify Wi-Fi service generation ordering, cancellation, and serialization."""
 
 from __future__ import annotations

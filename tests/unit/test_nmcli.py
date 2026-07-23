@@ -1,3 +1,4 @@
+# Copyright (c) 2026 Phillip Chin
 """Verify core nmcli execution, parsing, status, radio, devices, and scans."""
 
 from __future__ import annotations

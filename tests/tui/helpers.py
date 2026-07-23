@@ -1,3 +1,4 @@
+# Copyright (c) 2026 Phillip Chin
 """Provide shared Textual pilot helpers."""
 
 from __future__ import annotations

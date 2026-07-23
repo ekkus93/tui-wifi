@@ -1,3 +1,4 @@
+# Copyright (c) 2026 Phillip Chin
 """Verify password, confirmation, message, and hidden-network dialogs."""
 
 from __future__ import annotations
@@ -39,7 +40,7 @@ def test_password_dialog_validation_visibility_and_submission() -> None:
             await pilot.pause()
             verify(
                 "Enter the network password"
-                in static_text(app.screen.query_one("#validation", Static))
+                in static_text(app.screen.query_one("#validation", Static)),
             )
             verify(answers == [])
 
@@ -80,13 +81,14 @@ def test_hidden_dialog_open_personal_validation_and_cancel() -> None:
 
             await pilot.click("#connect")
             verify(
-                "Enter the network name" in static_text(app.screen.query_one("#validation", Static))
+                "Enter the network name"
+                in static_text(app.screen.query_one("#validation", Static)),
             )
             app.screen.query_one("#ssid", Input).value = "Hidden Personal"
             await pilot.click("#connect")
             verify(
                 "Enter the network password"
-                in static_text(app.screen.query_one("#validation", Static))
+                in static_text(app.screen.query_one("#validation", Static)),
             )
 
             app.screen.query_one("#password", Input).value = "hidden-secret"
@@ -149,12 +151,13 @@ def test_confirm_and_message_dialog_callbacks() -> None:
             verify(confirmations == [False, True])
 
             app.push_screen(
-                MessageDialog("Failure", "Friendly text", "safe details"), messages.append
+                MessageDialog("Failure", "Friendly text", "safe details"),
+                messages.append,
             )
             await settle(pilot)
             verify("Friendly text" in static_text(app.screen.query_one(Static)))
             verify(
-                any("safe details" in static_text(widget) for widget in app.screen.query(Static))
+                any("safe details" in static_text(widget) for widget in app.screen.query(Static)),
             )
             await pilot.click("#close")
             await settle(pilot)

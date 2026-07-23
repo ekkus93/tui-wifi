@@ -1,3 +1,4 @@
+# Copyright (c) 2026 Phillip Chin
 """Verify saved-profile rendering and mutation workflows."""
 
 from __future__ import annotations
@@ -129,7 +130,7 @@ def test_saved_empty_selection_no_adapter_and_backend_failure_are_visible() -> N
             verify(isinstance(app.screen, MessageDialog))
             verify(
                 "Select a saved network"
-                in " ".join(static_text(w) for w in app.screen.query(Static))
+                in " ".join(static_text(w) for w in app.screen.query(Static)),
             )
             await pilot.click("#close")
             await settle(pilot)
@@ -174,7 +175,7 @@ def test_saved_empty_selection_no_adapter_and_backend_failure_are_visible() -> N
             verify(isinstance(app.screen, MessageDialog))
             verify(
                 "Could not update network"
-                in " ".join(static_text(w) for w in app.screen.query(Static))
+                in " ".join(static_text(w) for w in app.screen.query(Static)),
             )
 
     asyncio.run(scenario())

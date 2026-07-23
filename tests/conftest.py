@@ -1,3 +1,4 @@
+# Copyright (c) 2026 Phillip Chin
 """Verify conftest behavior."""
 
 from __future__ import annotations

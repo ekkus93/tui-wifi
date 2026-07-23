@@ -1,3 +1,4 @@
+# Copyright (c) 2026 Phillip Chin
 """Provide the process package."""
 
 from tui_wifi.process.runner import (
