@@ -17,8 +17,10 @@ from tui_wifi.process.fake import FakeProcessRunner
 
 NONZERO_EXIT = 10
 EXPECTED_ACCESS_POINT_COUNT = 11
+CHANNEL_6 = 6
 CHANNEL_14 = 14
 CHANNEL_36 = 36
+FREQUENCY_2437 = 2437
 
 
 def test_device_parsing_covers_states_filters_and_escaped_connections() -> None:
@@ -138,7 +140,7 @@ def test_access_point_parsing_covers_security_channels_and_blank_policy() -> Non
             "no",
         )
         output = (
-            "*:Open:00\\:11\\:22\\:33\\:44\\:01:90:2412:--\n"
+            "*:Open:00\\:11\\:22\\:33\\:44\\:01:90:2437 MHz:--\n"
             ":WPA1:00\\:11\\:22\\:33\\:44\\:02:80:2484:WPA1\n"
             ":WPA2:00\\:11\\:22\\:33\\:44\\:03:70:5180:WPA2\n"
             ":WPA3:00\\:11\\:22\\:33\\:44\\:04:60:5955:SAE\n"
@@ -159,6 +161,8 @@ def test_access_point_parsing_covers_security_channels_and_blank_policy() -> Non
         verify(len(access_points) == EXPECTED_ACCESS_POINT_COUNT)
         verify(access_points[0].active is True)
         verify(access_points[0].security == SecurityClass.OPEN)
+        verify(access_points[0].frequency == FREQUENCY_2437)
+        verify(access_points[0].channel == CHANNEL_6)
         verify(access_points[1].channel == CHANNEL_14)
         verify(access_points[2].channel == CHANNEL_36)
         verify(access_points[3].channel == 1)

@@ -32,6 +32,14 @@ from tui_wifi.process import (
     ProcessTimeoutError,
 )
 
+_MEGAHERTZ_SUFFIX = " MHz"
+
+
+def _parse_frequency(value: str) -> int | None:
+    """Parse nmcli frequencies with or without its legacy MHz suffix."""
+    normalized = value.strip().removesuffix(_MEGAHERTZ_SUFFIX)
+    return parse_optional_int(normalized)
+
 
 class NmcliCore:
     """Represent NmcliCore."""
@@ -239,7 +247,7 @@ class NmcliCore:
             active, ssid, bssid, signal_text, frequency_text, security_text = split_escaped(line, 6)
             if not ssid:
                 continue
-            frequency = parse_optional_int(frequency_text)
+            frequency = _parse_frequency(frequency_text)
             access_points.append(
                 AccessPoint(
                     ssid=ssid.encode("utf-8", errors="surrogateescape"),
