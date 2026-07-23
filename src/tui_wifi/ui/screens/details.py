@@ -1,6 +1,9 @@
 from __future__ import annotations
 
+from typing import ClassVar
+
 from textual.app import ComposeResult
+from textual.binding import BindingType
 from textual.screen import Screen
 from textual.widgets import Footer, Header, Static
 
@@ -8,7 +11,10 @@ from tui_wifi.models import ActiveWifiConnection
 
 
 class DetailsScreen(Screen[None]):
-    BINDINGS = [("escape", "app.pop_screen", "Back"), ("q", "app.pop_screen", "Back")]
+    BINDINGS: ClassVar[list[BindingType]] = [
+        ("escape", "app.pop_screen", "Back"),
+        ("q", "app.pop_screen", "Back"),
+    ]
 
     def __init__(self, connection: ActiveWifiConnection | None) -> None:
         super().__init__()
