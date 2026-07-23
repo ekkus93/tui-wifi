@@ -1,4 +1,4 @@
-"""Provide app functionality."""
+"""Provide the Textual application entry point."""
 
 from __future__ import annotations
 
@@ -11,15 +11,11 @@ from tui_wifi.ui.screens.main import MainScreen
 
 
 class WifiTuiApp(App[None]):
-    """Represent WifiTuiApp."""
+    """Run the terminal Wi-Fi manager."""
 
     TITLE = "tui-wifi"
     SUB_TITLE = "Terminal Wi-Fi Manager"
     CSS_PATH = "ui/tui_wifi.tcss"
-    HORIZONTAL_BREAKPOINTS = [
-        (0, "-compact"),
-        (90, "-normal"),
-    ]
 
     def __init__(
         self,
@@ -29,8 +25,12 @@ class WifiTuiApp(App[None]):
         startup_warning: str | None = None,
         service: WifiService | None = None,
     ) -> None:
-        """Initialize the instance."""
+        """Initialize the application and its Wi-Fi service."""
         super().__init__()
+        self.HORIZONTAL_BREAKPOINTS = [
+            (0, "-compact"),
+            (90, "-normal"),
+        ]
         self.mouse_enabled = mouse_enabled
         self.startup_warning = startup_warning
         self.service = service or WifiService(
@@ -39,9 +39,9 @@ class WifiTuiApp(App[None]):
         )
 
     def on_mount(self) -> None:
-        """Perform on mount."""
+        """Open the main Wi-Fi screen after application startup."""
         self.push_screen(MainScreen(self.service, self.startup_warning))
 
     async def on_unmount(self) -> None:
-        """Perform on unmount."""
+        """Close the service when the application exits."""
         await self.service.close()
