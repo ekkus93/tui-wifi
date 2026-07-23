@@ -40,11 +40,10 @@ class NetworkTable(DataTable[str]):
             )
         if current_identity is None:
             return
-        try:
-            row = self.get_row_index(current_identity)
-        except LookupError:
-            return
-        self.move_cursor(row=row)
+        for row_index, row_key in enumerate(self.rows):
+            if str(row_key.value) == current_identity:
+                self.move_cursor(row=row_index)
+                return
 
     @property
     def selected_identity(self) -> str | None:
