@@ -57,8 +57,8 @@ jobs:
           changelog_path = Path("CHANGELOG.md")
           changelog = changelog_path.read_text(encoding="utf-8")
           anchor = (
-              "- Added compatibility for NetworkManager 1.36 frequency values that include "
-              "the `MHz` unit.\n"
+              "- Added compatibility for NetworkManager 1.36 access-point frequencies that include an\n"
+              "  explicit `MHz` unit.\n"
           )
           addition = anchor + "- Renamed the installed command to `tui-wifi` to match the project name.\n"
           if anchor not in changelog:
