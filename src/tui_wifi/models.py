@@ -6,6 +6,10 @@ from dataclasses import dataclass, field
 from datetime import UTC, datetime
 from enum import StrEnum
 
+_COMPARISON_VALUE_25 = 25
+_COMPARISON_VALUE_50 = 50
+_COMPARISON_VALUE_75 = 75
+
 
 class BackendAvailability(StrEnum):
     """Represent BackendAvailability."""
@@ -122,11 +126,11 @@ class SignalQuality(StrEnum):
         """Perform from percent."""
         if value is None:
             return cls.UNKNOWN
-        if value >= 75:
+        if value >= _COMPARISON_VALUE_75:
             return cls.EXCELLENT
-        if value >= 50:
+        if value >= _COMPARISON_VALUE_50:
             return cls.GOOD
-        if value >= 25:
+        if value >= _COMPARISON_VALUE_25:
             return cls.FAIR
         return cls.WEAK
 

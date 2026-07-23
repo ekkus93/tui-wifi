@@ -24,11 +24,11 @@ from tui_wifi.models import (
     WifiRadioState,
 )
 from tui_wifi.process import (
-    ProcessMissingExecutable,
-    ProcessNonZeroExit,
+    ProcessMissingExecutableError,
+    ProcessNonZeroExitError,
     ProcessRequest,
     ProcessRunner,
-    ProcessTimeout,
+    ProcessTimeoutError,
 )
 
 
@@ -70,18 +70,18 @@ class NmcliCore:
         )
         try:
             result = await self._runner.run(request)
-        except ProcessMissingExecutable as exc:
+        except ProcessMissingExecutableError as exc:
             raise WifiError(ErrorCategory.MISSING_NMCLI, operation="nmcli") from exc
-        except ProcessTimeout as exc:
+        except ProcessTimeoutError as exc:
             raise WifiError(ErrorCategory.TIMEOUT, operation="nmcli") from exc
-        except ProcessNonZeroExit as exc:
+        except ProcessNonZeroExitError as exc:
             stderr = exc.result.stderr if exc.result else ""
             exit_code = exc.result.exit_code if exc.result else None
-            raise self._classify_command_error(stderr, exit_code, "nmcli") from exc
+            raise self.classify_command_error(stderr, exit_code, "nmcli") from exc
         return result.stdout
 
     @staticmethod
-    def _classify_command_error(stderr: str, exit_code: int | None, operation: str) -> WifiError:
+    def classify_command_error(stderr: str, exit_code: int | None, operation: str) -> WifiError:
         """Perform classify command error."""
         lower = stderr.lower()
         if any(
@@ -165,7 +165,7 @@ class NmcliCore:
             return WifiRadioState.HARDWARE_BLOCKED
         return WifiRadioState.ENABLED if software_enabled else WifiRadioState.DISABLED
 
-    async def set_wifi_radio_state(self, enabled: bool) -> WifiRadioState:
+    async def set_wifi_radio_state(self, *, enabled: bool) -> WifiRadioState:
         """Perform set wifi radio state."""
         await self._run(
             ("radio", "wifi", "on" if enabled else "off"),

@@ -12,6 +12,9 @@ from tui_wifi.models import (
     SecurityClass,
 )
 
+_COMPARISON_VALUE_2 = 2
+_COMPARISON_VALUE_90 = 90
+
 
 def ap(
     ssid: str,
@@ -61,7 +64,7 @@ def test_grouping_preserves_security_boundaries_and_sorting() -> None:
         and group.security.supported
         and group.security != SecurityClass.OPEN
     )
-    verify(secured_home.signal == 90)
-    verify(len(secured_home.member_bssids) == 2)
+    verify(secured_home.signal == _COMPARISON_VALUE_90)
+    verify(len(secured_home.member_bssids) == _COMPARISON_VALUE_2)
     verify(secured_home.saved_profile_uuids == (profile.uuid,))
     verify(groups[-1].supported is False)

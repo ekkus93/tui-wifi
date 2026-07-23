@@ -2,8 +2,6 @@
 
 from __future__ import annotations
 
-from typing import ClassVar
-
 from textual.app import App
 
 from tui_wifi.backends.nmcli import NmcliWifiBackend
@@ -18,7 +16,7 @@ class WifiTuiApp(App[None]):
     TITLE = "tui-wifi"
     SUB_TITLE = "Terminal Wi-Fi Manager"
     CSS_PATH = "ui/tui_wifi.tcss"
-    HORIZONTAL_BREAKPOINTS: ClassVar[list[tuple[int, str]]] = [
+    HORIZONTAL_BREAKPOINTS = [
         (0, "-compact"),
         (90, "-normal"),
     ]

@@ -68,7 +68,7 @@ class WifiBackend(Protocol):
         """Perform get wifi radio state."""
         ...
 
-    async def set_wifi_radio_state(self, enabled: bool) -> WifiRadioState:
+    async def set_wifi_radio_state(self, *, enabled: bool) -> WifiRadioState:
         """Perform set wifi radio state."""
         ...
 
@@ -121,7 +121,7 @@ class WifiBackend(Protocol):
         """Perform delete saved profile."""
         ...
 
-    async def set_profile_autoconnect(self, uuid: str, enabled: bool) -> SavedProfile:
+    async def set_profile_autoconnect(self, uuid: str, *, enabled: bool) -> SavedProfile:
         """Perform set profile autoconnect."""
         ...
 

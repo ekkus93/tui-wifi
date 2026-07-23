@@ -74,24 +74,24 @@ class ProcessError(Exception):
         super().__init__(message)
 
 
-class ProcessMissingExecutable(ProcessError):
-    """Represent ProcessMissingExecutable."""
+class ProcessMissingExecutableError(ProcessError):
+    """Represent ProcessMissingExecutableError."""
 
 
-class ProcessTimeout(ProcessError):
-    """Represent ProcessTimeout."""
+class ProcessTimeoutError(ProcessError):
+    """Represent ProcessTimeoutError."""
 
 
-class ProcessCancelled(ProcessError):
-    """Represent ProcessCancelled."""
+class ProcessCancelledError(ProcessError):
+    """Represent ProcessCancelledError."""
 
 
 class ProcessSpawnError(ProcessError):
     """Represent ProcessSpawnError."""
 
 
-class ProcessNonZeroExit(ProcessError):
-    """Represent ProcessNonZeroExit."""
+class ProcessNonZeroExitError(ProcessError):
+    """Represent ProcessNonZeroExitError."""
 
 
 class ProcessRunner(Protocol):
@@ -126,7 +126,7 @@ class AsyncProcessRunner:
             )
         except FileNotFoundError as exc:
             msg = f"executable not found: {request.executable}"
-            raise ProcessMissingExecutable(
+            raise ProcessMissingExecutableError(
                 msg,
                 request,
             ) from exc
@@ -159,7 +159,7 @@ class AsyncProcessRunner:
                 timed_out=True,
             )
             msg = "process timed out"
-            raise ProcessTimeout(msg, request, result) from exc
+            raise ProcessTimeoutError(msg, request, result) from exc
         except asyncio.CancelledError as exc:
             process.terminate()
             try:
@@ -176,7 +176,7 @@ class AsyncProcessRunner:
                 cancelled=True,
             )
             msg = "process cancelled"
-            raise ProcessCancelled(msg, request, result) from exc
+            raise ProcessCancelledError(msg, request, result) from exc
 
         try:
             stdout = stdout_bytes.decode("utf-8", errors="strict")
@@ -194,7 +194,7 @@ class AsyncProcessRunner:
         )
         if result.exit_code != 0:
             msg = f"process exited with status {result.exit_code}"
-            raise ProcessNonZeroExit(
+            raise ProcessNonZeroExitError(
                 msg,
                 request,
                 result,

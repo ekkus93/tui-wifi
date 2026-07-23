@@ -63,7 +63,7 @@ class FakeWifiBackend:
         await self._before("get_wifi_radio_state")
         return self.radio
 
-    async def set_wifi_radio_state(self, enabled: bool) -> WifiRadioState:
+    async def set_wifi_radio_state(self, *, enabled: bool) -> WifiRadioState:
         """Perform set wifi radio state."""
         await self._before("set_wifi_radio_state", enabled)
         self.radio = WifiRadioState.ENABLED if enabled else WifiRadioState.DISABLED
@@ -153,7 +153,7 @@ class FakeWifiBackend:
         await self._before("delete_saved_profile", uuid)
         self.profiles = tuple(profile for profile in self.profiles if profile.uuid != uuid)
 
-    async def set_profile_autoconnect(self, uuid: str, enabled: bool) -> SavedProfile:
+    async def set_profile_autoconnect(self, uuid: str, *, enabled: bool) -> SavedProfile:
         """Perform set profile autoconnect."""
         await self._before("set_profile_autoconnect", (uuid, enabled))
         updated: list[SavedProfile] = []

@@ -2,26 +2,26 @@
 
 from tui_wifi.process.runner import (
     AsyncProcessRunner,
-    ProcessCancelled,
+    ProcessCancelledError,
     ProcessError,
-    ProcessMissingExecutable,
-    ProcessNonZeroExit,
+    ProcessMissingExecutableError,
+    ProcessNonZeroExitError,
     ProcessRequest,
     ProcessResult,
     ProcessRunner,
     ProcessSpawnError,
-    ProcessTimeout,
+    ProcessTimeoutError,
 )
 
 __all__ = [
     "AsyncProcessRunner",
-    "ProcessCancelled",
+    "ProcessCancelledError",
     "ProcessError",
-    "ProcessMissingExecutable",
-    "ProcessNonZeroExit",
+    "ProcessMissingExecutableError",
+    "ProcessNonZeroExitError",
     "ProcessRequest",
     "ProcessResult",
     "ProcessRunner",
     "ProcessSpawnError",
-    "ProcessTimeout",
+    "ProcessTimeoutError",
 ]

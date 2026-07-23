@@ -45,25 +45,25 @@ def test_command_error_classification_is_conservative() -> None:
     """Verify test command error classification is conservative."""
     backend = NmcliWifiBackend(FakeProcessRunner(), "/usr/bin/nmcli")
     verify(
-        backend._classify_command_error("Secrets were required", 4, "connect").category.value
+        backend.classify_command_error("Secrets were required", 4, "connect").category.value
         == "missing_secrets",
     )
     verify(
-        backend._classify_command_error("authentication failed", 4, "connect").category.value
+        backend.classify_command_error("authentication failed", 4, "connect").category.value
         == "authentication_rejected",
     )
     verify(
-        backend._classify_command_error("unrecognized failure", 10, "connect").category.value
+        backend.classify_command_error("unrecognized failure", 10, "connect").category.value
         == "command_failure",
     )
 
 
-def test_profile_security() -> None:
+def testprofile_security() -> None:
     """Verify test profile security."""
-    verify(NmcliWifiBackend._profile_security("") == SecurityClass.OPEN)
-    verify(NmcliWifiBackend._profile_security("wpa-psk") == SecurityClass.WPA2_PERSONAL)
-    verify(NmcliWifiBackend._profile_security("sae") == SecurityClass.WPA3_PERSONAL)
-    verify(NmcliWifiBackend._profile_security("wpa-eap") == SecurityClass.ENTERPRISE)
+    verify(NmcliWifiBackend.profile_security("") == SecurityClass.OPEN)
+    verify(NmcliWifiBackend.profile_security("wpa-psk") == SecurityClass.WPA2_PERSONAL)
+    verify(NmcliWifiBackend.profile_security("sae") == SecurityClass.WPA3_PERSONAL)
+    verify(NmcliWifiBackend.profile_security("wpa-eap") == SecurityClass.ENTERPRISE)
 
 
 def test_read_devices_and_access_points() -> None:

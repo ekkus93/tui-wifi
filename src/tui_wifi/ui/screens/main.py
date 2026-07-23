@@ -247,6 +247,7 @@ class MainScreen(Screen[None]):
         self,
         group: NetworkGroup,
         password: SecretValue | None,
+        *,
         autoconnect: bool,
     ) -> None:
         """Perform connect."""
@@ -342,11 +343,11 @@ class MainScreen(Screen[None]):
         else:
             self._start_toggle(enabled)
 
-    def _start_toggle(self, enabled: bool) -> None:
+    def _start_toggle(self, *, enabled: bool) -> None:
         """Perform start toggle."""
         self.run_worker(self._toggle(enabled), group="mutation", exclusive=True)
 
-    async def _toggle(self, enabled: bool) -> None:
+    async def _toggle(self, *, enabled: bool) -> None:
         """Perform toggle."""
         try:
             await self.service.set_wifi_enabled(enabled)

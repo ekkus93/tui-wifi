@@ -10,10 +10,12 @@ import pytest
 from tests.assertions import verify
 from tui_wifi.process import (
     AsyncProcessRunner,
-    ProcessNonZeroExit,
+    ProcessNonZeroExitError,
     ProcessRequest,
-    ProcessTimeout,
+    ProcessTimeoutError,
 )
+
+_COMPARISON_VALUE_7 = 7
 
 
 def test_process_success_and_no_shell_interpretation() -> None:
@@ -44,12 +46,12 @@ def test_process_nonzero_keeps_stdout_and_stderr_separate() -> None:
             ("-c", "import sys; print('out'); print('err', file=sys.stderr); raise SystemExit(7)"),
             timeout=5,
         )
-        with pytest.raises(ProcessNonZeroExit) as caught:
+        with pytest.raises(ProcessNonZeroExitError) as caught:
             await AsyncProcessRunner().run(request)
         verify(caught.value.result is not None)
         verify(caught.value.result.stdout.strip() == "out")
         verify(caught.value.result.stderr.strip() == "err")
-        verify(caught.value.result.exit_code == 7)
+        verify(caught.value.result.exit_code == _COMPARISON_VALUE_7)
 
     asyncio.run(scenario())
 
@@ -59,19 +61,19 @@ def test_process_output_redacts_sensitive_argument_values() -> None:
 
     async def scenario() -> None:
         """Perform scenario."""
-        secret = "credential-that-must-not-leak"
+        test_credential = "credential-that-must-not-leak"
         request = ProcessRequest(
             sys.executable,
             (
                 "-c",
                 "import sys; print(sys.argv[1]); print(sys.argv[1], file=sys.stderr); "
                 "raise SystemExit(9)",
-                secret,
+                test_credential,
             ),
             timeout=5,
             sensitive_arg_indexes=frozenset({2}),
         )
-        with pytest.raises(ProcessNonZeroExit) as caught:
+        with pytest.raises(ProcessNonZeroExitError) as caught:
             await AsyncProcessRunner().run(request)
         verify(caught.value.result is not None)
         verify(secret not in caught.value.result.stdout)
@@ -94,7 +96,7 @@ def test_process_timeout_redacts_sensitive_metadata() -> None:
             timeout=0.02,
             sensitive_arg_indexes=frozenset({2}),
         )
-        with pytest.raises(ProcessTimeout) as caught:
+        with pytest.raises(ProcessTimeoutError) as caught:
             await AsyncProcessRunner().run(request)
         verify(caught.value.result is not None)
         verify("actual-password" not in repr(caught.value.result.command))

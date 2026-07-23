@@ -39,7 +39,7 @@ class NmcliMutationsMixin(NmcliProfilesMixin):
 
     async def connect_visible_network(self, request: VisibleConnectRequest) -> ActiveWifiConnection:
         """Perform connect visible network."""
-        self._validate_connect_security(request.security, request.password is not None)
+        self._validate_connect_security(request.security, has_password=request.password is not None)
         args = [
             "--wait",
             "45",
@@ -73,7 +73,7 @@ class NmcliMutationsMixin(NmcliProfilesMixin):
                 ErrorCategory.NETWORK_UNAVAILABLE,
                 summary="The hidden SSID cannot be blank.",
             )
-        self._validate_connect_security(request.security, request.password is not None)
+        self._validate_connect_security(request.security, has_password=request.password is not None)
         args = [
             "--wait",
             "45",
@@ -101,7 +101,7 @@ class NmcliMutationsMixin(NmcliProfilesMixin):
         return active
 
     @staticmethod
-    def _validate_connect_security(security: SecurityClass, has_password: bool) -> None:
+    def _validate_connect_security(security: SecurityClass, *, has_password: bool) -> None:
         """Perform validate connect security."""
         if not security.supported:
             raise WifiError(ErrorCategory.UNSUPPORTED_SECURITY)
@@ -159,7 +159,7 @@ class NmcliMutationsMixin(NmcliProfilesMixin):
                 technical_details=f"profile {uuid} still exists after deletion",
             )
 
-    async def set_profile_autoconnect(self, uuid: str, enabled: bool) -> SavedProfile:
+    async def set_profile_autoconnect(self, uuid: str, *, enabled: bool) -> SavedProfile:
         """Perform set profile autoconnect."""
         await self._run(
             (

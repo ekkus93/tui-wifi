@@ -50,8 +50,8 @@ class WifiService:
         self.snapshot = ApplicationSnapshot(BackendStatus(BackendAvailability.UNKNOWN))
         self._listeners: list[SnapshotListener] = []
         self._refresh_generation = 0
-        self._operation_counter = 0
-        self._mutation_lock = asyncio.Lock()
+        self.operation_counter = 0
+        self.mutation_lock = asyncio.Lock()
         self._closed = False
 
     def subscribe(self, listener: SnapshotListener) -> Callable[[], None]:
@@ -65,7 +65,7 @@ class WifiService:
 
         return unsubscribe
 
-    def _publish(self, snapshot: ApplicationSnapshot) -> None:
+    def publish(self, snapshot: ApplicationSnapshot) -> None:
         """Perform publish."""
         self.snapshot = snapshot
         for listener in tuple(self._listeners):
@@ -78,7 +78,7 @@ class WifiService:
                 ErrorCategory.INTERNAL_FAILURE,
                 summary="tui-wifi currently supports Linux only.",
             )
-            self._publish(replace(self.snapshot, error=error.summary))
+            self.publish(replace(self.snapshot, error=error.summary))
             return self.snapshot
         return await self.refresh(request_scan=True)
 
@@ -95,7 +95,7 @@ class WifiService:
             operation_id=generation,
             message="Scanning for networks…" if request_scan else "Refreshing network state…",
         )
-        self._publish(replace(previous, operation=operation, error=None))
+        self.publish(replace(previous, operation=operation, error=None))
         try:
             status = await self.backend.check_status()
             if status.availability != BackendAvailability.AVAILABLE:
@@ -148,7 +148,7 @@ class WifiService:
                 generation=generation,
             )
         if generation == self._refresh_generation:
-            self._publish(candidate)
+            self.publish(candidate)
         return self.snapshot
 
     @staticmethod
@@ -236,6 +236,7 @@ class WifiService:
         ssid: str,
         security: SecurityClass,
         password: SecretValue | None,
+        *,
         autoconnect: bool,
     ) -> ApplicationSnapshot:
         """Perform connect hidden."""
@@ -273,7 +274,7 @@ class WifiService:
             await self.backend.disconnect(DisconnectRequest(active.device, active.uuid))
         return await self.refresh()
 
-    async def set_wifi_enabled(self, enabled: bool) -> ApplicationSnapshot:
+    async def set_wifi_enabled(self, *, enabled: bool) -> ApplicationSnapshot:
         """Perform set wifi enabled."""
         async with self._mutation(
             OperationKind.RADIO,
@@ -293,7 +294,7 @@ class WifiService:
             await self.backend.delete_saved_profile(uuid)
         return await self.refresh()
 
-    async def set_profile_autoconnect(self, uuid: str, enabled: bool) -> ApplicationSnapshot:
+    async def set_profile_autoconnect(self, uuid: str, *, enabled: bool) -> ApplicationSnapshot:
         """Perform set profile autoconnect."""
         async with self._mutation(
             OperationKind.AUTOCONNECT,
@@ -334,9 +335,9 @@ class WifiService:
 
         async def __aenter__(self) -> None:
             """Enter the asynchronous context."""
-            await self.service._mutation_lock.acquire()
-            self.service._operation_counter += 1
-            self.service._publish(
+            await self.service.mutation_lock.acquire()
+            self.service.operation_counter += 1
+            self.service.publish(
                 replace(
                     self.service.snapshot,
                     operation=OperationStatus(
@@ -344,7 +345,7 @@ class WifiService:
                         OperationPhase.RUNNING,
                         self.target,
                         self.message,
-                        self.service._operation_counter,
+                        self.service.operation_counter,
                     ),
                     error=None,
                 ),
@@ -359,7 +360,7 @@ class WifiService:
             """Exit the asynchronous context."""
             try:
                 if isinstance(exc, WifiError):
-                    self.service._publish(
+                    self.service.publish(
                         replace(
                             self.service.snapshot,
                             operation=OperationStatus(
@@ -367,14 +368,14 @@ class WifiService:
                                 OperationPhase.FAILED,
                                 self.target,
                                 exc.summary,
-                                self.service._operation_counter,
+                                self.service.operation_counter,
                             ),
                             error=exc.summary,
                             warning=exc.guidance,
                         ),
                     )
                 elif isinstance(exc, asyncio.CancelledError):
-                    self.service._publish(
+                    self.service.publish(
                         replace(
                             self.service.snapshot,
                             operation=OperationStatus(
@@ -382,12 +383,12 @@ class WifiService:
                                 OperationPhase.CANCELLED,
                                 self.target,
                                 "Operation cancelled.",
-                                self.service._operation_counter,
+                                self.service.operation_counter,
                             ),
                         ),
                     )
             finally:
-                self.service._mutation_lock.release()
+                self.service.mutation_lock.release()
             return False
 
     def _mutation(

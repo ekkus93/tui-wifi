@@ -11,8 +11,12 @@ from tui_wifi.logging_config import configure_debug_logging
 if TYPE_CHECKING:
     from pathlib import Path
 
+    import pytest
 
-def test_debug_logging_uses_xdg_and_is_bounded(tmp_path: Path, monkeypatch) -> None:
+
+def test_debug_logging_uses_xdg_and_is_bounded(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
     """Verify test debug logging uses xdg and is bounded."""
     monkeypatch.setenv("XDG_STATE_HOME", str(tmp_path))
     path, warning = configure_debug_logging()

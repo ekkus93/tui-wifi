@@ -8,6 +8,15 @@ import uuid as uuid_module
 from tui_wifi.errors import ErrorCategory, WifiError
 from tui_wifi.models import DeviceState, NetworkManagerState, SecurityClass
 
+_COMPARISON_VALUE_100 = 100
+_COMPARISON_VALUE_2412 = 2412
+_COMPARISON_VALUE_2472 = 2472
+_COMPARISON_VALUE_2484 = 2484
+_COMPARISON_VALUE_5000 = 5000
+_COMPARISON_VALUE_5895 = 5895
+_COMPARISON_VALUE_5955 = 5955
+_COMPARISON_VALUE_7115 = 7115
+
 
 def split_escaped(line: str, expected_fields: int | None = None, separator: str = ":") -> list[str]:
     """Perform split escaped."""
@@ -60,7 +69,7 @@ def parse_signal(value: str) -> int | None:
             ErrorCategory.PARSE_FAILURE,
             technical_details=f"invalid signal value: {value!r}",
         ) from exc
-    if not 0 <= signal <= 100:
+    if not 0 <= signal <= _COMPARISON_VALUE_100:
         raise WifiError(
             ErrorCategory.PARSE_FAILURE,
             technical_details=f"signal outside 0..100: {signal}",
@@ -85,13 +94,13 @@ def frequency_to_channel(frequency: int | None) -> int | None:
     """Perform frequency to channel."""
     if frequency is None:
         return None
-    if frequency == 2484:
+    if frequency == _COMPARISON_VALUE_2484:
         return 14
-    if 2412 <= frequency <= 2472:
+    if _COMPARISON_VALUE_2412 <= frequency <= _COMPARISON_VALUE_2472:
         return (frequency - 2407) // 5
-    if 5000 <= frequency <= 5895:
+    if _COMPARISON_VALUE_5000 <= frequency <= _COMPARISON_VALUE_5895:
         return (frequency - 5000) // 5
-    if 5955 <= frequency <= 7115:
+    if _COMPARISON_VALUE_5955 <= frequency <= _COMPARISON_VALUE_7115:
         return (frequency - 5950) // 5
     return None
 

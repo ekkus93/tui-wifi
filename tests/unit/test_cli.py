@@ -23,7 +23,7 @@ def test_cli_rejects_unknown_option() -> None:
     verify(caught.value.code != 0)
 
 
-def test_main_runs_app_and_propagates_mouse_setting(monkeypatch) -> None:
+def test_main_runs_app_and_propagates_mouse_setting(monkeypatch: pytest.MonkeyPatch) -> None:
     """Verify test main runs app and propagates mouse setting."""
     import sys
     import types
@@ -55,5 +55,5 @@ def test_main_runs_app_and_propagates_mouse_setting(monkeypatch) -> None:
             "preferred_interface": "wlan0",
             "mouse_enabled": False,
             "startup_warning": None,
-        }
+        },
     )

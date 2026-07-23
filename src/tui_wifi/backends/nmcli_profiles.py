@@ -15,6 +15,9 @@ from tui_wifi.models import (
     SecurityClass,
 )
 
+_COMPARISON_VALUE_2 = 2
+_COMPARISON_VALUE_3 = 3
+
 
 class NmcliProfilesMixin(NmcliCore):
     """Represent NmcliProfilesMixin."""
@@ -67,8 +70,10 @@ class NmcliProfilesMixin(NmcliCore):
             detail_lines = detail.splitlines()
             ssid = detail_lines[0] if detail_lines and detail_lines[0] else None
             key_mgmt = detail_lines[1] if len(detail_lines) > 1 else ""
-            interface_name = detail_lines[2] if len(detail_lines) > 2 else ""
-            detail_autoconnect = detail_lines[3] if len(detail_lines) > 3 else autoconnect
+            interface_name = detail_lines[2] if len(detail_lines) > _COMPARISON_VALUE_2 else ""
+            detail_autoconnect = (
+                detail_lines[3] if len(detail_lines) > _COMPARISON_VALUE_3 else autoconnect
+            )
             profiles.append(
                 SavedProfile(
                     name=name,
@@ -76,14 +81,14 @@ class NmcliProfilesMixin(NmcliCore):
                     ssid=ssid,
                     interface_name=interface_name or None,
                     autoconnect=parse_bool(detail_autoconnect),
-                    security=self._profile_security(key_mgmt),
+                    security=self.profile_security(key_mgmt),
                     active=device not in {"", "--"},
                 ),
             )
         return tuple(profiles)
 
     @staticmethod
-    def _profile_security(key_mgmt: str) -> SecurityClass:
+    def profile_security(key_mgmt: str) -> SecurityClass:
         """Perform profile security."""
         normalized = key_mgmt.strip().lower()
         if not normalized or normalized == "none":

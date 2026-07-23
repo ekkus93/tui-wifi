@@ -16,6 +16,11 @@ from tui_wifi.backends.parsing import (
 from tui_wifi.errors import ErrorCategory, WifiError
 from tui_wifi.models import SecurityClass
 
+_COMPARISON_VALUE_14 = 14
+_COMPARISON_VALUE_36 = 36
+_COMPARISON_VALUE_75 = 75
+_COMPARISON_VALUE_5180 = 5180
+
 
 def test_split_escaped_colon_and_backslash() -> None:
     """Verify test split escaped colon and backslash."""
@@ -26,7 +31,7 @@ def test_split_escaped_colon_and_backslash() -> None:
             r"path\name",
             "",
             "",
-        ]
+        ],
     )
 
 
@@ -47,7 +52,7 @@ def test_split_escaped_rejects_wrong_field_count() -> None:
     ("raw", "expected"),
     [("yes", True), ("disabled", False), ("1", True), ("0", False)],
 )
-def test_parse_bool(raw: str, expected: bool) -> None:
+def test_parse_bool(raw: str, *, expected: bool) -> None:
     """Verify test parse bool."""
     verify(parse_bool(raw) is expected)
 
@@ -55,7 +60,7 @@ def test_parse_bool(raw: str, expected: bool) -> None:
 def test_parse_signal_validates_range() -> None:
     """Verify test parse signal validates range."""
     verify(parse_signal("") is None)
-    verify(parse_signal("75") == 75)
+    verify(parse_signal("75") == _COMPARISON_VALUE_75)
     with pytest.raises(WifiError):
         parse_signal("101")
 
@@ -81,8 +86,8 @@ def test_security_classification(raw: str, expected: SecurityClass) -> None:
 def test_frequency_to_channel() -> None:
     """Verify test frequency to channel."""
     verify(frequency_to_channel(2412) == 1)
-    verify(frequency_to_channel(2484) == 14)
-    verify(frequency_to_channel(5180) == 36)
+    verify(frequency_to_channel(2484) == _COMPARISON_VALUE_14)
+    verify(frequency_to_channel(5180) == _COMPARISON_VALUE_36)
     verify(frequency_to_channel(5955) == 1)
     verify(frequency_to_channel(1234) is None)
 
@@ -106,7 +111,7 @@ def test_additional_scalar_and_state_parsers() -> None:
     from tui_wifi.models import DeviceState, NetworkManagerState
 
     verify(parse_optional_int("") is None)
-    verify(parse_optional_int("5180") == 5180)
+    verify(parse_optional_int("5180") == _COMPARISON_VALUE_5180)
     verify(parse_device_state("connected") == DeviceState.ACTIVATED)
     verify(parse_device_state("future-state") == DeviceState.UNKNOWN)
     verify(parse_nm_state("connected (global)") == NetworkManagerState.CONNECTED_GLOBAL)
@@ -116,7 +121,7 @@ def test_additional_scalar_and_state_parsers() -> None:
         == (
             "192.0.2.1/24",
             "2001:db8::1/64",
-        )
+        ),
     )
     with pytest.raises(WifiError):
         parse_optional_int("not-int")

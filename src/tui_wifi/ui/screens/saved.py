@@ -124,7 +124,7 @@ class SavedNetworksScreen(Screen[None]):
         except WifiError as exc:
             self.app.push_screen(MessageDialog("Could not forget network", exc.summary))
 
-    async def _set_autoconnect(self, uuid: str, enabled: bool) -> None:
+    async def _set_autoconnect(self, uuid: str, *, enabled: bool) -> None:
         """Perform set autoconnect."""
         try:
             await self.service.set_profile_autoconnect(uuid, enabled)
