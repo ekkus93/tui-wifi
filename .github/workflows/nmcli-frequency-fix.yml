@@ -92,8 +92,8 @@ jobs:
           if test.count(constants_anchor) != 1:
               raise SystemExit("scan test constants anchor was not found exactly once")
           test = test.replace(constants_anchor, constants_replacement)
-          row_anchor = "*:Open:00\\:11\\:22\\:33\\:44\\:01:90:2412:--\\n"
-          row_replacement = "*:Open:00\\:11\\:22\\:33\\:44\\:01:90:2437 MHz:--\\n"
+          row_anchor = r"*:Open:00\\:11\\:22\\:33\\:44\\:01:90:2412:--\n"
+          row_replacement = r"*:Open:00\\:11\\:22\\:33\\:44\\:01:90:2437 MHz:--\n"
           if test.count(row_anchor) != 1:
               raise SystemExit("legacy frequency fixture row was not found exactly once")
           test = test.replace(row_anchor, row_replacement)
