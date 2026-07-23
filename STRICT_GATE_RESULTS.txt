@@ -1,15 +1,9 @@
 === BLACK ===
-would reformat /home/runner/work/tui-wifi/tui-wifi/src/tui_wifi/ui/screens/main.py
-
-Oh no! 💥 💔 💥
-1 file would be reformatted, 47 files would be left unchanged.
+All done! ✨ 🍰 ✨
+48 files would be left unchanged.
 
 === RUFF ===
-src/tui_wifi/ui/screens/main.py:101:9: PLR0911 Too many return statements (8 > 6)
-src/tui_wifi/ui/screens/main.py:153:55: COM812 [*] Trailing comma missing
-src/tui_wifi/ui/screens/main.py:157:47: COM812 [*] Trailing comma missing
-Found 3 errors.
-[*] 2 fixable with the `--fix` option.
+All checks passed!
 
 === MYPY ===
 Success: no issues found in 31 source files
@@ -62,6 +56,6 @@ src/tui_wifi/services/wifi.py                164     34     46     14    74%   6
 --------------------------------------------------------------------------------------
 TOTAL                                       1102    217    256     48    76%
 Required test coverage of 70% reached. Total coverage: 76.22%
-============================== 46 passed in 1.96s ==============================
+============================== 46 passed in 1.94s ==============================
 
-overall_status=1
+overall_status=0
