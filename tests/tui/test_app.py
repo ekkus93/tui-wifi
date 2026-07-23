@@ -1,4 +1,4 @@
-"""Verify test app behavior."""
+"""Verify the Textual application with a fake backend."""
 
 from __future__ import annotations
 
@@ -18,22 +18,22 @@ from tui_wifi.ui.widgets.network_list import NetworkTable
 
 
 def test_main_screen_loads_fake_network_without_real_wifi() -> None:
-    """Verify test main screen loads fake network without real wifi."""
+    """Verify the main screen renders a fake network without touching host Wi-Fi."""
 
     async def scenario() -> None:
-        """Perform scenario."""
+        """Run the Textual application with deterministic backend state."""
         backend = FakeWifiBackend()
         backend.access_points["wlan0"] = (
             AccessPoint(
-                b"Test Network",
-                "Test Network",
-                "00:11:22:33:44:55",
-                90,
-                2412,
-                1,
-                SecurityClass.WPA2_PERSONAL,
-                False,
-                "wlan0",
+                ssid=b"Test Network",
+                display_ssid="Test Network",
+                bssid="00:11:22:33:44:55",
+                signal=90,
+                frequency=2412,
+                channel=1,
+                security=SecurityClass.WPA2_PERSONAL,
+                active=False,
+                device="wlan0",
             ),
         )
         app = WifiTuiApp(service=WifiService(backend))
