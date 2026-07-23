@@ -1,4 +1,4 @@
-"""Provide main functionality."""
+"""Provide the main Wi-Fi management screen."""
 
 from __future__ import annotations
 
@@ -33,7 +33,7 @@ if TYPE_CHECKING:
 
 
 class MainScreen(Screen[None]):
-    """Represent MainScreen."""
+    """Display nearby networks and common Wi-Fi actions."""
 
     BINDINGS: ClassVar[list[BindingType]] = [
         ("r", "refresh_networks", "Refresh"),
@@ -49,14 +49,14 @@ class MainScreen(Screen[None]):
     ]
 
     def __init__(self, service: WifiService, startup_warning: str | None = None) -> None:
-        """Initialize the instance."""
+        """Initialize the screen with its application service."""
         super().__init__()
         self.service = service
         self.startup_warning = startup_warning
         self._unsubscribe: Callable[[], None] | None = None
 
     def compose(self) -> ComposeResult:
-        """Perform compose."""
+        """Compose the main screen widgets."""
         yield Header(show_clock=True)
         with Vertical(id="main-body"):
             with Horizontal(id="status-row"):
@@ -76,61 +76,63 @@ class MainScreen(Screen[None]):
         yield Footer()
 
     def on_mount(self) -> None:
-        """Perform on mount."""
+        """Subscribe to state changes and start initial discovery."""
         self._unsubscribe = self.service.subscribe(self._on_snapshot)
         if self.startup_warning:
             self.notify(self.startup_warning, severity="warning", timeout=8)
         self.run_worker(self.service.startup(), group="startup", exclusive=True)
 
     def on_unmount(self) -> None:
-        """Perform on unmount."""
+        """Unsubscribe from service updates."""
         if self._unsubscribe is not None:
             self._unsubscribe()
 
-    def _on_snapshot(self, snapshot: ApplicationSnapshot) -> None:
-        """Perform on snapshot."""
-        if not self.is_mounted:
-            return
-        self.query_one("#networks", NetworkTable).load_networks(snapshot.networks)
-        radio = snapshot.status.wifi_radio
-        radio_text = {
+    @staticmethod
+    def _radio_text(radio: WifiRadioState) -> str:
+        """Return a human-readable Wi-Fi radio state."""
+        return {
             WifiRadioState.ENABLED: "Enabled",
             WifiRadioState.DISABLED: "Disabled",
             WifiRadioState.HARDWARE_BLOCKED: "Blocked",
             WifiRadioState.UNKNOWN: "Unknown",
         }[radio]
-        stale = " (stale)" if snapshot.stale else ""
-        self.query_one("#radio-status", Static).update(f"Wi-Fi: {radio_text}{stale}")
 
-        message = ""
+    @staticmethod
+    def _message_for(snapshot: ApplicationSnapshot, radio: WifiRadioState) -> str:
+        """Choose the most important current status message."""
         if snapshot.operation.phase == OperationPhase.RUNNING:
-            message = snapshot.operation.message or "Working…"
-        elif snapshot.error:
-            message = snapshot.error
-        elif snapshot.warning:
-            message = snapshot.warning
-        elif snapshot.selected_device is None:
-            message = "No usable Wi-Fi adapter was found."
-        elif radio == WifiRadioState.DISABLED:
-            message = "Wi-Fi is disabled. Press W to enable it."
-        elif radio == WifiRadioState.HARDWARE_BLOCKED:
-            message = "Wi-Fi is blocked by a hardware or software switch."
-        elif not snapshot.networks:
-            message = "No nearby networks were found. Press R to scan again."
-        else:
-            message = f"{len(snapshot.networks)} network(s) found on {snapshot.selected_device}."
-        self.query_one("#message", Static).update(message)
+            return snapshot.operation.message or "Working…"
+        if snapshot.error:
+            return snapshot.error
+        if snapshot.warning:
+            return snapshot.warning
+        if snapshot.selected_device is None:
+            return "No usable Wi-Fi adapter was found."
+        if radio == WifiRadioState.DISABLED:
+            return "Wi-Fi is disabled. Press W to enable it."
+        if radio == WifiRadioState.HARDWARE_BLOCKED:
+            return "Wi-Fi is blocked by a hardware or software switch."
+        if not snapshot.networks:
+            return "No nearby networks were found. Press R to scan again."
+        return f"{len(snapshot.networks)} network(s) found on {snapshot.selected_device}."
 
+    @staticmethod
+    def _connection_summary(snapshot: ApplicationSnapshot) -> str:
+        """Build the compact active-connection summary."""
         active = snapshot.active_connection
         if active is None:
-            summary = "Not connected"
-        else:
-            addresses = ", ".join(active.ipv4.addresses)
-            summary = f"Connected to {active.ssid or active.profile_name}"
-            if addresses:
-                summary += f" · {addresses}"
-        self.query_one("#connection-summary", Static).update(summary)
+            return "Not connected"
+        addresses = ", ".join(active.ipv4.addresses)
+        summary = f"Connected to {active.ssid or active.profile_name}"
+        return f"{summary} · {addresses}" if addresses else summary
 
+    def _update_action_widgets(
+        self,
+        snapshot: ApplicationSnapshot,
+        radio: WifiRadioState,
+    ) -> None:
+        """Enable and label actions from the current snapshot."""
+        active = snapshot.active_connection
         busy = snapshot.operation.phase == OperationPhase.RUNNING
         self.query_one("#connect", Button).disabled = busy or not snapshot.networks
         self.query_one("#disconnect", Button).disabled = busy or active is None
@@ -140,8 +142,24 @@ class MainScreen(Screen[None]):
             "Disable Wi-Fi" if radio == WifiRadioState.ENABLED else "Enable Wi-Fi"
         )
 
+    def _on_snapshot(self, snapshot: ApplicationSnapshot) -> None:
+        """Render one coherent application snapshot."""
+        if not self.is_mounted:
+            return
+        self.query_one("#networks", NetworkTable).load_networks(snapshot.networks)
+        radio = snapshot.status.wifi_radio
+        stale = " (stale)" if snapshot.stale else ""
+        self.query_one("#radio-status", Static).update(
+            f"Wi-Fi: {self._radio_text(radio)}{stale}"
+        )
+        self.query_one("#message", Static).update(self._message_for(snapshot, radio))
+        self.query_one("#connection-summary", Static).update(
+            self._connection_summary(snapshot)
+        )
+        self._update_action_widgets(snapshot, radio)
+
     def _selected_group(self) -> NetworkGroup | None:
-        """Perform selected group."""
+        """Return the network selected in the table."""
         identity = self.query_one("#networks", NetworkTable).selected_identity
         return next(
             (network for network in self.service.snapshot.networks if network.identity == identity),
@@ -149,11 +167,11 @@ class MainScreen(Screen[None]):
         )
 
     def on_data_table_row_selected(self, _event: NetworkTable.RowSelected) -> None:
-        """Perform on data table row selected."""
+        """Connect when the user activates a network row."""
         self.action_connect()
 
     def on_button_pressed(self, event: Button.Pressed) -> None:
-        """Perform on button pressed."""
+        """Dispatch a pressed action button."""
         actions = {
             "connect": self.action_connect,
             "disconnect": self.action_disconnect,
@@ -168,23 +186,23 @@ class MainScreen(Screen[None]):
             action()
 
     def action_cursor_down(self) -> None:
-        """Perform action cursor down."""
+        """Move the network selection down."""
         self.query_one("#networks", NetworkTable).action_cursor_down()
 
     def action_cursor_up(self) -> None:
-        """Perform action cursor up."""
+        """Move the network selection up."""
         self.query_one("#networks", NetworkTable).action_cursor_up()
 
     def action_refresh_networks(self) -> None:
-        """Perform action refresh networks."""
+        """Start a fresh network scan."""
         self.run_worker(self._refresh(), group="refresh", exclusive=True)
 
     async def _refresh(self) -> None:
-        """Perform refresh."""
+        """Refresh networks through the service."""
         await self.service.refresh(request_scan=True)
 
     def action_connect(self) -> None:
-        """Perform action connect."""
+        """Start the appropriate connection workflow for the selected network."""
         group = self._selected_group()
         if group is None:
             self.app.push_screen(MessageDialog("Connect", "Select a network first."))
@@ -201,7 +219,7 @@ class MainScreen(Screen[None]):
             return
         if len(group.saved_profile_uuids) == 1:
             self.run_worker(
-                self._connect(group, None, True),
+                self._connect(group, None, autoconnect=True),
                 group="mutation",
                 exclusive=True,
             )
@@ -231,14 +249,22 @@ class MainScreen(Screen[None]):
         )
 
     def _start_open(self, group: NetworkGroup) -> None:
-        """Perform start open."""
-        self.run_worker(self._connect(group, None, True), group="mutation", exclusive=True)
+        """Connect to a confirmed open network."""
+        self.run_worker(
+            self._connect(group, None, autoconnect=True),
+            group="mutation",
+            exclusive=True,
+        )
 
     def _start_password(self, group: NetworkGroup, answer: PasswordAnswer | None) -> None:
-        """Perform start password."""
+        """Connect using a submitted password dialog answer."""
         if answer is not None:
             self.run_worker(
-                self._connect(group, answer.password, answer.autoconnect),
+                self._connect(
+                    group,
+                    answer.password,
+                    autoconnect=answer.autoconnect,
+                ),
                 group="mutation",
                 exclusive=True,
             )
@@ -250,7 +276,7 @@ class MainScreen(Screen[None]):
         *,
         autoconnect: bool,
     ) -> None:
-        """Perform connect."""
+        """Connect to one visible network and report expected failures."""
         try:
             snapshot = await self.service.connect_network(
                 group,
@@ -265,15 +291,13 @@ class MainScreen(Screen[None]):
                     exc.diagnostic_text(),
                 ),
             )
-        except Exception as exc:
-            self.app.push_screen(MessageDialog("Unexpected connection error", str(exc)))
         else:
             active = snapshot.active_connection
             if active is not None:
                 self.notify(f"Connected to {active.ssid or active.profile_name}", timeout=5)
 
     def action_disconnect(self) -> None:
-        """Perform action disconnect."""
+        """Ask before disconnecting the active network."""
         active = self.service.snapshot.active_connection
         if active is None:
             return
@@ -287,33 +311,33 @@ class MainScreen(Screen[None]):
         )
 
     def _start_disconnect(self) -> None:
-        """Perform start disconnect."""
+        """Start the disconnect worker."""
         self.run_worker(self._disconnect(), group="mutation", exclusive=True)
 
     async def _disconnect(self) -> None:
-        """Perform disconnect."""
+        """Disconnect and present expected failures."""
         try:
             await self.service.disconnect()
         except WifiError as exc:
             self.app.push_screen(MessageDialog(exc.summary, exc.guidance or "Disconnect failed."))
 
     def action_hidden(self) -> None:
-        """Perform action hidden."""
+        """Open the hidden-network dialog."""
         self.app.push_screen(HiddenNetworkDialog(), self._start_hidden)
 
     def _start_hidden(self, answer: HiddenNetworkAnswer | None) -> None:
-        """Perform start hidden."""
+        """Start a hidden-network connection from a dialog answer."""
         if answer is not None:
             self.run_worker(self._connect_hidden(answer), group="mutation", exclusive=True)
 
     async def _connect_hidden(self, answer: HiddenNetworkAnswer) -> None:
-        """Perform connect hidden."""
+        """Connect to a hidden network and present expected failures."""
         try:
             await self.service.connect_hidden(
                 answer.ssid,
                 answer.security,
                 answer.password,
-                answer.autoconnect,
+                autoconnect=answer.autoconnect,
             )
         except WifiError as exc:
             self.app.push_screen(MessageDialog(exc.summary, exc.guidance or "Connection failed."))
@@ -321,15 +345,15 @@ class MainScreen(Screen[None]):
             self.notify(f"Connected to {answer.ssid}", timeout=5)
 
     def action_saved(self) -> None:
-        """Perform action saved."""
+        """Open the saved-network screen."""
         self.app.push_screen(SavedNetworksScreen(self.service))
 
     def action_details(self) -> None:
-        """Perform action details."""
+        """Open details for the active connection."""
         self.app.push_screen(DetailsScreen(self.service.snapshot.active_connection))
 
     def action_toggle_wifi(self) -> None:
-        """Perform action toggle wifi."""
+        """Enable Wi-Fi or confirm before disabling an active connection."""
         enabled = self.service.snapshot.status.wifi_radio != WifiRadioState.ENABLED
         if not enabled and self.service.snapshot.active_connection is not None:
             self.app.push_screen(
@@ -338,19 +362,23 @@ class MainScreen(Screen[None]):
                     "This will interrupt the active Wi-Fi connection.",
                     "Disable",
                 ),
-                lambda confirmed: self._start_toggle(False) if confirmed else None,
+                lambda confirmed: self._start_toggle(enabled=False) if confirmed else None,
             )
         else:
-            self._start_toggle(enabled)
+            self._start_toggle(enabled=enabled)
 
     def _start_toggle(self, *, enabled: bool) -> None:
-        """Perform start toggle."""
-        self.run_worker(self._toggle(enabled), group="mutation", exclusive=True)
+        """Start the Wi-Fi radio worker."""
+        self.run_worker(
+            self._toggle(enabled=enabled),
+            group="mutation",
+            exclusive=True,
+        )
 
     async def _toggle(self, *, enabled: bool) -> None:
-        """Perform toggle."""
+        """Change the Wi-Fi radio state and present expected failures."""
         try:
-            await self.service.set_wifi_enabled(enabled)
+            await self.service.set_wifi_enabled(enabled=enabled)
         except WifiError as exc:
             self.app.push_screen(
                 MessageDialog(
