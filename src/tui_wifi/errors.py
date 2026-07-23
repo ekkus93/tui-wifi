@@ -1,9 +1,9 @@
 from __future__ import annotations
 
-from enum import Enum
+from enum import StrEnum
 
 
-class ErrorCategory(str, Enum):
+class ErrorCategory(StrEnum):
     MISSING_NMCLI = "missing_nmcli"
     NETWORK_MANAGER_UNAVAILABLE = "network_manager_unavailable"
     NO_ADAPTER = "no_adapter"
