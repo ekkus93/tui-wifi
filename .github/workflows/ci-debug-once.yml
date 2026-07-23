@@ -1,0 +1,50 @@
+name: One-shot CI diagnostics
+
+on:
+  push:
+    branches:
+      - master
+
+permissions:
+  contents: write
+
+env:
+  PYTHONWARNINGS: error
+  PIP_DISABLE_PIP_VERSION_CHECK: "1"
+
+jobs:
+  diagnose:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: master
+          show-progress: false
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.13"
+          cache: pip
+      - run: python -m pip install --quiet -e '.[dev]'
+      - name: Capture failing gates
+        shell: bash
+        run: |
+          set +e
+          {
+            echo '=== RUFF ==='
+            ruff check . --output-format concise
+            echo "ruff_status=$?"
+            echo
+            echo '=== PYTEST ==='
+            pytest -m 'not real_network' -q --tb=short
+            echo "pytest_status=$?"
+          } > CI_FAILURES.txt 2>&1
+      - name: Commit diagnostics and remove workflow
+        shell: bash
+        run: |
+          rm .github/workflows/ci-debug-once.yml
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add -A
+          git commit -m "Record exact CI failures"
+          git push origin HEAD:master
